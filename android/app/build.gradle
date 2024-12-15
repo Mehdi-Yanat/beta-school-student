@@ -32,8 +32,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11   // Change from VERSION_8 to VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11   // Change from VERSION_8 to VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17   // Change from VERSION_8 to VERSION_11
+        targetCompatibility = JavaVersion.VERSION_17   // Change from VERSION_8 to VERSION_11
     }
 
     defaultConfig {
@@ -54,7 +54,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "1.8" // Use a valid target such as "1.8" or "11"
+        jvmTarget = "17"
     }
 }
 
