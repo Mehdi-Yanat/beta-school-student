@@ -10,12 +10,12 @@ By this version, features include:
 - Settings Page: this module allows users to manage the settings of their account in the application such as stat, payment, notifications, privacy and security, and theme.
 
 Next Features 
-Course Marketplace: Browse a wide variety of courses across different subjects and categories.
-Purchase Courses: Secure payment gateway for easy course purchases.
-Watch Courses: Stream courses with video playback and progress tracking.
-User Profiles: Students can create and manage their profiles, track their learning progress, and access purchased courses anytime.
-Notifications: Stay updated with new courses, promotions, and learning tips through notifications.
-Payment Integration: Secure payment methods for buying courses within the app.
+- Course Marketplace: Browse a wide variety of courses across different subjects and categories.
+- Purchase Courses: Secure payment gateway for easy course purchases.
+- Watch Courses: Stream courses with video playback and progress tracking.
+- User Profiles: Students can create and manage their profiles, track their learning progress, and access purchased courses anytime.
+- Notifications: Stay updated with new courses, promotions, and learning tips through notifications.
+- Payment Integration: Secure payment methods for buying courses within the app.
 
 # Development Setup
 
