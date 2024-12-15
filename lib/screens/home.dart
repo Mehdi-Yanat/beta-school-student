@@ -1,5 +1,6 @@
-import 'package:carousel_slider/carousel_slider.dart';  // Correct import for carousel_slider
+import 'package:carousel_slider/carousel_slider.dart'; // Correct import for carousel_slider
 import 'package:flutter/material.dart';
+import 'package:online_course/screens/course_detail.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:online_course/utils/data.dart';
 import 'package:online_course/widgets/category_box.dart';
@@ -59,7 +60,7 @@ class _HomePageState extends State<HomePage> {
                 height: 5,
               ),
               Text(
-                "Good Morning!",
+                "Bonjour !",
                 style: TextStyle(
                   color: AppColor.textColor,
                   fontWeight: FontWeight.w500,
@@ -149,7 +150,7 @@ class _HomePageState extends State<HomePage> {
   _buildFeatured() {
     return CarouselSlider(
       options: CarouselOptions(
-        height: 290,
+        height: 300,
         enlargeCenterPage: true,
         disableCenter: true,
         viewportFraction: .75,
@@ -158,6 +159,13 @@ class _HomePageState extends State<HomePage> {
         features.length,
         (index) => FeatureItem(
           data: features[index],
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        CourseDetailScreen(courseId: "course_1")));
+          },
         ),
       ),
     );

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:online_course/screens/account.dart';
 import 'package:online_course/screens/chat.dart';
+import 'package:online_course/screens/explore.dart';
+import 'package:online_course/screens/home.dart';
+import 'package:online_course/screens/my_courses.dart';
 import 'package:online_course/theme/color.dart';
-import 'package:online_course/utils/constant.dart';
-import 'package:online_course/widgets/bottombar_item.dart';
-import 'home.dart';
+
+import '../utils/auth.dart';
+import '../widgets/bottombar_item.dart'; // Import AuthService
 
 class RootApp extends StatefulWidget {
   const RootApp({Key? key}) : super(key: key);
@@ -13,88 +16,48 @@ class RootApp extends StatefulWidget {
   _RootAppState createState() => _RootAppState();
 }
 
-class _RootAppState extends State<RootApp> with TickerProviderStateMixin {
+class _RootAppState extends State<RootApp> {
   int _activeTab = 0;
   List _barItems = [
-    {
-      "icon": "assets/icons/home.svg",
-      "active_icon": "assets/icons/home.svg",
-      "page": HomePage(),
-    },
-    {
-      "icon": "assets/icons/search.svg",
-      "active_icon": "assets/icons/search.svg",
-      "page": Container(),
-    },
-    {
-      "icon": "assets/icons/play.svg",
-      "active_icon": "assets/icons/play.svg",
-      "page": Container(),
-    },
-    {
-      "icon": "assets/icons/chat.svg",
-      "active_icon": "assets/icons/chat.svg",
-      "page": ChatPage(),
-    },
-    {
-      "icon": "assets/icons/profile.svg",
-      "active_icon": "assets/icons/profile.svg",
-      "page": AccountPage(),
-    },
+    {"icon": "assets/icons/home.svg", "page": HomePage()},
+    {"icon": "assets/icons/search.svg", "page": ExploreScreen()},
+    {"icon": "assets/icons/play.svg", "page": MyCourseScreen()},
+    {"icon": "assets/icons/chat.svg", "page": ChatPage()},
+    {"icon": "assets/icons/profile.svg", "page": AccountPage()},
   ];
-
-//====== set animation=====
-  late final AnimationController _controller = AnimationController(
-    duration: const Duration(milliseconds: ANIMATED_BODY_MS),
-    vsync: this,
-  );
-  late final Animation<double> _animation = CurvedAnimation(
-    parent: _controller,
-    curve: Curves.fastOutSlowIn,
-  );
 
   @override
   void initState() {
     super.initState();
-    _controller.forward();
+    // Check if the user is authenticated
+    if (!AuthService.isAuthenticated) {
+      // If not, navigate to the login page
+      Future.delayed(Duration.zero, () {
+        Navigator.pushReplacementNamed(context, '/login');
+      });
+    }
   }
-
-  @override
-  void dispose() {
-    _controller.stop();
-    _controller.dispose();
-    super.dispose();
-  }
-
-  _buildAnimatedPage(page) {
-    return FadeTransition(child: page, opacity: _animation);
-  }
-
-  void onPageChanged(int index) {
-    _controller.reset();
-    setState(() {
-      _activeTab = index;
-    });
-    _controller.forward();
-  }
-
-//====== end set animation=====
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.appBgColor,
-      bottomNavigationBar: _buildBottomBar(),
-      body: _buildPage(),
+      body: AuthService.isAuthenticated
+          ? _buildMainApp() // Show main app content if authenticated
+          : Center(
+              child:
+                  CircularProgressIndicator()), // Show loading while checking
+      bottomNavigationBar:
+          AuthService.isAuthenticated ? _buildBottomBar() : null,
     );
   }
 
-  Widget _buildPage() {
+  Widget _buildMainApp() {
     return IndexedStack(
       index: _activeTab,
       children: List.generate(
         _barItems.length,
-        (index) => _buildAnimatedPage(_barItems[index]["page"]),
+        (index) => _barItems[index]["page"],
       ),
     );
   }
@@ -133,7 +96,9 @@ class _RootAppState extends State<RootApp> with TickerProviderStateMixin {
               isActive: _activeTab == index,
               activeColor: AppColor.primary,
               onTap: () {
-                onPageChanged(index);
+                setState(() {
+                  _activeTab = index;
+                });
               },
             ),
           ),

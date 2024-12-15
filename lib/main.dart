@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
-import 'screens/root_app.dart';
-import 'theme/color.dart';
+import 'package:online_course/screens/auth/forget_password.dart';
+import 'package:online_course/screens/auth/login.dart';
+import 'package:online_course/screens/auth/reset_password.dart';
+import 'package:online_course/screens/auth/signup.dart';
+import 'package:online_course/screens/root_app.dart';
+
+import 'package:online_course/theme/color.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,7 +20,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: AppColor.primary,
       ),
-      home: const RootApp(),
+      initialRoute: '/login',
+      // Default route
+      routes: {
+        '/': (context) => const RootApp(),
+        '/login': (context) => const LoginScreen(),
+        '/signup': (context) => const SignupScreen(),
+        '/forget-password': (context) => const ForgetPasswordScreen(),
+        '/reset-password': (context) => const ResetPasswordScreen(),
+      },
     );
   }
 }

@@ -5,6 +5,8 @@ import 'package:online_course/widgets/custom_image.dart';
 import 'package:online_course/widgets/setting_box.dart';
 import 'package:online_course/widgets/setting_item.dart';
 
+import '../utils/auth.dart';
+
 class AccountPage extends StatefulWidget {
   const AccountPage({Key? key}) : super(key: key);
 
@@ -236,6 +238,13 @@ class _AccountPageState extends State<AccountPage> {
         title: "Log Out",
         leadingIcon: "assets/icons/logout.svg",
         bgIconColor: AppColor.darker,
+        onTap: () {
+          // Log out the user
+          AuthService.logout();
+
+          // Redirect to the login page
+          Navigator.pushReplacementNamed(context, '/login');
+        },
       ),
     );
   }

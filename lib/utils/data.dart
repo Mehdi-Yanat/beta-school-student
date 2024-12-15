@@ -1,19 +1,19 @@
 var profile = {
-  "name": "Sangvaleap",
+  "name": "Rayan Bourakani",
   "image": "https://avatars.githubusercontent.com/u/86506519?v=4",
   "email": "sangvaleap.vanny@gmail.com"
 };
 
 List categories = [
-  {"name": "All", "icon": "assets/icons/categories/all.svg"},
-  {"name": "Coding", "icon": "assets/icons/categories/coding.svg"},
-  {"name": "Education", "icon": "assets/icons/categories/education.svg"},
-  {"name": "Design", "icon": "assets/icons/categories/design.svg"},
-  {"name": "Business", "icon": "assets/icons/categories/business.svg"},
-  {"name": "Cooking", "icon": "assets/icons/categories/cooking.svg"},
-  {"name": "Music", "icon": "assets/icons/categories/music.svg"},
-  {"name": "Art", "icon": "assets/icons/categories/art.svg"},
-  {"name": "Finance", "icon": "assets/icons/categories/finance.svg"},
+  {"name": "Mathématiques", "icon": "assets/icons/categories/all.svg"},
+  {"name": "Sciences", "icon": "assets/icons/categories/coding.svg"},
+  {"name": "Physique", "icon": "assets/icons/categories/education.svg"},
+  {"name": "Histoire", "icon": "assets/icons/categories/design.svg"},
+  {"name": "Islamiques", "icon": "assets/icons/categories/business.svg"},
+  {"name": "Arabe", "icon": "assets/icons/categories/cooking.svg"},
+  {"name": "Français", "icon": "assets/icons/categories/music.svg"},
+  {"name": "Anglais", "icon": "assets/icons/categories/art.svg"},
+  {"name": "Autres", "icon": "assets/icons/categories/finance.svg"},
 ];
 
 List courses = [
@@ -22,7 +22,7 @@ List courses = [
     "name": "UI/UX Design",
     "image":
         "https://images.unsplash.com/photo-1596638787647-904d822d751e?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$110.00",
+    "price": "DZD 1100.00",
     "duration": "10 hours",
     "session": "6 lessons",
     "review": "4.5",
@@ -35,7 +35,7 @@ List courses = [
     "name": "Programming",
     "image":
         "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$155.00",
+    "price": "DZD 1505.00",
     "duration": "20 hours",
     "session": "12 lessons",
     "review": "5",
@@ -48,7 +48,7 @@ List courses = [
     "name": "English Writing",
     "image":
         "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$65.00",
+    "price": "DZD 650.00",
     "duration": "12 hours",
     "session": "4 lessons",
     "review": "4.5",
@@ -61,7 +61,7 @@ List courses = [
     "name": "Mix Salad",
     "image":
         "https://images.unsplash.com/photo-1507048331197-7d4ac70811cf?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$80.00",
+    "price": "DZD 800.00",
     "duration": "4 hours",
     "session": "3 lessons",
     "review": "4.5",
@@ -74,7 +74,7 @@ List courses = [
     "name": "Guitar Class",
     "image":
         "https://images.unsplash.com/photo-1549298240-0d8e60513026?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$125.00",
+    "price": "DZD 1205.00",
     "duration": "12 hours",
     "session": "4 lessons",
     "review": "5",
@@ -87,7 +87,7 @@ List courses = [
     "name": "Painting",
     "image":
         "https://images.unsplash.com/photo-1596548438137-d51ea5c83ca5?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$65.00",
+    "price": "DZD 650.00",
     "duration": "12 hours",
     "session": "8 lessons",
     "review": "4.5",
@@ -100,7 +100,7 @@ List courses = [
     "name": "Communication Skill",
     "image":
         "https://images.unsplash.com/photo-1552664730-d307ca884978?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$135.00",
+    "price": "DZD 1305.00",
     "duration": "6 hours",
     "session": "4 lessons",
     "review": "4",
@@ -113,7 +113,7 @@ List courses = [
     "name": "Caster",
     "image":
         "https://images.unsplash.com/photo-1554446422-d05db23719d2?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$95.00",
+    "price": "DZD 950.00",
     "duration": "8 hours",
     "session": "4 lessons",
     "review": "4.5",
@@ -126,7 +126,7 @@ List courses = [
     "name": "Management",
     "image":
         "https://images.unsplash.com/photo-1542626991-cbc4e32524cc?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$75.00",
+    "price": "DZD 750.00",
     "duration": "9 hours",
     "session": "5 lessons",
     "review": "4.5",
@@ -142,7 +142,7 @@ List features = [
     "name": "UI/UX Design",
     "image":
         "https://images.unsplash.com/photo-1596638787647-904d822d751e?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$110.00",
+    "price": "DZD 1100.00",
     "duration": "10 hours",
     "session": "6 lessons",
     "review": "4.5",
@@ -155,7 +155,7 @@ List features = [
     "name": "Programming",
     "image":
         "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$155.00",
+    "price": "DZD 1505.00",
     "duration": "20 hours",
     "session": "12 lessons",
     "review": "5",
@@ -168,7 +168,7 @@ List features = [
     "name": "English Writing",
     "image":
         "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$65.00",
+    "price": "DZD 650.00",
     "duration": "12 hours",
     "session": "4 lessons",
     "review": "4.5",
@@ -181,7 +181,7 @@ List features = [
     "name": "Photography",
     "image":
         "https://images.unsplash.com/photo-1472393365320-db77a5abbecc?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$80.00",
+    "price": "DZD 800.00",
     "duration": "4 hours",
     "session": "3 lessons",
     "review": "4.5",
@@ -194,7 +194,7 @@ List features = [
     "name": "Guitar Class",
     "image":
         "https://images.unsplash.com/photo-1549298240-0d8e60513026?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$125.00",
+    "price": "DZD 1205.00",
     "duration": "12 hours",
     "session": "4 lessons",
     "review": "5",
@@ -210,7 +210,7 @@ List recommends = [
     "name": "Painting",
     "image":
         "https://images.unsplash.com/photo-1596548438137-d51ea5c83ca5?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$65.00",
+    "price": "DZD 650.00",
     "duration": "12 hours",
     "session": "8 lessons",
     "review": "4.5",
@@ -223,7 +223,7 @@ List recommends = [
     "name": "Social Media",
     "image":
         "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$135.00",
+    "price": "DZD 1305.00",
     "duration": "6 hours",
     "session": "4 lessons",
     "review": "4",
@@ -236,7 +236,7 @@ List recommends = [
     "name": "Caster",
     "image":
         "https://images.unsplash.com/photo-1554446422-d05db23719d2?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$95.00",
+    "price": "DZD 950.00",
     "duration": "8 hours",
     "session": "4 lessons",
     "review": "4.5",
@@ -249,7 +249,7 @@ List recommends = [
     "name": "Management",
     "image":
         "https://images.unsplash.com/photo-1542626991-cbc4e32524cc?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$75.00",
+    "price": "DZD 750.00",
     "duration": "9 hours",
     "session": "5 lessons",
     "review": "4.5",
@@ -265,7 +265,7 @@ List myProgressCourses = [
     "name": "UI/UX Design",
     "image":
         "https://images.unsplash.com/photo-1596638787647-904d822d751e?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$110.00",
+    "price": "DZD 1100.00",
     "duration": "10 hours",
     "session": "6 lessons",
     "progress": "4 lessons",
@@ -281,7 +281,7 @@ List myProgressCourses = [
     "name": "Painting",
     "image":
         "https://images.unsplash.com/photo-1596548438137-d51ea5c83ca5?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$65.00",
+    "price": "DZD 650.00",
     "duration": "12 hours",
     "session": "10 lessons",
     "progress": "3 lessons",
@@ -297,7 +297,7 @@ List myProgressCourses = [
     "name": "Mobile App Development",
     "image":
         "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$135.00",
+    "price": "DZD 1305.00",
     "duration": "30 hours",
     "session": "10 lessons",
     "progress": "2 lessons",
@@ -313,7 +313,7 @@ List myProgressCourses = [
     "name": "Photography",
     "image":
         "https://images.unsplash.com/photo-1472393365320-db77a5abbecc?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$125.00",
+    "price": "DZD 1205.00",
     "duration": "12 hours",
     "session": "5 lessons",
     "progress": "2 lessons",
@@ -332,7 +332,7 @@ List myCompleteCourses = [
     "name": "Graphic Design",
     "image":
         "https://images.unsplash.com/photo-1602576666092-bf6447a729fc?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$110.00",
+    "price": "DZD 1100.00",
     "duration": "10 hours",
     "session": "6 lessons",
     "progress": "0 lessons",
@@ -348,7 +348,7 @@ List myCompleteCourses = [
     "name": "Web Development",
     "image":
         "https://images.unsplash.com/photo-1534972195531-d756b9bfa9f2?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$155.00",
+    "price": "DZD 1505.00",
     "duration": "20 hours",
     "session": "12 lessons",
     "progress": "0 lessons",
@@ -364,7 +364,7 @@ List myCompleteCourses = [
     "name": "English Speaking",
     "image":
         "https://images.unsplash.com/photo-1565538420870-da08ff96a207?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$65.00",
+    "price": "DZD 650.00",
     "duration": "10 hours",
     "session": "8 lessons",
     "progress": "0 lessons",
@@ -380,7 +380,7 @@ List myCompleteCourses = [
     "name": "Social Media",
     "image":
         "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$135.00",
+    "price": "DZD 1305.00",
     "duration": "6 hours",
     "session": "4 lessons",
     "progress": "0 lessons",
@@ -396,7 +396,7 @@ List myCompleteCourses = [
     "name": "Internet Course",
     "image":
         "https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$125.00",
+    "price": "DZD 1205.00",
     "duration": "8 hours",
     "session": "5 lessons",
     "progress": "0 lessons",
@@ -412,7 +412,7 @@ List myCompleteCourses = [
     "name": "English Writing",
     "image":
         "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$65.00",
+    "price": "DZD 650.00",
     "duration": "12 hours",
     "session": "5 lessons",
     "progress": "0 lessons",
@@ -428,7 +428,7 @@ List myCompleteCourses = [
     "name": "Mix Salad",
     "image":
         "https://images.unsplash.com/photo-1507048331197-7d4ac70811cf?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$80.00",
+    "price": "DZD 800.00",
     "duration": "4 hours",
     "session": "4 lessons",
     "progress": "0 lessons",
@@ -444,7 +444,7 @@ List myCompleteCourses = [
     "name": "Guitar Class",
     "image":
         "https://images.unsplash.com/photo-1549298240-0d8e60513026?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price": "\$125.00",
+    "price": "DZD 1205.00",
     "duration": "12 hours",
     "session": "10 lessons",
     "progress": "0 lessons",
