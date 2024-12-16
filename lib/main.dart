@@ -16,11 +16,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Online Course App',
+      title: 'Beta Prime School',
       theme: ThemeData(
+        scaffoldBackgroundColor: AppColor.appBgColor,
         primaryColor: AppColor.primary,
       ),
-      initialRoute: '/login',
+      initialRoute: '/',
       // Default route
       routes: {
         '/': (context) => const RootApp(),

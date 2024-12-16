@@ -41,7 +41,6 @@ class _RootAppState extends State<RootApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.appBgColor,
       body: AuthService.isAuthenticated
           ? _buildMainApp() // Show main app content if authenticated
           : Center(

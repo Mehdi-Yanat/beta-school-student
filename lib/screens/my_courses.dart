@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../theme/color.dart';
+import 'package:online_course/screens/view_chapters.dart';
 import 'package:online_course/theme/color.dart';
 
 class MyCourseScreen extends StatefulWidget {
@@ -15,28 +15,32 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
     {
       'title': 'UI/UX Design',
       'image':
-          'https://images.unsplash.com/photo-1596548438137-d51ea5c83ca5?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=60', // Replace with real URL
+          'https://images.unsplash.com/photo-1596548438137-d51ea5c83ca5?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=60',
+      // Replace with real URL
       'completedLessons': 2,
       'totalLessons': 4,
     },
     {
       'title': 'Painting',
       'image':
-          'https://images.unsplash.com/photo-1596548438137-d51ea5c83ca5?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=60', // Replace with real URL
+          'https://images.unsplash.com/photo-1596548438137-d51ea5c83ca5?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=60',
+      // Replace with real URL
       'completedLessons': 7,
       'totalLessons': 10,
     },
     {
       'title': 'Mobile App Development',
       'image':
-          'https://images.unsplash.com/photo-1596548438137-d51ea5c83ca5?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=60', // Replace with real URL
+          'https://images.unsplash.com/photo-1596548438137-d51ea5c83ca5?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=60',
+      // Replace with real URL
       'completedLessons': 8,
       'totalLessons': 10,
     },
     {
       'title': 'Photography',
       'image':
-          'https://images.unsplash.com/photo-1596548438137-d51ea5c83ca5?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=60', // Replace with real URL
+          'https://images.unsplash.com/photo-1596548438137-d51ea5c83ca5?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=60',
+      // Replace with real URL
       'completedLessons': 3,
       'totalLessons': 5,
     },
@@ -162,79 +166,86 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
         final course = courses[index];
         double progress = course['completedLessons'] / course['totalLessons'];
 
-        return Container(
-          margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          padding: EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: AppColor.cardColor,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: AppColor.shadowColor.withOpacity(0.1),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: Offset(0, 3),
+        return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          ViewChapterScreen(chapterId: 'chapterId')));
+            },
+            child: Container(
+              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppColor.cardColor,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColor.shadowColor.withOpacity(0.1),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: Offset(0, 3),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Course Image
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  course['image'],
-                  width: 60,
-                  height: 60,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              SizedBox(width: 12),
-
-              // Course Details
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      course['title'],
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppColor.textColor,
-                      ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Course Image
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      course['image'],
+                      width: 60,
+                      height: 60,
+                      fit: BoxFit.cover,
                     ),
-                    SizedBox(height: 6),
-                    Row(
+                  ),
+                  SizedBox(width: 12),
+                  // Course Details
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${course['completedLessons']} lessons',
-                          style:
-                              TextStyle(color: AppColor.primary, fontSize: 12),
-                        ),
-                        Spacer(),
-                        Text(
-                          '${course['totalLessons']} lessons',
+                          course['title'],
                           style: TextStyle(
-                              color: AppColor.inActiveColor, fontSize: 12),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.textColor,
+                          ),
+                        ),
+                        SizedBox(height: 6),
+                        Row(
+                          children: [
+                            Text(
+                              '${course['completedLessons']} lessons',
+                              style: TextStyle(
+                                  color: AppColor.primary, fontSize: 12),
+                            ),
+                            Spacer(),
+                            Text(
+                              '${course['totalLessons']} lessons',
+                              style: TextStyle(
+                                  color: AppColor.inActiveColor, fontSize: 12),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 6),
+                        // Progress Bar
+                        LinearProgressIndicator(
+                          value: progress,
+                          backgroundColor: AppColor.appBgColor,
+                          color: AppColor.blue,
+                          minHeight: 5,
                         ),
                       ],
                     ),
-                    SizedBox(height: 6),
-                    // Progress Bar
-                    LinearProgressIndicator(
-                      value: progress,
-                      backgroundColor: AppColor.appBgColor,
-                      color: AppColor.blue,
-                      minHeight: 5,
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        );
+            ));
       },
     );
   }

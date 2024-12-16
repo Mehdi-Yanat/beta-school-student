@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:online_course/screens/profile/bookmark.dart';
+import 'package:online_course/screens/profile/notification.dart';
+import 'package:online_course/screens/profile/payments.dart';
+import 'package:online_course/screens/profile/privacy.dart';
+import 'package:online_course/screens/profile/settings.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:online_course/utils/data.dart';
 import 'package:online_course/widgets/custom_image.dart';
@@ -140,7 +145,7 @@ class _AccountPageState extends State<AccountPage> {
             color: AppColor.shadowColor.withOpacity(0.1),
             spreadRadius: 1,
             blurRadius: 1,
-            offset: Offset(0, 1), // changes position of shadow
+            offset: Offset(0, 1),
           ),
         ],
       ),
@@ -150,6 +155,13 @@ class _AccountPageState extends State<AccountPage> {
             title: "Setting",
             leadingIcon: "assets/icons/setting.svg",
             bgIconColor: AppColor.blue,
+            onTap: () {
+              // Navigate to Settings Page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingPage()),
+              );
+            },
           ),
           Padding(
             padding: const EdgeInsets.only(left: 45),
@@ -162,6 +174,13 @@ class _AccountPageState extends State<AccountPage> {
             title: "Payment",
             leadingIcon: "assets/icons/wallet.svg",
             bgIconColor: AppColor.green,
+            onTap: () {
+              // Navigate to Payment Page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PaymentPage()),
+              );
+            },
           ),
           Padding(
             padding: const EdgeInsets.only(left: 45),
@@ -174,6 +193,13 @@ class _AccountPageState extends State<AccountPage> {
             title: "Bookmark",
             leadingIcon: "assets/icons/bookmark.svg",
             bgIconColor: AppColor.primary,
+            onTap: () {
+              // Navigate to Bookmark Page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => BookmarkPage()),
+              );
+            },
           ),
         ],
       ),
@@ -191,7 +217,7 @@ class _AccountPageState extends State<AccountPage> {
             color: AppColor.shadowColor.withOpacity(0.1),
             spreadRadius: 1,
             blurRadius: 1,
-            offset: Offset(0, 1), // changes position of shadow
+            offset: Offset(0, 1),
           ),
         ],
       ),
@@ -201,6 +227,13 @@ class _AccountPageState extends State<AccountPage> {
             title: "Notification",
             leadingIcon: "assets/icons/bell.svg",
             bgIconColor: AppColor.purple,
+            onTap: () {
+              // Navigate to Notification Page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotificationPage()),
+              );
+            },
           ),
           Padding(
             padding: const EdgeInsets.only(left: 45),
@@ -213,6 +246,13 @@ class _AccountPageState extends State<AccountPage> {
             title: "Privacy",
             leadingIcon: "assets/icons/shield.svg",
             bgIconColor: AppColor.orange,
+            onTap: () {
+              // Navigate to Privacy Page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PrivacyPage()),
+              );
+            },
           ),
         ],
       ),
@@ -230,7 +270,7 @@ class _AccountPageState extends State<AccountPage> {
             color: AppColor.shadowColor.withOpacity(0.1),
             spreadRadius: 1,
             blurRadius: 1,
-            offset: Offset(0, 1), // changes position of shadow
+            offset: Offset(0, 1),
           ),
         ],
       ),

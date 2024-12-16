@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.sangvaleap.online_course">
+    package="com.beta.school">
 
     <!-- Flutter needs it to communicate with the running application -->
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -8,7 +8,9 @@
     <application
         android:name="${applicationName}"
         android:label="online_course"
-        tools:replace="android:label">
+        tools:replace="android:label"
+        android:usesCleartextTraffic="true"
+    >
 
         <!-- MainActivity with exported attribute -->
         <activity
