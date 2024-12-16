@@ -23,7 +23,7 @@ class NotificationBox extends StatelessWidget {
         padding: EdgeInsets.all(size),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: AppColor.appBarColor,
+          color: Colors.white,
           border: Border.all(
             color: Colors.grey.withOpacity(.3),
           ),
@@ -36,7 +36,7 @@ class NotificationBox extends StatelessWidget {
   Widget _buildIconNotified() {
     return badge_lib.Badge(
       badgeContent: Text('5'),
-      child: Icon(Icons.notifications),
+      child: Icon(Icons.notifications, color: AppColor.textColor),
     );
   }
 

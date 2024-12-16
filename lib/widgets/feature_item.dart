@@ -74,7 +74,7 @@ class FeatureItem extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: 17,
-              color: AppColor.textColor,
+              color: AppColor.mainColor,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -118,7 +118,7 @@ class FeatureItem extends StatelessWidget {
       children: [
         _getAttribute(
           Icons.play_circle_outlined,
-          AppColor.labelColor,
+          AppColor.darker,
           data["session"],
         ),
         const SizedBox(
@@ -126,7 +126,7 @@ class FeatureItem extends StatelessWidget {
         ),
         _getAttribute(
           Icons.schedule_rounded,
-          AppColor.labelColor,
+          AppColor.darker,
           data["duration"],
         ),
         const SizedBox(
@@ -156,7 +156,7 @@ class FeatureItem extends StatelessWidget {
           info,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: TextStyle(color: AppColor.labelColor, fontSize: 13),
+          style: TextStyle(color: AppColor.darker, fontSize: 13),
         ),
       ],
     );

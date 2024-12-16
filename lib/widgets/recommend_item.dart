@@ -58,7 +58,7 @@ class RecommendItem extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            color: AppColor.textColor,
+            color: AppColor.mainColor,
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
@@ -68,7 +68,7 @@ class RecommendItem extends StatelessWidget {
         ),
         Text(
           data["price"],
-          style: TextStyle(fontSize: 14, color: AppColor.textColor),
+          style: TextStyle(fontSize: 14, color: AppColor.darker),
         ),
         const SizedBox(
           height: 15,
@@ -83,7 +83,7 @@ class RecommendItem extends StatelessWidget {
       children: [
         Icon(
           Icons.schedule_rounded,
-          color: AppColor.labelColor,
+          color: AppColor.darker,
           size: 14,
         ),
         const SizedBox(
@@ -93,7 +93,7 @@ class RecommendItem extends StatelessWidget {
           data["duration"],
           style: TextStyle(
             fontSize: 12,
-            color: AppColor.labelColor,
+            color: AppColor.darker,
           ),
         ),
         const SizedBox(
@@ -111,7 +111,7 @@ class RecommendItem extends StatelessWidget {
           data["review"],
           style: TextStyle(
             fontSize: 12,
-            color: AppColor.labelColor,
+            color: AppColor.darker,
           ),
         )
       ],

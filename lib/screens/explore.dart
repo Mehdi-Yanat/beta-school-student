@@ -38,7 +38,7 @@ class ExploreScreen extends StatelessWidget {
         title: Text(
           "Explore",
           style: TextStyle(
-            color: AppColor.mainColor,
+            color: AppColor.labelColor,
             fontSize: 22,
             fontWeight: FontWeight.bold,
           ),
@@ -99,7 +99,7 @@ class ExploreScreen extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                             side: BorderSide(
-                              color: AppColor.labelColor.withOpacity(0.3),
+                              color: AppColor.darker.withOpacity(0.3),
                             ),
                           ),
                         ),
@@ -157,29 +157,26 @@ class ExploreScreen extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: AppColor.textColor,
+                                  color: AppColor.mainColor,
                                 ),
                               ),
                               SizedBox(height: 8),
                               Row(
                                 children: [
                                   Icon(Icons.attach_money,
-                                      color: AppColor.labelColor, size: 18),
+                                      color: AppColor.darker, size: 18),
                                   Text(course['price'],
-                                      style:
-                                          TextStyle(color: AppColor.textColor)),
+                                      style: TextStyle(color: AppColor.darker)),
                                   SizedBox(width: 12),
                                   Icon(Icons.play_circle_fill,
-                                      color: AppColor.labelColor, size: 18),
+                                      color: AppColor.darker, size: 18),
                                   Text(course['lessons'],
-                                      style:
-                                          TextStyle(color: AppColor.textColor)),
+                                      style: TextStyle(color: AppColor.darker)),
                                   SizedBox(width: 12),
                                   Icon(Icons.schedule,
-                                      color: AppColor.labelColor, size: 18),
+                                      color: AppColor.darker, size: 18),
                                   Text(course['duration'],
-                                      style:
-                                          TextStyle(color: AppColor.textColor)),
+                                      style: TextStyle(color: AppColor.darker)),
                                   Spacer(),
                                   Row(
                                     children: [
@@ -187,7 +184,7 @@ class ExploreScreen extends StatelessWidget {
                                           color: AppColor.yellow, size: 18),
                                       Text(course['rating'],
                                           style: TextStyle(
-                                              color: AppColor.textColor)),
+                                              color: AppColor.darker)),
                                     ],
                                   ),
                                 ],

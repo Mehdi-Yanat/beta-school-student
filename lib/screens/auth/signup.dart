@@ -56,7 +56,10 @@ class _SignupScreenState extends State<SignupScreen> {
           children: [
             SizedBox(height: 40),
             Text('Create an account',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: AppColor.textColor)),
             SizedBox(height: 10),
             Text('Enter your details below to get started.',
                 style: TextStyle(color: AppColor.textColor.withOpacity(0.7))),

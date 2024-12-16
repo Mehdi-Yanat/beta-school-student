@@ -89,35 +89,50 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
       ),
       body: Column(
         children: [
-          // Video Player Section with Visibility Detection
+          // Improved Video Player Section
           Container(
-            height: 200,
-            child: VisibilityDetector(
-              key: ObjectKey(flickManager),
-              onVisibilityChanged: (visibility) {
-                if (visibility.visibleFraction == 0 && this.mounted) {
-                  flickManager.flickControlManager?.autoPause();
-                } else if (visibility.visibleFraction == 1) {
-                  flickManager.flickControlManager?.autoResume();
-                }
-              },
-              child: FlickVideoPlayer(
-                flickManager: flickManager,
-                flickVideoWithControls: FlickVideoWithControls(
-                  controls: FlickPortraitControls(), // Portrait controls
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+            child: ClipRRect(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 8,
+                      offset: Offset(0, 2), // Shadow direction: bottom right
+                    ),
+                  ],
                 ),
-                flickVideoWithControlsFullscreen: FlickVideoWithControls(
-                  controls: FlickLandscapeControls(), // Landscape controls
+                height: MediaQuery.of(context).size.height *
+                    0.25, // Responsive height
+                child: VisibilityDetector(
+                  key: ObjectKey(flickManager),
+                  onVisibilityChanged: (visibility) {
+                    if (visibility.visibleFraction == 0 && this.mounted) {
+                      flickManager.flickControlManager?.autoPause();
+                    } else if (visibility.visibleFraction == 1) {
+                      flickManager.flickControlManager?.autoResume();
+                    }
+                  },
+                  child: FlickVideoPlayer(
+                    flickManager: flickManager,
+                    flickVideoWithControls: FlickVideoWithControls(
+                      controls: FlickPortraitControls(), // Portrait controls
+                    ),
+                    flickVideoWithControlsFullscreen: FlickVideoWithControls(
+                      controls: FlickLandscapeControls(), // Landscape controls
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
-          Divider(color: AppColor.textBoxColor),
           // Tabs for Lessons and Attachments
           TabBar(
             controller: _tabController,
             labelColor: AppColor.primary,
-            unselectedLabelColor: AppColor.textColor.withOpacity(0.6),
+            unselectedLabelColor: Colors.white,
             indicatorColor: AppColor.primary,
             tabs: [
               Tab(text: "Lessons"),

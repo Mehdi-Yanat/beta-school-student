@@ -13,12 +13,12 @@ class CourseDetailScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColor.appBgColor,
       appBar: AppBar(
-        leading: Icon(Icons.arrow_back, color: AppColor.mainColor),
+        leading: Icon(Icons.arrow_back, color: Colors.white),
         backgroundColor: AppColor.appBgColor,
         elevation: 0,
         title: Text(
           'Detail',
-          style: TextStyle(color: AppColor.mainColor),
+          style: TextStyle(color: AppColor.labelColor),
         ),
         centerTitle: true,
       ),
@@ -112,8 +112,9 @@ class CourseDetailScreen extends StatelessWidget {
               child: Column(
                 children: [
                   TabBar(
-                    labelColor: AppColor.mainColor,
+                    labelColor: AppColor.primary,
                     indicatorColor: AppColor.primary,
+                    unselectedLabelColor: Colors.white,
                     tabs: [
                       Tab(text: 'Lessons'),
                       Tab(text: 'Exercises'),
@@ -171,14 +172,14 @@ class CourseDetailScreen extends StatelessWidget {
                     children: [
                       Text(
                         'Price',
-                        style: TextStyle(color: AppColor.labelColor),
+                        style: TextStyle(color: AppColor.mainColor),
                       ),
                       Text(
-                        '\$110.00',
+                        'DZD 110.00',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: AppColor.textColor,
+                          color: AppColor.darker,
                         ),
                       ),
                     ],

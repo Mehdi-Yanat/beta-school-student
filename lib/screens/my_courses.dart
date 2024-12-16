@@ -73,7 +73,7 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
         title: Text(
           'My Course',
           style: TextStyle(
-            color: AppColor.mainColor,
+            color: AppColor.labelColor,
             fontSize: 22,
             fontWeight: FontWeight.bold,
           ),
@@ -213,7 +213,7 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: AppColor.textColor,
+                            color: AppColor.mainColor,
                           ),
                         ),
                         SizedBox(height: 6),
@@ -222,7 +222,7 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                             Text(
                               '${course['completedLessons']} lessons',
                               style: TextStyle(
-                                  color: AppColor.primary, fontSize: 12),
+                                  color: AppColor.textColor, fontSize: 12),
                             ),
                             Spacer(),
                             Text(

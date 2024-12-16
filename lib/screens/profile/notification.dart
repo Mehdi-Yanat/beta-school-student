@@ -12,7 +12,7 @@ class NotificationPage extends StatelessWidget {
             Text('Notifications', style: TextStyle(color: AppColor.textColor)),
         backgroundColor: AppColor.appBarColor,
         centerTitle: true,
-        iconTheme: IconThemeData(color: AppColor.textColor),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: ListView(
         children: [

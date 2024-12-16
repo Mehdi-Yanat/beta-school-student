@@ -10,7 +10,7 @@ class PaymentPage extends StatelessWidget {
         title: Text('Payment', style: TextStyle(color: AppColor.textColor)),
         backgroundColor: AppColor.appBarColor,
         centerTitle: true,
-        iconTheme: IconThemeData(color: AppColor.textColor),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: ListView(
         children: [

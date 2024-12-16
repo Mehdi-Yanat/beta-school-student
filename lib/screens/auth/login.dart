@@ -54,7 +54,10 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             SizedBox(height: 40),
             Text('Welcome back!',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: AppColor.textColor)),
             SizedBox(height: 10),
             Text('Please sign in to continue.',
                 style: TextStyle(color: AppColor.textColor.withOpacity(0.7))),

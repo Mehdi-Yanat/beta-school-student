@@ -3,6 +3,7 @@ import 'package:online_course/screens/auth/forget_password.dart';
 import 'package:online_course/screens/auth/login.dart';
 import 'package:online_course/screens/auth/reset_password.dart';
 import 'package:online_course/screens/auth/signup.dart';
+import 'package:online_course/screens/profile/settings.dart';
 import 'package:online_course/screens/root_app.dart';
 
 import 'package:online_course/theme/color.dart';
@@ -19,7 +20,11 @@ class MyApp extends StatelessWidget {
       title: 'Beta Prime School',
       theme: ThemeData(
         scaffoldBackgroundColor: AppColor.appBgColor,
-        primaryColor: AppColor.primary,
+        appBarTheme: AppBarTheme(
+          iconTheme: IconThemeData(
+            color: Colors.white, // Set default back icon color
+          ),
+        ),
       ),
       initialRoute: '/',
       // Default route

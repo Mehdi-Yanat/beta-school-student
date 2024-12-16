@@ -10,7 +10,7 @@ class BookmarkPage extends StatelessWidget {
         title: Text('Bookmarks', style: TextStyle(color: AppColor.textColor)),
         backgroundColor: AppColor.appBarColor,
         centerTitle: true,
-        iconTheme: IconThemeData(color: AppColor.textColor),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: ListView.builder(
         itemCount: 10, // Assuming you have a list of bookmarks

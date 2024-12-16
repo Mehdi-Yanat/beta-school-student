@@ -21,7 +21,10 @@ class ResetPasswordScreen extends StatelessWidget {
           children: [
             SizedBox(height: 40),
             Text('Reset your password',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: AppColor.textColor)),
             SizedBox(height: 10),
             Text('Enter your new password below.',
                 style: TextStyle(color: AppColor.textColor.withOpacity(0.7))),
