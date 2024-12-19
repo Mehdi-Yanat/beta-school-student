@@ -30,11 +30,10 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.transparent,
         ),
       ),
-      initialRoute: '/splash',
+      home: const SplashScreen(),
       // Default route
       routes: {
-        '/splash': (context) => SplashScreen(),
-        '/': (context) => const RootApp(),
+        '/root': (context) => const RootApp(),
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignupScreen(),
         '/forget-password': (context) => const ForgetPasswordScreen(),

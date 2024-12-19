@@ -31,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       _isLoading = false;
       if (success) {
-        Navigator.pushReplacementNamed(context, '/');
+        Navigator.pushReplacementNamed(context, '/root');
       } else {
         _errorMessage = 'Invalid email or password.';
       }

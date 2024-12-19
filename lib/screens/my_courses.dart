@@ -249,7 +249,7 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                       LinearProgressIndicator(
                         value: progress,
                         backgroundColor: AppColor.appBgColor,
-                        color: AppColor.blue,
+                        color: AppColor.primary,
                         minHeight: 5,
                       ),
                     ],

@@ -33,7 +33,7 @@ class _SignupScreenState extends State<SignupScreen> {
     setState(() {
       _isLoading = false;
       if (success) {
-        Navigator.pushReplacementNamed(context, '/');
+        Navigator.pushReplacementNamed(context, '/root');
       } else {
         _errorMessage = 'Signup failed. Try again.';
       }
