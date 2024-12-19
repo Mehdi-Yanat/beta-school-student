@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:online_course/theme/color.dart';
 
+import '../widgets/appbar.dart';
+
 class ExploreScreen extends StatelessWidget {
   final List<Map<String, String>> categories = [
-    {'name': 'All', 'icon': 'assets/icons/all.png'},
-    {'name': 'Coding', 'icon': 'assets/icons/coding.png'},
-    {'name': 'Education', 'icon': 'assets/icons/education.png'},
-    {'name': 'Design', 'icon': 'assets/icons/design.png'},
+    {'name': 'Tout'},
+    {'name': 'Mathematics'},
+    {'name': 'Science'},
+    {'name': 'Physics'},
+    {'name': 'History & Geography'},
+    {'name': 'Islamic Studies'},
+    {'name': 'Arabic'},
+    {'name': 'French'},
+    {'name': 'English'},
+    {'name': 'Auture'},
   ];
 
   final List<Map<String, dynamic>> courses = [
@@ -34,19 +42,7 @@ class ExploreScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.appBgColor,
-      appBar: AppBar(
-        title: Text(
-          "Explore",
-          style: TextStyle(
-            color: AppColor.labelColor,
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        elevation: 0,
-        backgroundColor: AppColor.appBarColor,
-        centerTitle: false,
-      ),
+      appBar: const CustomAppBar(title: 'Explore'),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -82,29 +78,29 @@ class ExploreScreen extends StatelessWidget {
           // Categories
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              children: categories
-                  .map((category) => Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Chip(
-                          label: Text(category['name']!),
-                          backgroundColor: category['name'] == 'All'
-                              ? AppColor.primary
-                              : AppColor.cardColor,
-                          labelStyle: TextStyle(
-                            color: category['name'] == 'All'
-                                ? AppColor.glassTextColor
-                                : AppColor.mainColor,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            side: BorderSide(
-                              color: AppColor.darker.withOpacity(0.3),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: categories
+                    .map((category) => Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Chip(
+                            label: Text(category['name']!),
+                            backgroundColor: category['name'] == 'All'
+                                ? AppColor.primary
+                                : AppColor.cardColor,
+                            labelStyle: TextStyle(
+                              color: category['name'] == 'All'
+                                  ? AppColor.glassTextColor
+                                  : AppColor.mainColor,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
                             ),
                           ),
-                        ),
-                      ))
-                  .toList(),
+                        ))
+                    .toList(),
+              ),
             ),
           ),
 

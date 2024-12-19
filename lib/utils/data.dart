@@ -5,15 +5,16 @@ var profile = {
 };
 
 List categories = [
-  {"name": "Mathématiques", "icon": "assets/icons/categories/all.svg"},
-  {"name": "Sciences", "icon": "assets/icons/categories/coding.svg"},
-  {"name": "Physique", "icon": "assets/icons/categories/education.svg"},
-  {"name": "Histoire", "icon": "assets/icons/categories/design.svg"},
-  {"name": "Islamiques", "icon": "assets/icons/categories/business.svg"},
-  {"name": "Arabe", "icon": "assets/icons/categories/cooking.svg"},
-  {"name": "Français", "icon": "assets/icons/categories/music.svg"},
-  {"name": "Anglais", "icon": "assets/icons/categories/art.svg"},
-  {"name": "Autres", "icon": "assets/icons/categories/finance.svg"},
+  {"name": "Tout", "icon": "assets/icons/categories/all.svg"},
+  {"name": "Mathématiques", "icon": "assets/icons/categories/mathematics.svg"},
+  {"name": "Sciences", "icon": "assets/icons/categories/science.svg"},
+  {"name": "Physique", "icon": "assets/icons/categories/physics.svg"},
+  {"name": "Histoire", "icon": "assets/icons/categories/geography.svg"},
+  {"name": "Islamiques", "icon": "assets/icons/categories/islamic.svg"},
+  {"name": "Arabe", "icon": "assets/icons/categories/ar-language-icon.svg"},
+  {"name": "Français", "icon": "assets/icons/categories/fr-language-icon.svg"},
+  {"name": "Anglais", "icon": "assets/icons/categories/en-language-icon.svg"},
+  {"name": "Autres", "icon": "assets/icons/categories/other.svg"},
 ];
 
 List courses = [

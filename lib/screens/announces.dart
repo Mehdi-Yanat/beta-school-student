@@ -3,14 +3,14 @@ import 'package:online_course/utils/data.dart';
 import 'package:online_course/widgets/chat_item.dart';
 import 'package:online_course/widgets/custom_textfield.dart';
 
-class ChatPage extends StatefulWidget {
-  const ChatPage({Key? key}) : super(key: key);
+class AnnouncesPage extends StatefulWidget {
+  const AnnouncesPage({Key? key}) : super(key: key);
 
   @override
-  _ChatPageState createState() => _ChatPageState();
+  _AnnouncesPageState createState() => _AnnouncesPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _AnnouncesPageState extends State<AnnouncesPage> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -30,7 +30,7 @@ class _ChatPageState extends State<ChatPage> {
       child: Column(
         children: [
           Text(
-            "Chat",
+            "Annonces",
             style: TextStyle(
               fontSize: 28,
               color: Colors.black87,

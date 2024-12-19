@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:online_course/screens/view_chapters.dart';
 import 'package:online_course/theme/color.dart';
 
+import '../widgets/appbar.dart';
+
 class MyCourseScreen extends StatefulWidget {
   @override
   _MyCourseScreenState createState() => _MyCourseScreenState();
@@ -10,13 +12,15 @@ class MyCourseScreen extends StatefulWidget {
 class _MyCourseScreenState extends State<MyCourseScreen> {
   int selectedTabIndex = 0;
 
+  // PageController for managing PageView
+  final PageController _pageController = PageController();
+
   // Dummy course data
   final List<Map<String, dynamic>> coursesInProgress = [
     {
       'title': 'UI/UX Design',
       'image':
           'https://images.unsplash.com/photo-1596548438137-d51ea5c83ca5?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=60',
-      // Replace with real URL
       'completedLessons': 2,
       'totalLessons': 4,
     },
@@ -24,25 +28,8 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
       'title': 'Painting',
       'image':
           'https://images.unsplash.com/photo-1596548438137-d51ea5c83ca5?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=60',
-      // Replace with real URL
       'completedLessons': 7,
       'totalLessons': 10,
-    },
-    {
-      'title': 'Mobile App Development',
-      'image':
-          'https://images.unsplash.com/photo-1596548438137-d51ea5c83ca5?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=60',
-      // Replace with real URL
-      'completedLessons': 8,
-      'totalLessons': 10,
-    },
-    {
-      'title': 'Photography',
-      'image':
-          'https://images.unsplash.com/photo-1596548438137-d51ea5c83ca5?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=60',
-      // Replace with real URL
-      'completedLessons': 3,
-      'totalLessons': 5,
     },
   ];
 
@@ -67,98 +54,117 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.appBgColor,
-      appBar: AppBar(
-        backgroundColor: AppColor.appBarColor,
-        elevation: 0,
-        title: Text(
-          'My Course',
-          style: TextStyle(
-            color: AppColor.labelColor,
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: false,
-      ),
+      appBar: const CustomAppBar(title: 'My Courses'),
       body: Column(
         children: [
           // Tab Bar
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedTabIndex = 0;
-                    });
-                  },
-                  child: Column(
-                    children: [
-                      Text(
-                        'Progress (4)',
-                        style: TextStyle(
-                          color: selectedTabIndex == 0
-                              ? AppColor.primary
-                              : AppColor.labelColor,
-                          fontWeight: FontWeight.bold,
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Progress Tab
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedTabIndex = 0;
+                      });
+                      // Animate PageView to index 0
+                      _pageController.animateToPage(
+                        0,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        Text(
+                          'Progress (${coursesInProgress.length})',
+                          style: TextStyle(
+                            color: selectedTabIndex == 0
+                                ? AppColor.primary
+                                : AppColor.mainColor,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 4),
-                      if (selectedTabIndex == 0)
-                        Container(
-                          height: 2,
-                          color: AppColor.primary,
-                          width: 60,
-                        ),
-                    ],
+                        const SizedBox(height: 10),
+                        if (selectedTabIndex == 0)
+                          Container(
+                            height: 2,
+                            color: AppColor.primary,
+                            width: 60,
+                          ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedTabIndex = 1;
-                    });
-                  },
-                  child: Column(
-                    children: [
-                      Text(
-                        'Completed (8)',
-                        style: TextStyle(
-                          color: selectedTabIndex == 1
-                              ? AppColor.primary
-                              : AppColor.labelColor,
-                          fontWeight: FontWeight.bold,
+                // Completed Tab
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedTabIndex = 1;
+                      });
+                      // Animate PageView to index 1
+                      _pageController.animateToPage(
+                        1,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        Text(
+                          'Completed (${completedCourses.length})',
+                          style: TextStyle(
+                            color: selectedTabIndex == 1
+                                ? AppColor.primary
+                                : AppColor.mainColor,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 4),
-                      if (selectedTabIndex == 1)
-                        Container(
-                          height: 2,
-                          color: AppColor.primary,
-                          width: 60,
-                        ),
-                    ],
+                        const SizedBox(height: 10),
+                        if (selectedTabIndex == 1)
+                          Container(
+                            height: 2,
+                            color: AppColor.primary,
+                            width: 60,
+                          ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
 
-          // Course List
+          // PageView for swiping between Progress and Completed
           Expanded(
-            child: selectedTabIndex == 0
-                ? buildCourseList(coursesInProgress)
-                : buildCourseList(completedCourses),
+            child: PageView(
+              controller: _pageController,
+              onPageChanged: (index) {
+                // Update selectedTabIndex when user swipes
+                setState(() {
+                  selectedTabIndex = index;
+                });
+              },
+              children: [
+                // Progress Courses
+                buildCourseList(coursesInProgress),
+
+                // Completed Courses
+                buildCourseList(completedCourses),
+              ],
+            ),
           ),
         ],
       ),
     );
   }
 
+  // List of courses (shared for Progress and Completed)
   Widget buildCourseList(List<Map<String, dynamic>> courses) {
     return ListView.builder(
       itemCount: courses.length,
@@ -167,85 +173,92 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
         double progress = course['completedLessons'] / course['totalLessons'];
 
         return GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          ViewChapterScreen(chapterId: 'chapterId')));
-            },
-            child: Container(
-              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppColor.cardColor,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColor.shadowColor.withOpacity(0.1),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: Offset(0, 3),
-                  ),
-                ],
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    ViewChapterScreen(chapterId: 'chapterId'), // Dummy id
               ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Course Image
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      course['image'],
-                      width: 60,
-                      height: 60,
-                      fit: BoxFit.cover,
-                    ),
+            );
+          },
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColor.cardColor,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColor.shadowColor.withOpacity(0.1),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Course Image
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    course['image'],
+                    width: 60,
+                    height: 60,
+                    fit: BoxFit.cover,
                   ),
-                  SizedBox(width: 12),
-                  // Course Details
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          course['title'],
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: AppColor.mainColor,
+                ),
+                const SizedBox(width: 12),
+                // Course Details
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        course['title'],
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.mainColor,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
+                        children: [
+                          Text(
+                            '${course['completedLessons']} lessons',
+                            style: TextStyle(
+                              color: AppColor.textColor,
+                              fontSize: 12,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 6),
-                        Row(
-                          children: [
-                            Text(
-                              '${course['completedLessons']} lessons',
-                              style: TextStyle(
-                                  color: AppColor.textColor, fontSize: 12),
+                          const Spacer(),
+                          Text(
+                            '${course['totalLessons']} lessons',
+                            style: TextStyle(
+                              color: AppColor.inActiveColor,
+                              fontSize: 12,
                             ),
-                            Spacer(),
-                            Text(
-                              '${course['totalLessons']} lessons',
-                              style: TextStyle(
-                                  color: AppColor.inActiveColor, fontSize: 12),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 6),
-                        // Progress Bar
-                        LinearProgressIndicator(
-                          value: progress,
-                          backgroundColor: AppColor.appBgColor,
-                          color: AppColor.blue,
-                          minHeight: 5,
-                        ),
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      // Progress Bar
+                      LinearProgressIndicator(
+                        value: progress,
+                        backgroundColor: AppColor.appBgColor,
+                        color: AppColor.blue,
+                        minHeight: 5,
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ));
+                ),
+              ],
+            ),
+          ),
+        );
       },
     );
   }

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flick_video_player/flick_video_player.dart';
+import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-import 'package:screen_protector/screen_protector.dart'; // Import screen_protector package
+import 'package:screen_protector/screen_protector.dart';
 
 import '../theme/color.dart';
+import '../widgets/appbar.dart';
 
 class ViewChapterScreen extends StatefulWidget {
   final String chapterId;
@@ -19,9 +20,8 @@ class ViewChapterScreen extends StatefulWidget {
 class _ViewChapterScreenState extends State<ViewChapterScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-
-  // FlickManager controller for video playback
-  late FlickManager flickManager;
+  late VideoPlayerController _videoController;
+  ChewieController? _chewieController;
 
   final List<Map<String, String>> _episodes = [
     {
@@ -36,12 +36,6 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
       "url":
           "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
     },
-    {
-      "title": "Wireframing",
-      "duration": "15 minutes",
-      "url":
-          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
-    },
   ];
 
   @override
@@ -49,90 +43,76 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
 
-    // Initialize FlickManager with the first episode URL
-    flickManager = FlickManager(
-      videoPlayerController:
-          VideoPlayerController.network(_episodes[0]['url']!),
-    );
-
-    // Protect the screen to prevent screen recording or leakage
+    _initializeVideo(_episodes[0]['url']!);
     ScreenProtector.protectDataLeakageWithBlur();
   }
 
-  void _changeVideo(String url) {
-    // Dispose the current flickManager and create a new one
-    flickManager.dispose();
-    flickManager = FlickManager(
-      videoPlayerController: VideoPlayerController.network(url),
+  Future<void> _initializeVideo(String url) async {
+    _videoController = VideoPlayerController.network(url);
+    await _videoController.initialize();
+    _chewieController?.dispose(); // Dispose of any previous Chewie controller
+    _chewieController = ChewieController(
+      videoPlayerController: _videoController,
+      autoPlay: true,
+      looping: false,
+      allowFullScreen: true,
+      allowMuting: true,
+      materialProgressColors: ChewieProgressColors(
+        playedColor: AppColor.primary,
+        handleColor: AppColor.primary,
+        backgroundColor: Colors.white10,
+        bufferedColor: Colors.white38,
+      ),
     );
-    setState(() {}); // Rebuild the widget to reflect the new video
+    setState(() {});
   }
 
   @override
   void dispose() {
-    flickManager.dispose();
+    _videoController.dispose();
+    _chewieController?.dispose();
+    _tabController.dispose();
     super.dispose();
+  }
+
+  void _changeVideo(String url) {
+    _initializeVideo(url);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.appBgColor,
-      appBar: AppBar(
-        title: Text(
-          "UI/UX Design",
-          style: TextStyle(color: AppColor.textColor),
-        ),
-        backgroundColor: AppColor.appBarColor,
-        centerTitle: true,
-        iconTheme: IconThemeData(color: AppColor.textColor),
-      ),
+      appBar: const CustomAppBar(title: 'UI/UX Design'),
       body: Column(
         children: [
-          // Improved Video Player Section
+          // Video Player Section
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-            child: ClipRRect(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 8,
-                      offset: Offset(0, 2), // Shadow direction: bottom right
+            height: MediaQuery.of(context).size.height * 0.3,
+            color: Colors.black,
+            child: VisibilityDetector(
+              key: ObjectKey(_videoController),
+              onVisibilityChanged: (visibility) {
+                if (visibility.visibleFraction == 0) {
+                  _videoController.pause();
+                }
+              },
+              child: _chewieController != null &&
+                      _chewieController!
+                          .videoPlayerController.value.isInitialized
+                  ? Chewie(controller: _chewieController!)
+                  : Center(
+                      child: CircularProgressIndicator(
+                        color: AppColor.primary,
+                      ),
                     ),
-                  ],
-                ),
-                height: MediaQuery.of(context).size.height *
-                    0.25, // Responsive height
-                child: VisibilityDetector(
-                  key: ObjectKey(flickManager),
-                  onVisibilityChanged: (visibility) {
-                    if (visibility.visibleFraction == 0 && this.mounted) {
-                      flickManager.flickControlManager?.autoPause();
-                    } else if (visibility.visibleFraction == 1) {
-                      flickManager.flickControlManager?.autoResume();
-                    }
-                  },
-                  child: FlickVideoPlayer(
-                    flickManager: flickManager,
-                    flickVideoWithControls: FlickVideoWithControls(
-                      controls: FlickPortraitControls(), // Portrait controls
-                    ),
-                    flickVideoWithControlsFullscreen: FlickVideoWithControls(
-                      controls: FlickLandscapeControls(), // Landscape controls
-                    ),
-                  ),
-                ),
-              ),
             ),
           ),
-          // Tabs for Lessons and Attachments
+          // Tabs Section
           TabBar(
             controller: _tabController,
             labelColor: AppColor.primary,
-            unselectedLabelColor: Colors.white,
+            unselectedLabelColor: AppColor.mainColor,
             indicatorColor: AppColor.primary,
             tabs: [
               Tab(text: "Lessons"),
@@ -161,8 +141,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                             color: AppColor.textColor.withOpacity(0.7)),
                       ),
                       onTap: () {
-                        _changeVideo(
-                            episode["url"]!); // Change the video when tapped
+                        _changeVideo(episode["url"]!);
                       },
                     );
                   },

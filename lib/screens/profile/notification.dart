@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../../theme/color.dart';
+import '../../widgets/appbar.dart';
 
 class NotificationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.appBgColor,
-      appBar: AppBar(
-        title:
-            Text('Notifications', style: TextStyle(color: AppColor.textColor)),
-        backgroundColor: AppColor.appBarColor,
-        centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.white),
-      ),
+      appBar: const CustomAppBar(title: 'Notifications'),
       body: ListView(
         children: [
           ListTile(

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:online_course/screens/account.dart';
-import 'package:online_course/screens/chat.dart';
+import 'package:online_course/screens/announces.dart';
 import 'package:online_course/screens/explore.dart';
 import 'package:online_course/screens/home.dart';
 import 'package:online_course/screens/my_courses.dart';
 import 'package:online_course/theme/color.dart';
 
 import '../utils/auth.dart';
+import '../widgets/bottombar_box.dart';
 import '../widgets/bottombar_item.dart'; // Import AuthService
 
 class RootApp extends StatefulWidget {
@@ -22,7 +23,7 @@ class _RootAppState extends State<RootApp> {
     {"icon": "assets/icons/home.svg", "page": HomePage()},
     {"icon": "assets/icons/search.svg", "page": ExploreScreen()},
     {"icon": "assets/icons/play.svg", "page": MyCourseScreen()},
-    {"icon": "assets/icons/chat.svg", "page": ChatPage()},
+    {"icon": "assets/icons/chat.svg", "page": AnnouncesPage()},
     {"icon": "assets/icons/profile.svg", "page": AccountPage()},
   ];
 
@@ -62,45 +63,19 @@ class _RootAppState extends State<RootApp> {
   }
 
   Widget _buildBottomBar() {
-    return Container(
-      height: 75,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: AppColor.bottomBarColor,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(25),
-          topRight: Radius.circular(25),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColor.shadowColor.withOpacity(0.1),
-            blurRadius: 1,
-            spreadRadius: 1,
-            offset: Offset(1, 1),
-          )
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.only(
-          left: 25,
-          right: 25,
-          bottom: 15,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: List.generate(
-            _barItems.length,
-            (index) => BottomBarItem(
-              _barItems[index]["icon"],
-              isActive: _activeTab == index,
-              activeColor: AppColor.primary,
-              onTap: () {
-                setState(() {
-                  _activeTab = index;
-                });
-              },
-            ),
-          ),
+    return CustomBottomBar(
+      children: List.generate(
+        _barItems.length,
+        (index) => BottomBarItem(
+          _barItems[index]["icon"],
+          isActive: _activeTab == index,
+          activeColor: AppColor.primary,
+          color: AppColor.mainColor,
+          onTap: () {
+            setState(() {
+              _activeTab = index;
+            });
+          },
         ),
       ),
     );

@@ -3,12 +3,13 @@
     <!-- Flutter needs it to communicate with the running application -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-            android:label="online_course"
+            android:label="Beta Prime School"
             android:icon="@mipmap/ic_launcher"
             android:usesCleartextTraffic="true"
     >
         <activity
                 android:name=".MainActivity"
+                android:label="Beta Prime School"
                 android:exported="true"
                 android:launchMode="singleTop"
                 android:theme="@style/LaunchTheme"

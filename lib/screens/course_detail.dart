@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:online_course/theme/color.dart';
 import '../utils/data.dart';
+import '../widgets/appbar.dart';
 
 class CourseDetailScreen extends StatelessWidget {
   final String courseId;
@@ -12,16 +13,7 @@ class CourseDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.appBgColor,
-      appBar: AppBar(
-        leading: Icon(Icons.arrow_back, color: Colors.white),
-        backgroundColor: AppColor.appBgColor,
-        elevation: 0,
-        title: Text(
-          'Detail',
-          style: TextStyle(color: AppColor.labelColor),
-        ),
-        centerTitle: true,
-      ),
+      appBar: const CustomAppBar(title: 'Course Detail'),
       body: Container(
         color: AppColor.appBgColor,
         child: Column(

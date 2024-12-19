@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../theme/color.dart';
+import '../../widgets/appbar.dart';
 
 class SettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.appBgColor,
-      appBar: AppBar(
-        title: Text('Settings', style: TextStyle(color: AppColor.textColor)),
-        backgroundColor: AppColor.appBarColor,
-        centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.white),
-      ),
+      appBar: const CustomAppBar(title: 'Settings'),
       body: ListView(
         children: [
           ListTile(

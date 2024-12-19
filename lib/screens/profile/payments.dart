@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../theme/color.dart';
+import '../../widgets/appbar.dart';
 
 class PaymentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.appBgColor,
-      appBar: AppBar(
-        title: Text('Payment', style: TextStyle(color: AppColor.textColor)),
-        backgroundColor: AppColor.appBarColor,
-        centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.white),
-      ),
+      appBar: const CustomAppBar(title: 'Payments'),
       body: ListView(
         children: [
           ListTile(

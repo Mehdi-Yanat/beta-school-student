@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../../theme/color.dart';
+import '../../widgets/appbar.dart';
 
 class PrivacyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.appBgColor,
-      appBar: AppBar(
-        title: Text('Privacy', style: TextStyle(color: AppColor.textColor)),
-        backgroundColor: AppColor.appBarColor,
-        centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.white),
-      ),
+      appBar: const CustomAppBar(title: 'Privacy'),
       body: ListView(
         children: [
           ListTile(

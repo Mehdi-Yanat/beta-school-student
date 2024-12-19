@@ -8,6 +8,8 @@ import 'package:online_course/widgets/feature_item.dart';
 import 'package:online_course/widgets/notification_box.dart';
 import 'package:online_course/widgets/recommend_item.dart';
 
+import '../widgets/sliver_app_bar.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -22,11 +24,11 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: AppColor.appBgColor,
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
-            backgroundColor: AppColor.appBarColor,
+          CustomSliverAppBar(
             pinned: true,
             snap: true,
             floating: true,
+            toolbarHeight: 70,
             title: _buildAppBar(),
           ),
           SliverList(
@@ -92,7 +94,7 @@ class _HomePageState extends State<HomePage> {
             child: Text(
               "Featured",
               style: TextStyle(
-                color: AppColor.textColor,
+                color: AppColor.mainColor,
                 fontWeight: FontWeight.w600,
                 fontSize: 24,
               ),
@@ -112,7 +114,7 @@ class _HomePageState extends State<HomePage> {
                   style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w600,
-                      color: AppColor.textColor),
+                      color: AppColor.mainColor),
                 ),
                 Text(
                   "See all",
@@ -137,7 +139,7 @@ class _HomePageState extends State<HomePage> {
           (index) => Padding(
             padding: const EdgeInsets.only(right: 15),
             child: CategoryBox(
-              selectedColor: Colors.white,
+              selectedColor: AppColor.mainColor,
               data: categories[index],
               onTap: null,
             ),

@@ -17,15 +17,21 @@ dependencies:
   cached_network_image: ^3.1.0
   badges: ^3.1.2
   carousel_slider: ^5.0.0
-  flick_video_player: ^0.9.0
+  chewie: ^1.8.5
   video_player: ^2.8.2
   url_launcher: ^6.3.1
   screen_protector: ^1.4.2+1
   visibility_detector: ^0.4.0+2
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.13.1
   flutter_test:
     sdk: flutter
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/app_icon.png"
 
 flutter:
 
@@ -34,3 +40,4 @@ flutter:
   assets:
     - assets/icons/
     - assets/icons/categories/
+    - assets/logo.png

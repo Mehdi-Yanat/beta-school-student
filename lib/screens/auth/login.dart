@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:online_course/theme/color.dart';
 import '../../utils/auth.dart';
+import '../../widgets/gradient_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,10 +19,10 @@ class _LoginScreenState extends State<LoginScreen> {
   void _login() async {
     setState(() {
       _isLoading = true;
-      _errorMessage = ''; // Clear error message
+      _errorMessage = '';
     });
 
-    // Attempt login with the AuthService
+    // Attempt login
     bool success = await AuthService.login(
       _emailController.text,
       _passwordController.text,
@@ -30,7 +31,6 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       _isLoading = false;
       if (success) {
-        // Navigate to the home screen or main app page
         Navigator.pushReplacementNamed(context, '/');
       } else {
         _errorMessage = 'Invalid email or password.';
@@ -42,108 +42,133 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.appBgColor,
-      appBar: AppBar(
-        title: Text('Login', style: TextStyle(color: AppColor.textColor)),
-        backgroundColor: AppColor.appBarColor,
-        elevation: 0,
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: ListView(
-          children: [
-            SizedBox(height: 40),
-            Text('Welcome back!',
-                style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: AppColor.textColor)),
-            SizedBox(height: 10),
-            Text('Please sign in to continue.',
-                style: TextStyle(color: AppColor.textColor.withOpacity(0.7))),
-            SizedBox(height: 40),
-            TextField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                hintText: 'Email Address',
-                prefixIcon: Icon(Icons.email, color: AppColor.textColor),
-                filled: true,
-                fillColor: AppColor.textBoxColor,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-              keyboardType: TextInputType.emailAddress,
-            ),
-            SizedBox(height: 16),
-            TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(
-                hintText: 'Password',
-                prefixIcon: Icon(Icons.lock, color: AppColor.textColor),
-                filled: true,
-                fillColor: AppColor.textBoxColor,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-              obscureText: true,
-            ),
-            SizedBox(height: 20),
-            // Only show the loading spinner if _isLoading is true
-            if (_isLoading)
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: ListView(
+            children: [
+              SizedBox(height: 40),
+
+              // Logo
               Center(
-                child: CircularProgressIndicator(),
+                child: Image.asset(
+                  'assets/logo.png', // Path to your logo in the assets folder
+                  height: 80,
+                  color: AppColor.primary,
+                ),
               ),
-            if (_errorMessage.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Text(
+              SizedBox(height: 20),
+
+              // Welcome Message
+              Text(
+                'Welcome Back!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: AppColor.primary,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Sign in to access your courses.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: AppColor.textColor.withOpacity(0.7),
+                  fontSize: 16,
+                ),
+              ),
+              SizedBox(height: 40),
+
+              // Email Field
+              TextField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  hintText: 'Email Address',
+                  prefixIcon: Icon(Icons.email, color: AppColor.textColor),
+                  filled: true,
+                  fillColor: AppColor.textBoxColor,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+                keyboardType: TextInputType.emailAddress,
+              ),
+              SizedBox(height: 16),
+
+              // Password Field
+              TextField(
+                controller: _passwordController,
+                decoration: InputDecoration(
+                  hintText: 'Password',
+                  prefixIcon: Icon(Icons.lock, color: AppColor.textColor),
+                  filled: true,
+                  fillColor: AppColor.textBoxColor,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+                obscureText: true,
+              ),
+              SizedBox(height: 20),
+
+              // Error Message
+              if (_errorMessage.isNotEmpty)
+                Text(
                   _errorMessage,
-                  style: TextStyle(color: Colors.red),
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 14,
+                  ),
                   textAlign: TextAlign.center,
                 ),
+
+              // Login Button
+              SizedBox(height: 20),
+              GradientButton(
+                text: _isLoading ? 'Loading...' : 'Login',
+                variant: 'primary',
+                color: Colors.white,
+                disabled: _isLoading,
+                onTap: _isLoading ? () => {} : _login,
               ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed:
-                  _isLoading ? null : _login, // Disable button during loading
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColor.primary,
-                padding: EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
+              SizedBox(height: 20),
+
+              // Signup and Forgot Password
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Don\'t have an account? ',
+                    style: TextStyle(color: AppColor.textColor),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pushNamed(context, '/signup'),
+                    child: Text(
+                      'Sign up',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.primary,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              child: Text('Login', style: TextStyle(color: Colors.white)),
-            ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Don\'t have an account?',
-                    style: TextStyle(color: AppColor.textColor)),
-                TextButton(
+              Center(
+                child: TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/signup');
+                    Navigator.pushNamed(context, '/forget-password');
                   },
-                  child: Text('Sign up',
-                      style: TextStyle(color: AppColor.primary)),
+                  child: Text(
+                    'Forgot Password?',
+                    style: TextStyle(color: AppColor.primary),
+                  ),
                 ),
-              ],
-            ),
-            SizedBox(height: 20),
-            Center(
-              child: TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/forget-password');
-                },
-                child: Text('Forgot Password?',
-                    style: TextStyle(color: AppColor.primary)),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -7,7 +7,7 @@
 
     <application
         android:name="${applicationName}"
-        android:label="online_course"
+        android:label="Beta Prime School"
         tools:replace="android:label"
         android:usesCleartextTraffic="true"
     >
@@ -15,7 +15,7 @@
         <!-- MainActivity with exported attribute -->
         <activity
             android:name=".MainActivity"
-            android:label="flutter_app"
+            android:label="Beta Prime School"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|screenLayout|fontScale|layoutDirection"
             android:hardwareAccelerated="true"

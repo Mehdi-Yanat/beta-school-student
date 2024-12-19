@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class AppColor {
-  static const bottomBarColor = Color(0x1D030C1D);
+  static const bottomBarColor = Color(0xFF030C1D);
 
   // React's "background.default" is mapped to Flutter's "appBgColor"
-  static const appBgColor = Color(0xFF030C1D);
+  static const appBgColor = Color(0xFFFFFFFF);
 
   // React's "text.main" is mapped to Flutter's "textColor"
   static const textColor = Color(0xFFA0AEC0);
@@ -61,7 +61,7 @@ class AppColor {
   static const glassLabelColor = Color(0xFFE2E8F0);
 
   // React's "dark.body" is mapped to Flutter's "appBarColor"
-  static const appBarColor = Color(0x1D030C1D);
+  static const appBarColor = Color(0xFF030C1D);
 
   // React's "grey.400" is mapped to Flutter's "inActiveColor"
   static const inActiveColor = Color(0xFFA0AEC0);
