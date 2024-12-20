@@ -1,5 +1,6 @@
-import 'package:carousel_slider/carousel_slider.dart'; // Correct import for carousel_slider
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
 import 'package:online_course/screens/course_detail.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:online_course/utils/data.dart';
@@ -20,6 +21,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    final localizations =
+        AppLocalizations.of(context); // Localizations instance
     return Scaffold(
       backgroundColor: AppColor.appBgColor,
       body: CustomScrollView(
@@ -29,11 +32,11 @@ class _HomePageState extends State<HomePage> {
             snap: true,
             floating: true,
             toolbarHeight: 70,
-            title: _buildAppBar(),
+            title: _buildAppBar(localizations),
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
-              (context, index) => _buildBody(),
+              (context, index) => _buildBody(localizations),
               childCount: 1,
             ),
           )
@@ -42,7 +45,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildAppBar() {
+  Widget _buildAppBar(localizations) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -62,7 +65,7 @@ class _HomePageState extends State<HomePage> {
                 height: 5,
               ),
               Text(
-                "Bonjour !",
+                localizations.greeting, // Localized greeting
                 style: TextStyle(
                   color: AppColor.textColor,
                   fontWeight: FontWeight.w500,
@@ -79,20 +82,20 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _buildBody() {
+  Widget _buildBody(localizations) {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildCategories(),
+          _buildCategories(localizations),
           const SizedBox(
             height: 15,
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
             child: Text(
-              "Featured",
+              localizations.featured, // Localized "Featured" title
               style: TextStyle(
                 color: AppColor.mainColor,
                 fontWeight: FontWeight.w600,
@@ -105,20 +108,24 @@ class _HomePageState extends State<HomePage> {
             height: 15,
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
+            padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Recommended",
+                  localizations.recommended, // Localized "Recommended" title
                   style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w600,
-                      color: AppColor.mainColor),
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600,
+                    color: AppColor.mainColor,
+                  ),
                 ),
                 Text(
-                  "See all",
-                  style: TextStyle(fontSize: 14, color: AppColor.darker),
+                  localizations.see_all, // Localized "See all" text
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: AppColor.darker,
+                  ),
                 ),
               ],
             ),
@@ -129,9 +136,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _buildCategories() {
+  Widget _buildCategories(AppLocalizations localizations) {
     return SingleChildScrollView(
-      padding: EdgeInsets.fromLTRB(15, 10, 0, 10),
+      padding: const EdgeInsets.fromLTRB(15, 10, 0, 10),
       scrollDirection: Axis.horizontal,
       child: Row(
         children: List.generate(
@@ -149,7 +156,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _buildFeatured() {
+  Widget _buildFeatured() {
     return CarouselSlider(
       options: CarouselOptions(
         height: 300,
@@ -173,9 +180,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _buildRecommended() {
+  Widget _buildRecommended() {
     return SingleChildScrollView(
-      padding: EdgeInsets.fromLTRB(15, 5, 0, 5),
+      padding: const EdgeInsets.fromLTRB(15, 5, 0, 5),
       scrollDirection: Axis.horizontal,
       child: Row(
         children: List.generate(

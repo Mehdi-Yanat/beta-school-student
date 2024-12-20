@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
 import 'package:online_course/screens/profile/bookmark.dart';
 import 'package:online_course/screens/profile/notification.dart';
 import 'package:online_course/screens/profile/payments.dart';
@@ -24,10 +25,13 @@ class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const CustomAppBar(title: 'Account'),
-        body: CustomScrollView(
-          slivers: <Widget>[SliverToBoxAdapter(child: _buildBody(context))],
-        ));
+      appBar: CustomAppBar(
+        title: AppLocalizations.of(context)!.account_title, // Localized name
+      ),
+      body: CustomScrollView(
+        slivers: <Widget>[SliverToBoxAdapter(child: _buildBody(context))],
+      ),
+    );
   }
 }
 
@@ -71,7 +75,7 @@ Widget _buildProfile(context) {
         height: 10,
       ),
       Text(
-        profile["name"]!,
+        profile["name"]!, // User's name (static data)
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w500,
@@ -87,7 +91,8 @@ Widget _buildRecord(context) {
     children: [
       Expanded(
         child: SettingBox(
-          title: "12 courses",
+          title: AppLocalizations.of(context)!.account_courses,
+          // Localized text
           icon: "assets/icons/work.svg",
         ),
       ),
@@ -96,7 +101,7 @@ Widget _buildRecord(context) {
       ),
       Expanded(
         child: SettingBox(
-          title: "55 hours",
+          title: AppLocalizations.of(context)!.account_hours, // Localized text
           icon: "assets/icons/time.svg",
         ),
       ),
@@ -105,7 +110,7 @@ Widget _buildRecord(context) {
       ),
       Expanded(
         child: SettingBox(
-          title: "4.8",
+          title: AppLocalizations.of(context)!.account_rating, // Localized text
           icon: "assets/icons/star.svg",
         ),
       ),
@@ -131,11 +136,10 @@ Widget _buildSection1(context) {
     child: Column(
       children: [
         SettingItem(
-          title: "Setting",
+          title: AppLocalizations.of(context)!.settings_title, // Localized text
           leadingIcon: "assets/icons/setting.svg",
           bgIconColor: AppColor.blue,
           onTap: () {
-            // Navigate to Settings Page
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => SettingPage()),
@@ -150,11 +154,10 @@ Widget _buildSection1(context) {
           ),
         ),
         SettingItem(
-          title: "Payment",
+          title: AppLocalizations.of(context)!.payments_title, // Localized text
           leadingIcon: "assets/icons/wallet.svg",
           bgIconColor: AppColor.green,
           onTap: () {
-            // Navigate to Payment Page
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => PaymentPage()),
@@ -169,11 +172,10 @@ Widget _buildSection1(context) {
           ),
         ),
         SettingItem(
-          title: "Bookmark",
+          title: AppLocalizations.of(context)!.bookmark_title, // Localized text
           leadingIcon: "assets/icons/bookmark.svg",
           bgIconColor: AppColor.primary,
           onTap: () {
-            // Navigate to Bookmark Page
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => BookmarkPage()),
@@ -203,11 +205,11 @@ Widget _buildSection2(context) {
     child: Column(
       children: [
         SettingItem(
-          title: "Notification",
+          title: AppLocalizations.of(context)!.notifications_title,
+          // Localized text
           leadingIcon: "assets/icons/bell.svg",
           bgIconColor: AppColor.purple,
           onTap: () {
-            // Navigate to Notification Page
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => NotificationPage()),
@@ -222,11 +224,10 @@ Widget _buildSection2(context) {
           ),
         ),
         SettingItem(
-          title: "Privacy",
+          title: AppLocalizations.of(context)!.privacy_title, // Localized text
           leadingIcon: "assets/icons/shield.svg",
           bgIconColor: AppColor.orange,
           onTap: () {
-            // Navigate to Privacy Page
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => PrivacyPage()),
@@ -254,14 +255,11 @@ Widget _buildSection3(context) {
       ],
     ),
     child: SettingItem(
-      title: "Log Out",
+      title: AppLocalizations.of(context)!.account_logout, // Localized text
       leadingIcon: "assets/icons/logout.svg",
       bgIconColor: AppColor.darker,
       onTap: () {
-        // Log out the user
         AuthService.logout();
-
-        // Redirect to the login page
         Navigator.pushReplacementNamed(context, '/login');
       },
     ),

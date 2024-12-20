@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
 import 'package:online_course/theme/color.dart';
 
-import '../../widgets/appbar.dart';
 import '../../widgets/gradient_button.dart';
 
 class ForgetPasswordScreen extends StatelessWidget {
@@ -19,7 +19,7 @@ class ForgetPasswordScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: ListView(
           children: [
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
 
             // Logo Section
             Center(
@@ -29,11 +29,11 @@ class ForgetPasswordScreen extends StatelessWidget {
                 color: AppColor.primary, // Tint the logo if necessary
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Forgot Password Text
             Text(
-              'Forgot your password?',
+              AppLocalizations.of(context)!.forgot_password_title,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -41,20 +41,20 @@ class ForgetPasswordScreen extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
-              'Enter your email to reset your password.',
+              AppLocalizations.of(context)!.forgot_password_subtitle,
               style: TextStyle(
                 color: AppColor.textColor.withOpacity(0.7),
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
 
             // Email Address Field
             TextField(
               decoration: InputDecoration(
-                hintText: 'Email Address',
+                hintText: AppLocalizations.of(context)!.email_hint,
                 prefixIcon: Icon(Icons.email, color: AppColor.textColor),
                 filled: true,
                 fillColor: AppColor.textBoxColor,
@@ -65,17 +65,17 @@ class ForgetPasswordScreen extends StatelessWidget {
               ),
               keyboardType: TextInputType.emailAddress,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Submit Button
             GradientButton(
-              text: 'Submit',
+              text: AppLocalizations.of(context)!.submit_button,
               variant: 'primary',
               color: Colors.white,
               disabled: false,
               onTap: _forgetPassword,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Back to Login Button
             Center(
@@ -84,7 +84,7 @@ class ForgetPasswordScreen extends StatelessWidget {
                   Navigator.pushNamed(context, '/login');
                 },
                 child: Text(
-                  'Back to Login',
+                  AppLocalizations.of(context)!.back_to_login,
                   style: TextStyle(color: AppColor.primary),
                 ),
               ),

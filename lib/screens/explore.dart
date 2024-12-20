@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
 import 'package:online_course/theme/color.dart';
 
 import '../widgets/appbar.dart';
 
 class ExploreScreen extends StatelessWidget {
-  final List<Map<String, String>> categories = [
-    {'name': 'Tout'},
-    {'name': 'Mathematics'},
-    {'name': 'Science'},
-    {'name': 'Physics'},
-    {'name': 'History & Geography'},
-    {'name': 'Islamic Studies'},
-    {'name': 'Arabic'},
-    {'name': 'French'},
-    {'name': 'English'},
-    {'name': 'Auture'},
+  final List<String> categoryKeys = [
+    'categories_all',
+    'categories_mathematics',
+    'categories_science',
+    'categories_physics',
+    'categories_history_geography',
+    'categories_islamic_studies',
+    'categories_arabic',
+    'categories_french',
+    'categories_english',
+    'categories_other',
   ];
 
   final List<Map<String, dynamic>> courses = [
@@ -40,9 +41,12 @@ class ExploreScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: AppColor.appBgColor,
-      appBar: const CustomAppBar(title: 'Explore'),
+      appBar: CustomAppBar(
+        title: localizations!.explore_title, // Localized title
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -64,10 +68,13 @@ class ExploreScreen extends StatelessWidget {
               ),
               child: TextField(
                 decoration: InputDecoration(
-                  hintText: "Search",
+                  hintText: localizations.search_hint,
+                  // Localized search hint
                   prefixIcon: Icon(Icons.search, color: AppColor.inActiveColor),
-                  suffixIcon:
-                      Icon(Icons.filter_alt_outlined, color: AppColor.primary),
+                  suffixIcon: Icon(
+                    Icons.filter_alt_outlined,
+                    color: AppColor.primary,
+                  ),
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(vertical: 14),
                 ),
@@ -81,16 +88,17 @@ class ExploreScreen extends StatelessWidget {
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                children: categories
-                    .map((category) => Padding(
+                children: categoryKeys
+                    .map((key) => Padding(
                           padding: const EdgeInsets.only(right: 8.0),
                           child: Chip(
-                            label: Text(category['name']!),
-                            backgroundColor: category['name'] == 'All'
+                            label: Text(localizations.getCategoryName(
+                                key)), // Fetch translated category name
+                            backgroundColor: key == 'categories_all'
                                 ? AppColor.primary
                                 : AppColor.cardColor,
                             labelStyle: TextStyle(
-                              color: category['name'] == 'All'
+                              color: key == 'categories_all'
                                   ? AppColor.glassTextColor
                                   : AppColor.mainColor,
                             ),
@@ -166,13 +174,21 @@ class ExploreScreen extends StatelessWidget {
                                   SizedBox(width: 12),
                                   Icon(Icons.play_circle_fill,
                                       color: AppColor.darker, size: 18),
-                                  Text(course['lessons'],
-                                      style: TextStyle(color: AppColor.darker)),
+                                  Text(
+                                    localizations.course_lessons(int.parse(
+                                        course['lessons'].split(
+                                            ' ')[0])), // Localized lessons
+                                    style: TextStyle(color: AppColor.darker),
+                                  ),
                                   SizedBox(width: 12),
                                   Icon(Icons.schedule,
                                       color: AppColor.darker, size: 18),
-                                  Text(course['duration'],
-                                      style: TextStyle(color: AppColor.darker)),
+                                  Text(
+                                    localizations.course_duration(
+                                        course['duration'].split(
+                                            " ")[0]), // Localized duration
+                                    style: TextStyle(color: AppColor.darker),
+                                  ),
                                   Spacer(),
                                   Row(
                                     children: [
@@ -198,5 +214,34 @@ class ExploreScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+extension LocalizationsExtensions on AppLocalizations {
+  String getCategoryName(String key) {
+    switch (key) {
+      case 'categories_all':
+        return categories_all;
+      case 'categories_mathematics':
+        return categories_mathematics;
+      case 'categories_science':
+        return categories_science;
+      case 'categories_physics':
+        return categories_physics;
+      case 'categories_history_geography':
+        return categories_history_geography;
+      case 'categories_islamic_studies':
+        return categories_islamic_studies;
+      case 'categories_arabic':
+        return categories_arabic;
+      case 'categories_french':
+        return categories_french;
+      case 'categories_english':
+        return categories_english;
+      case 'categories_other':
+        return categories_other;
+      default:
+        return '';
+    }
   }
 }

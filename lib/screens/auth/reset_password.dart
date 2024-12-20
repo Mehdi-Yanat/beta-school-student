@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
 import 'package:online_course/theme/color.dart';
 
-import '../../widgets/appbar.dart';
 import '../../widgets/gradient_button.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
   const ResetPasswordScreen({super.key});
 
-  void _resetPassword() {}
+  void _resetPassword() {
+    // Add reset password business logic here
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +19,7 @@ class ResetPasswordScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: ListView(
           children: [
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
 
             // Logo Section
             Center(
@@ -27,11 +29,11 @@ class ResetPasswordScreen extends StatelessWidget {
                 color: AppColor.primary, // Tint the logo if needed
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Reset Password Text
             Text(
-              'Reset your password',
+              AppLocalizations.of(context)!.reset_password_title,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -39,20 +41,20 @@ class ResetPasswordScreen extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
-              'Enter your new password below.',
+              AppLocalizations.of(context)!.reset_password_subtitle,
               style: TextStyle(
                 color: AppColor.textColor.withOpacity(0.7),
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
 
             // New Password Field
             TextField(
               decoration: InputDecoration(
-                hintText: 'New Password',
+                hintText: AppLocalizations.of(context)!.new_password_hint,
                 prefixIcon: Icon(Icons.lock, color: AppColor.textColor),
                 filled: true,
                 fillColor: AppColor.textBoxColor,
@@ -63,12 +65,12 @@ class ResetPasswordScreen extends StatelessWidget {
               ),
               obscureText: true,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Confirm Password Field
             TextField(
               decoration: InputDecoration(
-                hintText: 'Confirm Password',
+                hintText: AppLocalizations.of(context)!.confirm_password_hint,
                 prefixIcon: Icon(Icons.lock, color: AppColor.textColor),
                 filled: true,
                 fillColor: AppColor.textBoxColor,
@@ -79,11 +81,11 @@ class ResetPasswordScreen extends StatelessWidget {
               ),
               obscureText: true,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Submit Button
             GradientButton(
-              text: 'Submit',
+              text: AppLocalizations.of(context)!.submit_button,
               variant: 'primary',
               color: Colors.white,
               disabled: false,

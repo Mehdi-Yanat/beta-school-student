@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
 import 'package:online_course/utils/data.dart';
 import 'package:online_course/widgets/chat_item.dart';
 import 'package:online_course/widgets/custom_textfield.dart';
@@ -17,20 +18,20 @@ class _AnnouncesPageState extends State<AnnouncesPage> {
       padding: EdgeInsets.symmetric(horizontal: 15),
       child: Column(
         children: [
-          _buildHeader(),
+          _buildHeader(context),
           _buildChats(),
         ],
       ),
     );
   }
 
-  _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Padding(
       padding: EdgeInsets.fromLTRB(0, 60, 0, 5),
       child: Column(
         children: [
           Text(
-            "Annonces",
+            AppLocalizations.of(context)!.announces_title, // Localized title
             style: TextStyle(
               fontSize: 28,
               color: Colors.black87,
@@ -39,7 +40,8 @@ class _AnnouncesPageState extends State<AnnouncesPage> {
           ),
           const SizedBox(height: 15),
           CustomTextBox(
-            hint: "Search",
+            hint: AppLocalizations.of(context)!
+                .search_hint, // Localized hint text
             prefix: Icon(
               Icons.search,
               color: Colors.grey,
@@ -50,7 +52,7 @@ class _AnnouncesPageState extends State<AnnouncesPage> {
     );
   }
 
-  _buildChats() {
+  Widget _buildChats() {
     return ListView(
       padding: EdgeInsets.only(top: 10),
       shrinkWrap: true,

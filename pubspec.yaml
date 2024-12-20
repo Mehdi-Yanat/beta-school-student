@@ -22,6 +22,9 @@ dependencies:
   url_launcher: ^6.3.1
   screen_protector: ^1.4.2+1
   visibility_detector: ^0.4.0+2
+  flutter_localizations:
+    sdk: flutter
+  intl: any
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
@@ -34,7 +37,7 @@ flutter_icons:
   image_path: "assets/icons/app_icon.png"
 
 flutter:
-
+  generate: true # Add this line
   uses-material-design: true
   
   assets:

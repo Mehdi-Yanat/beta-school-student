@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:online_course/theme/color.dart';
 import '../../utils/auth.dart';
+import '../../theme/color.dart';
 import '../../widgets/gradient_button.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -33,7 +34,8 @@ class _LoginScreenState extends State<LoginScreen> {
       if (success) {
         Navigator.pushReplacementNamed(context, '/root');
       } else {
-        _errorMessage = 'Invalid email or password.';
+        // Fetch the localized string for "Invalid email or password"
+        _errorMessage = AppLocalizations.of(context)!.invalid_credentials;
       }
     });
   }
@@ -47,21 +49,21 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: ListView(
             children: [
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
 
               // Logo
               Center(
                 child: Image.asset(
-                  'assets/logo.png', // Path to your logo in the assets folder
+                  'assets/logo.png',
                   height: 80,
                   color: AppColor.primary,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Welcome Message
               Text(
-                'Welcome Back!',
+                AppLocalizations.of(context)!.welcome_message,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 28,
@@ -69,22 +71,22 @@ class _LoginScreenState extends State<LoginScreen> {
                   color: AppColor.primary,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Text(
-                'Sign in to access your courses.',
+                AppLocalizations.of(context)!.sign_in_message,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: AppColor.textColor.withOpacity(0.7),
                   fontSize: 16,
                 ),
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
 
               // Email Field
               TextField(
                 controller: _emailController,
                 decoration: InputDecoration(
-                  hintText: 'Email Address',
+                  hintText: AppLocalizations.of(context)!.email_hint,
                   prefixIcon: Icon(Icons.email, color: AppColor.textColor),
                   filled: true,
                   fillColor: AppColor.textBoxColor,
@@ -95,13 +97,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 keyboardType: TextInputType.emailAddress,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Password Field
               TextField(
                 controller: _passwordController,
                 decoration: InputDecoration(
-                  hintText: 'Password',
+                  hintText: AppLocalizations.of(context)!.password_hint,
                   prefixIcon: Icon(Icons.lock, color: AppColor.textColor),
                   filled: true,
                   fillColor: AppColor.textBoxColor,
@@ -112,13 +114,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 obscureText: true,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Error Message
               if (_errorMessage.isNotEmpty)
                 Text(
                   _errorMessage,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.red,
                     fontSize: 14,
                   ),
@@ -126,28 +128,30 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
 
               // Login Button
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               GradientButton(
-                text: _isLoading ? 'Loading...' : 'Login',
+                text: _isLoading
+                    ? AppLocalizations.of(context)!.loading
+                    : AppLocalizations.of(context)!.login_button,
                 variant: 'primary',
                 color: Colors.white,
                 disabled: _isLoading,
                 onTap: _isLoading ? () => {} : _login,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Signup and Forgot Password
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Don\'t have an account? ',
+                    AppLocalizations.of(context)!.no_account_text,
                     style: TextStyle(color: AppColor.textColor),
                   ),
                   TextButton(
                     onPressed: () => Navigator.pushNamed(context, '/signup'),
                     child: Text(
-                      'Sign up',
+                      AppLocalizations.of(context)!.signup_button,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: AppColor.primary,
@@ -162,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.pushNamed(context, '/forget-password');
                   },
                   child: Text(
-                    'Forgot Password?',
+                    AppLocalizations.of(context)!.forgot_password,
                     style: TextStyle(color: AppColor.primary),
                   ),
                 ),

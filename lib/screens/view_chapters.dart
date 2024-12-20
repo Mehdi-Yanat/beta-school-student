@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
 import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -81,9 +82,13 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context); // Localized strings
+
     return Scaffold(
       backgroundColor: AppColor.appBgColor,
-      appBar: const CustomAppBar(title: 'UI/UX Design'),
+      appBar: CustomAppBar(
+        title: localizations!.chapter_title, // Localized screen title
+      ),
       body: Column(
         children: [
           // Video Player Section
@@ -115,8 +120,10 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
             unselectedLabelColor: AppColor.mainColor,
             indicatorColor: AppColor.primary,
             tabs: [
-              Tab(text: "Lessons"),
-              Tab(text: "Attachments"),
+              Tab(text: localizations.lessons_tab), // Localized "Lessons"
+              Tab(
+                  text:
+                      localizations.attachments_tab), // Localized "Attachments"
             ],
           ),
           Expanded(
@@ -149,7 +156,8 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                 // Attachments Tab
                 Center(
                   child: Text(
-                    "No attachments available",
+                    localizations
+                        .no_attachments, // Localized "No attachments available"
                     style: TextStyle(color: AppColor.textColor),
                   ),
                 ),

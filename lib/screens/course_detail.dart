@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
 import 'package:online_course/theme/color.dart';
 import '../utils/data.dart';
 import '../widgets/appbar.dart';
@@ -13,7 +14,10 @@ class CourseDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.appBgColor,
-      appBar: const CustomAppBar(title: 'Course Detail'),
+      appBar: CustomAppBar(
+        title: AppLocalizations.of(context)!
+            .course_detail_title, // Localized title
+      ),
       body: Container(
         color: AppColor.appBgColor,
         child: Column(
@@ -41,7 +45,8 @@ class CourseDetailScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'UI/UX Design',
+                    AppLocalizations.of(context)!
+                        .course_title_ui_ux, // Localized course title
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -54,14 +59,20 @@ class CourseDetailScreen extends StatelessWidget {
                       Icon(Icons.video_library,
                           size: 16, color: AppColor.labelColor),
                       SizedBox(width: 4),
-                      Text('6 lessons',
-                          style: TextStyle(color: AppColor.labelColor)),
+                      Text(
+                        AppLocalizations.of(context)!
+                            .course_lessons(6), // Localized lessons count
+                        style: TextStyle(color: AppColor.labelColor),
+                      ),
                       SizedBox(width: 16),
                       Icon(Icons.access_time,
                           size: 16, color: AppColor.labelColor),
                       SizedBox(width: 4),
-                      Text('10 hours',
-                          style: TextStyle(color: AppColor.labelColor)),
+                      Text(
+                        AppLocalizations.of(context)!
+                            .course_duration("10"), // Localized duration
+                        style: TextStyle(color: AppColor.labelColor),
+                      ),
                       SizedBox(width: 16),
                       Icon(Icons.star, size: 16, color: AppColor.yellow),
                       SizedBox(width: 4),
@@ -70,7 +81,8 @@ class CourseDetailScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 12),
                   Text(
-                    'About Course',
+                    AppLocalizations.of(context)!
+                        .about_course_title, // Localized section title
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -79,7 +91,7 @@ class CourseDetailScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used...',
+                    AppLocalizations.of(context)!.about_course_description,
                     style: TextStyle(
                       color: AppColor.labelColor,
                       height: 1.5,
@@ -87,7 +99,8 @@ class CourseDetailScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Show more',
+                    AppLocalizations.of(context)!
+                        .show_more, // Localized "Show more"
                     style: TextStyle(
                       color: AppColor.primary,
                       fontWeight: FontWeight.w600,
@@ -108,8 +121,12 @@ class CourseDetailScreen extends StatelessWidget {
                     indicatorColor: AppColor.primary,
                     unselectedLabelColor: Colors.white,
                     tabs: [
-                      Tab(text: 'Lessons'),
-                      Tab(text: 'Exercises'),
+                      Tab(
+                          text: AppLocalizations.of(context)!
+                              .lessons_tab), // Localized tab
+                      Tab(
+                          text: AppLocalizations.of(context)!
+                              .exercises_tab), // Localized tab
                     ],
                   ),
                   Container(
@@ -119,20 +136,25 @@ class CourseDetailScreen extends StatelessWidget {
                         ListView(
                           children: [
                             CourseLessonItem(
-                              title: 'Introduction to UI/UX Design',
-                              duration: '45 minutes',
+                              title: AppLocalizations.of(context)!
+                                  .lesson_title_1, // Localized lesson title
+                              duration: AppLocalizations.of(context)!
+                                  .lesson_duration("45"), // Localized duration
                               imagePath: features[0]['image'],
                             ),
                             CourseLessonItem(
-                              title: 'UI/UX Research',
-                              duration: '55 minutes',
+                              title: AppLocalizations.of(context)!
+                                  .lesson_title_2, // Localized lesson title
+                              duration: AppLocalizations.of(context)!
+                                  .lesson_duration("55"), // Localized duration
                               imagePath: features[0]['image'],
                             ),
                           ],
                         ),
                         Center(
                           child: Text(
-                            'Exercises Content Goes Here',
+                            AppLocalizations.of(context)!
+                                .exercises_content_placeholder, // Localized exercises explanation
                             style: TextStyle(color: AppColor.textColor),
                           ),
                         ),
@@ -163,7 +185,8 @@ class CourseDetailScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Price',
+                        AppLocalizations.of(context)!
+                            .price_label, // Localized "Price"
                         style: TextStyle(color: AppColor.mainColor),
                       ),
                       Text(
@@ -184,7 +207,8 @@ class CourseDetailScreen extends StatelessWidget {
                           EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                     ),
                     child: Text(
-                      'Buy Now',
+                      AppLocalizations.of(context)!
+                          .buy_now, // Localized "Buy Now"
                       style: TextStyle(color: AppColor.glassTextColor),
                     ),
                   ),

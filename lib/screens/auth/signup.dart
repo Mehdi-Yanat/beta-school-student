@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:online_course/theme/color.dart';
 import '../../utils/auth.dart';
+import '../../theme/color.dart';
 import '../../widgets/gradient_button.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -35,7 +36,7 @@ class _SignupScreenState extends State<SignupScreen> {
       if (success) {
         Navigator.pushReplacementNamed(context, '/root');
       } else {
-        _errorMessage = 'Signup failed. Try again.';
+        _errorMessage = AppLocalizations.of(context)!.signup_failed;
       }
     });
   }
@@ -49,7 +50,7 @@ class _SignupScreenState extends State<SignupScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: ListView(
             children: [
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
 
               // Logo
               Center(
@@ -59,11 +60,11 @@ class _SignupScreenState extends State<SignupScreen> {
                   color: AppColor.primary,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Header
               Text(
-                'Create Account',
+                AppLocalizations.of(context)!.signup_title,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 28,
@@ -71,22 +72,22 @@ class _SignupScreenState extends State<SignupScreen> {
                   color: AppColor.primary,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Text(
-                'Register to explore courses.',
+                AppLocalizations.of(context)!.signup_subtitle,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: AppColor.textColor.withOpacity(0.7),
                   fontSize: 16,
                 ),
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
 
               // Name Field
               TextField(
                 controller: _nameController,
                 decoration: InputDecoration(
-                  hintText: 'Full Name',
+                  hintText: AppLocalizations.of(context)!.full_name_hint,
                   prefixIcon: Icon(Icons.person, color: AppColor.textColor),
                   filled: true,
                   fillColor: AppColor.textBoxColor,
@@ -96,13 +97,13 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Email Field
               TextField(
                 controller: _emailController,
                 decoration: InputDecoration(
-                  hintText: 'Email Address',
+                  hintText: AppLocalizations.of(context)!.email_hint,
                   prefixIcon: Icon(Icons.email, color: AppColor.textColor),
                   filled: true,
                   fillColor: AppColor.textBoxColor,
@@ -112,13 +113,13 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Password Field
               TextField(
                 controller: _passwordController,
                 decoration: InputDecoration(
-                  hintText: 'Password',
+                  hintText: AppLocalizations.of(context)!.password_hint,
                   prefixIcon: Icon(Icons.lock, color: AppColor.textColor),
                   filled: true,
                   fillColor: AppColor.textBoxColor,
@@ -129,37 +130,41 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 obscureText: true,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Error Message
               if (_errorMessage.isNotEmpty)
                 Text(
                   _errorMessage,
-                  style: TextStyle(color: Colors.red),
+                  style: const TextStyle(color: Colors.red),
                   textAlign: TextAlign.center,
                 ),
 
               // Signup Button
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               GradientButton(
-                text: _isLoading ? 'Loading...' : 'Sign Up',
+                text: _isLoading
+                    ? AppLocalizations.of(context)!.loading
+                    : AppLocalizations.of(context)!.signup_button,
                 variant: 'primary',
                 color: Colors.white,
                 disabled: _isLoading,
                 onTap: _isLoading ? () => {} : _signup,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Login Link
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Already have an account? ',
-                      style: TextStyle(color: AppColor.textColor)),
+                  Text(
+                    AppLocalizations.of(context)!.already_have_account,
+                    style: TextStyle(color: AppColor.textColor),
+                  ),
                   TextButton(
                     onPressed: () => Navigator.pushNamed(context, '/login'),
                     child: Text(
-                      'Login',
+                      AppLocalizations.of(context)!.login_button,
                       style: TextStyle(color: AppColor.primary),
                     ),
                   ),

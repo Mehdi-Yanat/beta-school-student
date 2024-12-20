@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
 import 'package:online_course/screens/view_chapters.dart';
 import 'package:online_course/theme/color.dart';
 
@@ -52,9 +53,12 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations =
+        AppLocalizations.of(context); // Localizations instance
     return Scaffold(
       backgroundColor: AppColor.appBgColor,
-      appBar: const CustomAppBar(title: 'My Courses'),
+      appBar: CustomAppBar(
+          title: localizations!.my_courses_title), // Localized title
       body: Column(
         children: [
           // Tab Bar
@@ -80,7 +84,7 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                     child: Column(
                       children: [
                         Text(
-                          'Progress (${coursesInProgress.length})',
+                          '${localizations.progress_tab} (${coursesInProgress.length})',
                           style: TextStyle(
                             color: selectedTabIndex == 0
                                 ? AppColor.primary
@@ -116,7 +120,7 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                     child: Column(
                       children: [
                         Text(
-                          'Completed (${completedCourses.length})',
+                          '${localizations.completed_tab} (${completedCourses.length})',
                           style: TextStyle(
                             color: selectedTabIndex == 1
                                 ? AppColor.primary
@@ -152,10 +156,10 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
               },
               children: [
                 // Progress Courses
-                buildCourseList(coursesInProgress),
+                buildCourseList(localizations, coursesInProgress),
 
                 // Completed Courses
-                buildCourseList(completedCourses),
+                buildCourseList(localizations, completedCourses),
               ],
             ),
           ),
@@ -165,7 +169,8 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
   }
 
   // List of courses (shared for Progress and Completed)
-  Widget buildCourseList(List<Map<String, dynamic>> courses) {
+  Widget buildCourseList(
+      AppLocalizations localizations, List<Map<String, dynamic>> courses) {
     return ListView.builder(
       itemCount: courses.length,
       itemBuilder: (context, index) {
@@ -228,7 +233,7 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                       Row(
                         children: [
                           Text(
-                            '${course['completedLessons']} lessons',
+                            '${course['completedLessons']} ${localizations.lessons}',
                             style: TextStyle(
                               color: AppColor.textColor,
                               fontSize: 12,
@@ -236,7 +241,7 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                           ),
                           const Spacer(),
                           Text(
-                            '${course['totalLessons']} lessons',
+                            '${course['totalLessons']} ${localizations.lessons}',
                             style: TextStyle(
                               color: AppColor.inActiveColor,
                               fontSize: 12,
