@@ -1,33 +1,15 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.beta.school">
-
-    <!-- Flutter needs it to communicate with the running application -->
-    <uses-permission android:name="android.permission.INTERNET"/>
-
-    <application
-        android:name="${applicationName}"
-        android:label="Beta Prime School"
-        tools:replace="android:label"
-        android:usesCleartextTraffic="true"
-    >
-
-        <!-- MainActivity with exported attribute -->
-        <activity
-            android:name=".MainActivity"
-            android:label="Beta Prime School"
-            android:theme="@style/LaunchTheme"
-            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|screenLayout|fontScale|layoutDirection"
-            android:hardwareAccelerated="true"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="true"
-            tools:replace="android:configChanges">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-
-    </application>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" package="com.beta.school">
+	<!-- Flutter needs it to communicate with the running application -->
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<application android:name="${applicationName}" android:label="Beta Prime School" tools:replace="android:label" android:usesCleartextTraffic="true">
+		<!-- MainActivity with exported attribute -->
+		<activity android:name=".MainActivity" android:label="Beta Prime School" android:theme="@style/LaunchTheme" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|screenLayout|fontScale|layoutDirection" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize" android:exported="true" tools:replace="android:configChanges">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+	</application>
 </manifest>

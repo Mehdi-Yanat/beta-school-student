@@ -1,3 +1,5 @@
 {
-    "dart.flutterSdkPath": "/Users/sangvaleapvanny/fvm/versions/stable"
+  "dart.flutterSdkPath": "E:\Flutter\src\flutter",
+  "dart.sdkPath": "E:\Projects\beta-school-student\flutter\bin\cache\dart-sdk",
+  "java.compile.nullAnalysis.mode": "automatic"
 }

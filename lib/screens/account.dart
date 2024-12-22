@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
+import 'package:online_course/models/student.dart';
+import 'package:online_course/providers/auth_provider.dart';
 import 'package:online_course/screens/profile/bookmark.dart';
 import 'package:online_course/screens/profile/notification.dart';
 import 'package:online_course/screens/profile/payments.dart';
@@ -7,9 +9,11 @@ import 'package:online_course/screens/profile/privacy.dart';
 import 'package:online_course/screens/profile/settings.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:online_course/utils/data.dart';
+import 'package:online_course/utils/logger.dart';
 import 'package:online_course/widgets/custom_image.dart';
 import 'package:online_course/widgets/setting_box.dart';
 import 'package:online_course/widgets/setting_item.dart';
+import 'package:provider/provider.dart';
 
 import '../utils/auth.dart';
 import '../widgets/appbar.dart';
@@ -24,45 +28,56 @@ class AccountPage extends StatefulWidget {
 class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: AppLocalizations.of(context)!.account_title, // Localized name
-      ),
-      body: CustomScrollView(
-        slivers: <Widget>[SliverToBoxAdapter(child: _buildBody(context))],
-      ),
+    return Consumer<AuthProvider>(
+      builder: (context, authProvider, _) {
+        final student = authProvider.student;
+        Logger.log(
+            'Current student: ${student!.email}'); // Replace print with Logger
+        return Scaffold(
+          appBar: CustomAppBar(
+            title: AppLocalizations.of(context)!.account_title,
+          ),
+          body: CustomScrollView(
+            slivers: <Widget>[
+              SliverToBoxAdapter(
+                child: _buildBody(context, student),
+              )
+            ],
+          ),
+        );
+      },
     );
   }
 }
 
-Widget _buildBody(context) {
+Widget _buildBody(context, Student? student) {
   return SingleChildScrollView(
     padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
     child: Column(
       children: [
-        _buildProfile(context),
+        _buildProfile(context, student),
         const SizedBox(
           height: 20,
         ),
-        _buildRecord(context),
+        _buildRecord(context, student),
         const SizedBox(
           height: 20,
         ),
-        _buildSection1(context),
+        _buildSection1(context, student),
         const SizedBox(
           height: 20,
         ),
-        _buildSection2(context),
+        _buildSection2(context, student),
         const SizedBox(
           height: 20,
         ),
-        _buildSection3(context),
+        _buildSection3(context, student),
       ],
     ),
   );
 }
 
-Widget _buildProfile(context) {
+Widget _buildProfile(context, Student? student) {
   return Column(
     children: [
       CustomImage(
@@ -85,7 +100,7 @@ Widget _buildProfile(context) {
   );
 }
 
-Widget _buildRecord(context) {
+Widget _buildRecord(context, Student? student) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
@@ -118,7 +133,7 @@ Widget _buildRecord(context) {
   );
 }
 
-Widget _buildSection1(context) {
+Widget _buildSection1(context, Student? student) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 15),
     decoration: BoxDecoration(
@@ -187,7 +202,7 @@ Widget _buildSection1(context) {
   );
 }
 
-Widget _buildSection2(context) {
+Widget _buildSection2(context, Student? student) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 15),
     decoration: BoxDecoration(
@@ -239,7 +254,7 @@ Widget _buildSection2(context) {
   );
 }
 
-Widget _buildSection3(context) {
+Widget _buildSection3(context, Student? student) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 15),
     decoration: BoxDecoration(

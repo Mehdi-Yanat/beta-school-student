@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:online_course/theme/color.dart';
+import 'package:online_course/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
+import '../theme/color.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  final Locale locale;
+  const SplashScreen(this.locale, {super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -15,18 +18,22 @@ class _SplashScreenState extends State<SplashScreen>
   bool _imageLoaded = false;
 
   @override
+  @override
   void initState() {
     super.initState();
 
-    // Initialize the animation controller for fading effect
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 1), // Animation duration for fade-in
+      duration: const Duration(seconds: 1),
     );
 
-    // Define the fade animation
     _fadeAnimation =
         CurvedAnimation(parent: _animationController, curve: Curves.easeIn);
+
+    // Schedule auth check after build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAuth();
+    });
   }
 
   @override
@@ -40,7 +47,8 @@ class _SplashScreenState extends State<SplashScreen>
   Future<void> _loadResourcesAndAnimate() async {
     try {
       // Preload the logo to prevent delays
-      await precacheImage(const AssetImage('assets/logo.png'), context);
+      final image = const AssetImage('assets/logo.png');
+      await precacheImage(image, context);
 
       // Indicate that the image has been loaded
       setState(() {
@@ -49,16 +57,33 @@ class _SplashScreenState extends State<SplashScreen>
 
       // Start the fade-in animation
       _animationController.forward();
+    } catch (error) {
+      print('Error loading image: $error');
+    }
+  }
 
-      // Keep splash screen for a few seconds
-      await Future.delayed(const Duration(seconds: 3));
+  Future<void> _checkAuth() async {
+    try {
+      await _loadResourcesAndAnimate();
 
-      // Navigate to the next screen
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      await Future.wait([
+        authProvider.initAuth(),
+        Future.delayed(const Duration(seconds: 2)),
+      ]);
+
+      if (!mounted) return;
+
+      if (authProvider.isAuthenticated) {
+        Navigator.pushReplacementNamed(context, '/root');
+      } else {
+        Navigator.pushReplacementNamed(context, '/login');
+      }
+    } catch (e) {
+      print('Auth check error: $e');
       if (mounted) {
         Navigator.pushReplacementNamed(context, '/login');
       }
-    } catch (error) {
-      debugPrint('Error loading resources: $error');
     }
   }
 
@@ -76,7 +101,6 @@ class _SplashScreenState extends State<SplashScreen>
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Fade-in animation for the logo
           Expanded(
             child: Center(
               child: FadeTransition(
@@ -86,15 +110,13 @@ class _SplashScreenState extends State<SplashScreen>
                 child: _imageLoaded
                     ? Image.asset(
                         'assets/logo.png',
-                        height: 150, // Logo size
-                        color: AppColor.primary, // Optional tint
+                        height: 150,
+                        color: AppColor.primary,
                       )
                     : const SizedBox(),
               ),
             ),
           ),
-
-          // Spinner at the bottom of the screen
           const Padding(
             padding: EdgeInsets.only(bottom: 30.0),
             child: CircularProgressIndicator(

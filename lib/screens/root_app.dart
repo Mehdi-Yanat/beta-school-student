@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:online_course/providers/auth_provider.dart';
 import 'package:online_course/screens/account.dart';
 import 'package:online_course/screens/announces.dart';
 import 'package:online_course/screens/explore.dart';
 import 'package:online_course/screens/home.dart';
 import 'package:online_course/screens/my_courses.dart';
 import 'package:online_course/theme/color.dart';
-
-import '../utils/auth.dart';
+import 'package:provider/provider.dart';
 import '../widgets/bottombar_box.dart';
-import '../widgets/bottombar_item.dart'; // Import AuthService
+import '../widgets/bottombar_item.dart';
 
 class RootApp extends StatefulWidget {
   const RootApp({Key? key}) : super(key: key);
@@ -28,27 +28,27 @@ class _RootAppState extends State<RootApp> {
   ];
 
   @override
-  void initState() {
-    super.initState();
-    // Check if the user is authenticated
-    if (!AuthService.isAuthenticated) {
-      // If not, navigate to the login page
-      Future.delayed(Duration.zero, () {
-        Navigator.pushReplacementNamed(context, '/login');
-      });
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: AuthService.isAuthenticated
-          ? _buildMainApp() // Show main app content if authenticated
-          : Center(
-              child:
-                  CircularProgressIndicator()), // Show loading while checking
-      bottomNavigationBar:
-          AuthService.isAuthenticated ? _buildBottomBar() : null,
+    // Listen to changes in the AuthProvider
+    return Consumer<AuthProvider>(
+      builder: (context, authProvider, child) {
+        // If not authenticated, redirect to login
+        if (!authProvider.isAuthenticated) {
+          // Navigate to login screen
+          Future.microtask(
+              () => Navigator.pushReplacementNamed(context, '/login'));
+
+          return Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        // If authenticated, show the main app content
+        return Scaffold(
+          body: _buildMainApp(),
+          bottomNavigationBar: _buildBottomBar(),
+        );
+      },
     );
   }
 

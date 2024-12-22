@@ -12,6 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  provider: ^6.1.2
+  flutter_secure_storage: ^9.2.2
+  flutter_dotenv: ^5.1.0
   cupertino_icons: ^1.0.2
   flutter_svg: ^2.0.16
   cached_network_image: ^3.1.0
@@ -44,3 +47,5 @@ flutter:
     - assets/icons/
     - assets/icons/categories/
     - assets/logo.png
+    - .env.development
+    - .env.production
