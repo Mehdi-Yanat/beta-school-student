@@ -187,5 +187,13 @@
   "wilaya_DJANET": "Djanet",
   "wilaya_IN_SALAH": "In Salah",
   "wilaya_EL_MGHAIER": "El M'Ghair",
-  "wilaya_EL_MENIAA": "El Meniaa"
+  "wilaya_EL_MENIAA": "El Meniaa",
+  "profile_photo": "Photo de profil",
+  "change_photo": "Changer la photo",
+  "save_changes": "Enregistrer les modifications",
+  "photo_optional": "Optionnel",
+  "upload_photo": "Télécharger la photo",
+  "update_profile": "Mettre à jour le profil",
+  "class_label": "Classe",
+  "update": "Mettre à jour"
 }

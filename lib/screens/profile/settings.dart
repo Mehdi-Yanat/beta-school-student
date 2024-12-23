@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
+import 'package:online_course/screens/profile/update_profile.dart';
 import '../../main.dart';
 import '../../theme/color.dart';
 import '../../widgets/appbar.dart';
@@ -77,17 +78,20 @@ class _SettingPageState extends State<SettingPage> {
             leading: Icon(Icons.account_circle, color: AppColor.primary),
             title: Text(
               AppLocalizations.of(context)!.settings_profile,
-              style: TextStyle(color: AppColor.textColor),
+              style: TextStyle(color: AppColor.mainColor),
             ),
             onTap: () {
-              // Handle Profile tap
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>  UpdateProfileScreen()));
             },
           ),
           ListTile(
             leading: Icon(Icons.security, color: AppColor.primary),
             title: Text(
               AppLocalizations.of(context)!.settings_security,
-              style: TextStyle(color: AppColor.textColor),
+              style: TextStyle(color: AppColor.mainColor),
             ),
             onTap: () {
               // Handle Security tap
@@ -97,7 +101,7 @@ class _SettingPageState extends State<SettingPage> {
             leading: Icon(Icons.notifications, color: AppColor.primary),
             title: Text(
               AppLocalizations.of(context)!.settings_notifications,
-              style: TextStyle(color: AppColor.textColor),
+              style: TextStyle(color: AppColor.mainColor),
             ),
             onTap: () {
               // Handle Notifications tap
@@ -109,9 +113,9 @@ class _SettingPageState extends State<SettingPage> {
             leading: Icon(Icons.language, color: AppColor.primary),
             title: Text(
               AppLocalizations.of(context)!.change_language,
-              style: TextStyle(color: AppColor.textColor),
+              style: TextStyle(color: AppColor.mainColor),
             ),
-            trailing: Icon(Icons.arrow_forward_ios, color: AppColor.textColor),
+            trailing: Icon(Icons.arrow_forward_ios, color: AppColor.mainColor),
             onTap: () {
               _showLanguageDialog(
                   context); // Show dialog for language selection

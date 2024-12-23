@@ -187,5 +187,13 @@
   "wilaya_DJANET": "جانت",
   "wilaya_IN_SALAH": "عين صالح",
   "wilaya_EL_MGHAIER": "المغير",
-  "wilaya_EL_MENIAA": "المنيعة"
+  "wilaya_EL_MENIAA": "المنيعة",
+  "profile_photo": "الصورة الشخصية",
+  "change_photo": "تغيير الصورة",
+  "save_changes": "حفظ التغييرات",
+  "photo_optional": "اختياري",
+  "upload_photo": "تحميل الصورة",
+  "update_profile": "تحديث الملف الشخصي",
+  "class_label": "الفصل",
+  "update": "تحديث"
 }

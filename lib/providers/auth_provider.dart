@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:online_course/utils/storage.dart';
 import '../services/auth_service.dart';
 import '../models/student.dart';
 
@@ -13,6 +14,21 @@ class AuthProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   Student? get student => _student;
 
+  Future<void> refreshProfile() async {
+    try {
+      final token = await StorageService.getToken('accessToken');
+      if (token != null) {
+        final studentData = await AuthService.verifyToken(token);
+        if (studentData != null) {
+          _student = Student.fromJson(studentData);
+          notifyListeners();
+        }
+      }
+    } catch (e) {
+      print('Error refreshing profile: $e');
+    }
+  }
+
   Future<void> initAuth() async {
     try {
       print('Initializing auth state...');
@@ -25,6 +41,7 @@ class AuthProvider with ChangeNotifier {
       if (token?.isNotEmpty ?? false) {
         print('Verifying token...');
         final studentData = await AuthService.verifyToken(token!);
+        print(studentData.toString());
 
         if (studentData != null) {
           print('Token verified, loading student data');

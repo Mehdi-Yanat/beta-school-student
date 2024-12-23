@@ -5,6 +5,8 @@ import '../../theme/color.dart';
 import '../../utils/constant.dart';
 import '../../widgets/gradient_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -23,6 +25,9 @@ class _SignupScreenState extends State<SignupScreen> {
   final _passwordController = TextEditingController();
   final _addressController = TextEditingController();
   final _phoneController = TextEditingController();
+  File? _profileImage;
+  final _picker = ImagePicker();
+
   String? _selectedWilaya;
   String? _selectedClass;
   bool _isLoading = false;
@@ -31,6 +36,20 @@ class _SignupScreenState extends State<SignupScreen> {
 
   final List<String> wilayas = Wilaya.values.map((e) => e.name).toList();
   final List<String> classes = Class.values.map((e) => e.name).toList();
+
+  // Add image picker method
+  Future<void> _pickImage() async {
+    try {
+      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        setState(() {
+          _profileImage = File(image.path);
+        });
+      }
+    } catch (e) {
+      print('Error picking image: $e');
+    }
+  }
 
   void _signup() async {
     if (!_formKey.currentState!.validate()) return;
@@ -51,7 +70,8 @@ class _SignupScreenState extends State<SignupScreen> {
           address: _addressController.text,
           phone: _phoneController.text,
           wilaya: _selectedWilaya!,
-          studentClass: _selectedClass!);
+          studentClass: _selectedClass!,
+          profilePic: _profileImage?.path);
 
       final locale = Localizations.localeOf(context).languageCode;
 
@@ -324,6 +344,55 @@ class _SignupScreenState extends State<SignupScreen> {
                 }
                 return null;
               },
+            ),
+          ],
+        ),
+      ),
+      Step(
+        state: _currentStep > 4 ? StepState.complete : StepState.indexed,
+        isActive: _currentStep >= 4,
+        title: Text(AppLocalizations.of(context)!.profile_photo),
+        content: Column(
+          children: [
+            if (_profileImage != null)
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.file(
+                      _profileImage!,
+                      height: 200,
+                      width: 200,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: IconButton(
+                      icon: Icon(Icons.close, color: Colors.red),
+                      onPressed: () => setState(() => _profileImage = null),
+                    ),
+                  ),
+                ],
+              ),
+            const SizedBox(height: 16),
+            GradientButton(
+              text: _profileImage == null
+                  ? AppLocalizations.of(context)!.upload_photo
+                  : AppLocalizations.of(context)!.change_photo,
+              variant: 'secondary',
+              onTap: _pickImage,
+              color: AppColor.primary,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              AppLocalizations.of(context)!.photo_optional,
+              style: TextStyle(
+                color: AppColor.textColor.withValues(alpha: 0.7),
+                fontSize: 12,
+              ),
             ),
           ],
         ),

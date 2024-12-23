@@ -14,14 +14,18 @@ import 'package:provider/provider.dart';
 
 Future<void> main() async {
   // Ensure the environment file is loaded correctly
-  await dotenv.load(fileName: ".env.development");
+  await dotenv.load(fileName: ".env.production");
 
   Logger.enable();
 
   // Initialize the provider before running the app
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => AuthProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => AuthProvider(),
+        )
+      ],
       child: MyApp(),
     ),
   );

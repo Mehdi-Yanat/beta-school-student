@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:online_course/providers/auth_provider.dart';
-import 'package:online_course/services/auth_service.dart';
 import 'package:provider/provider.dart';
 import '../../theme/color.dart';
 import '../../widgets/gradient_button.dart';
@@ -88,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 AppLocalizations.of(context)!.sign_in_message,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: AppColor.textColor.withOpacity(0.7),
+                  color: AppColor.textColor.withValues(alpha: 0.7),
                   fontSize: 16,
                 ),
               ),

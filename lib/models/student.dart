@@ -1,3 +1,4 @@
+
 class Student {
   final String? id;
   final String email;
@@ -10,6 +11,7 @@ class Student {
   final String? phone;
   final String wilaya;
   final String studentClass;
+  final String? profilePic;
 
   Student({
     this.id,
@@ -23,20 +25,22 @@ class Student {
     this.phone,
     required this.wilaya,
     required this.studentClass,
+    this.profilePic,
   });
 
   factory Student.fromJson(Map<String, dynamic> json) {
     return Student(
-      id: json['_id']?.toString() ?? '',
+      id: json['id']?.toString() ?? '',
       email: json['email']?.toString() ?? '',
       firstName: json['firstName']?.toString() ?? '',
       lastName: json['lastName']?.toString() ?? '',
       firstNameAr: json['firstNameAr']?.toString(),
       lastNameAr: json['lastNameAr']?.toString(),
-      address: json['address']?.toString(),
+      address: json['Student']?['address']?.toString(),
       phone: json['phone']?.toString(),
-      wilaya: json['wilaya']?.toString() ?? '',
-      studentClass: json['studentClass']?.toString() ?? '',
+      wilaya: json['Student']?['wilaya']?.toString() ?? '',
+      studentClass: json['Student']?['class']?.toString() ?? '',
+      profilePic: json['profilePic']?['url']?.toString(),
     );
   }
 }
