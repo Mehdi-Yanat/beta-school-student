@@ -16,6 +16,13 @@ class AuthResult {
 class AuthService {
   static final String baseUrl = dotenv.env['API_URL'] ?? '';
 
+  static Map<String, String> _headers([String? token]) {
+    return {
+      'Content-Type': 'application/json',
+      if (token != null) 'Authorization': 'Bearer $token',
+    };
+  }
+
   // Register student
   static Future<bool> registerStudent(Student student,
       {String lang = 'ar'}) async {
@@ -158,6 +165,102 @@ class AuthService {
 
       return AuthResult(response.statusCode == 200, message);
     } catch (e) {
+      return AuthResult(false, e.toString());
+    }
+  }
+
+  static Future<bool> forgotPassword(String email, {String lang = 'ar'}) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/auth/forgot-password?lng=$lang'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'email': email}),
+      );
+      return response.statusCode == 204;
+    } catch (e) {
+      print('Forgot password error: $e');
+      return false;
+    }
+  }
+
+  static Future<bool> logout({String lang = 'ar'}) async {
+    try {
+      // Retrieve tokens
+      final accessToken = await StorageService.getToken("accessToken");
+      final refreshToken = await StorageService.getToken("refreshToken");
+
+      if (accessToken == null) {
+        // Consider already logged out if there's no access token
+        return true;
+      }
+
+      // Make a logout request to the backend
+      final response = await http.post(
+        Uri.parse('$baseUrl/auth/logout?lng=$lang'),
+        headers: _headers(accessToken),
+        body: jsonEncode({"refreshToken": refreshToken}),
+      );
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        // Clear tokens from local storage
+        await Future.wait([
+          StorageService.deleteToken("accessToken"),
+          StorageService.deleteToken("refreshToken"),
+        ]);
+        return true;
+      } else {
+        print('Logout failed: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('Error during logout: $e');
+      return false;
+    }
+  }
+
+  static Future<AuthResult> verifyEmail(String token,
+      {String lang = 'ar'}) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/auth/verify-email?token=$token'),
+        headers: _headers(),
+      );
+
+      if (response.body.isNotEmpty) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        final String message = responseData['message'] ?? 'Unknown error';
+        return AuthResult(response.statusCode == 200, message);
+      }
+
+      return AuthResult(response.statusCode == 200,
+          'Email verification ${response.statusCode == 200 ? 'successful' : 'failed'}');
+    } catch (e) {
+      print('Email verification error: $e');
+      return AuthResult(false, e.toString());
+    }
+  }
+
+  static Future<AuthResult> resetPassword(String token, String newPassword,
+      {String lang = 'ar'}) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/auth/reset-password?token=$token'),
+        headers: _headers(),
+        body: jsonEncode({
+          'password': newPassword,
+        }),
+      );
+
+      if (response.body.isNotEmpty) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        final String message = responseData['message'] ?? 'Unknown error';
+        return AuthResult(response.statusCode == 204, message);
+      }
+
+      return AuthResult(response.statusCode == 204,
+          'Password reset ${response.statusCode == 204 ? 'successful' : 'failed'}');
+    } catch (e) {
+      print('Password reset error: $e');
       return AuthResult(false, e.toString());
     }
   }

@@ -10,6 +10,7 @@ import 'package:online_course/screens/profile/settings.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:online_course/utils/logger.dart';
 import 'package:online_course/widgets/custom_image.dart';
+import 'package:online_course/widgets/dialog.dart';
 import 'package:online_course/widgets/setting_box.dart';
 import 'package:online_course/widgets/setting_item.dart';
 import 'package:provider/provider.dart';
@@ -252,7 +253,7 @@ Widget _buildSection2(context, Student? student) {
   );
 }
 
-Widget _buildSection3(context, Student? student) {
+Widget _buildSection3(BuildContext context, Student? student) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 15),
     decoration: BoxDecoration(
@@ -260,10 +261,10 @@ Widget _buildSection3(context, Student? student) {
       color: AppColor.cardColor,
       boxShadow: [
         BoxShadow(
-          color: AppColor.shadowColor.withValues(alpha: 0.1),
+          color: AppColor.shadowColor.withOpacity(0.1),
           spreadRadius: 1,
           blurRadius: 1,
-          offset: Offset(0, 1),
+          offset: const Offset(0, 1),
         ),
       ],
     ),
@@ -272,10 +273,23 @@ Widget _buildSection3(context, Student? student) {
       leadingIcon: "assets/icons/logout.svg",
       bgIconColor: AppColor.darker,
       onTap: () {
-        AuthProvider authProvider =
-            Provider.of<AuthProvider>(context, listen: false);
-        authProvider.logout();
-        Navigator.pushReplacementNamed(context, '/login');
+        showLogoutDialog(
+          context: context,
+          title: AppLocalizations.of(context)!.confirm_logout, // Translated title
+          message: AppLocalizations.of(context)!
+              .confirm_logout_message, // Translated message
+          confirmText: AppLocalizations.of(context)!
+              .logout, // Translated confirm text
+          cancelText: AppLocalizations.of(context)!
+              .cancel, // Translated cancel text
+          onConfirm: () {
+            // Handle logout logic
+            final authProvider =
+                Provider.of<AuthProvider>(context, listen: false);
+            authProvider.logout();
+            Navigator.pushReplacementNamed(context, '/login');
+          },
+        );
       },
     ),
   );

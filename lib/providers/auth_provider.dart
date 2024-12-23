@@ -80,6 +80,15 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> logout() async {
     try {
+      // Call the logout service to invalidate the session on the backend
+      final result = await AuthService.logout();
+      if (result) {
+        print('Backend logout successful');
+      } else {
+        print('Backend logout failed');
+      }
+
+      // Clear tokens locally regardless of backend result
       await _storage.delete(key: 'accessToken');
       await _storage.delete(key: 'refreshToken');
       _student = null;

@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:online_course/providers/auth_provider.dart';
 import 'package:online_course/screens/auth/forget_password.dart';
@@ -7,6 +10,7 @@ import 'package:online_course/screens/auth/signup.dart';
 import 'package:online_course/screens/root_app.dart';
 import 'package:online_course/screens/splash.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:online_course/screens/verify_email.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:online_course/utils/logger.dart';
@@ -31,9 +35,61 @@ Future<void> main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   static final ValueNotifier<Locale> currentLocale =
       ValueNotifier<Locale>(Locale("ar"));
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  static final ValueNotifier<Locale> currentLocale =
+      ValueNotifier<Locale>(Locale("ar"));
+  late AppLinks _appLinks;
+  StreamSubscription? _sub;
+
+  @override
+  void initState() {
+    super.initState();
+    _appLinks = AppLinks();
+    _handleIncomingLinks();
+  }
+
+  void _handleIncomingLinks() {
+    _sub = _appLinks.uriLinkStream.listen((Uri? uri) {
+      if (uri != null) {
+        if (uri.host == 'reset-password') {
+          final token = uri.queryParameters['token'];
+          if (token != null) {
+            // Use navigatorKey to push the route
+            navigatorKey.currentState?.push(
+              MaterialPageRoute(
+                builder: (context) => ResetPasswordScreen(token: token),
+              ),
+            );
+          }
+        } else if (uri.host == 'verify') {
+          final token = uri.queryParameters['token'];
+          if (token != null) {
+            navigatorKey.currentState?.push(
+              MaterialPageRoute(
+                builder: (context) => VerifyEmailScreen(token: token),
+              ),
+            );
+          }
+        }
+      }
+    }, onError: (Object err) {
+      print('Error handling deep link: $err');
+    });
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +99,7 @@ class MyApp extends StatelessWidget {
         return Consumer<AuthProvider>(
           builder: (context, auth, _) {
             return MaterialApp(
+              navigatorKey: navigatorKey,
               debugShowCheckedModeBanner: false,
               title: 'Beta Prime School',
               localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -70,7 +127,11 @@ class MyApp extends StatelessWidget {
                 '/login': (context) => const LoginScreen(),
                 '/signup': (context) => const SignupScreen(),
                 '/forget-password': (context) => const ForgetPasswordScreen(),
-                '/reset-password': (context) => const ResetPasswordScreen(),
+                '/reset-password': (context) =>
+                    const ResetPasswordScreen(token: ''),
+                '/verify': (context) => const VerifyEmailScreen(
+                      token: '',
+                    ),
               },
             );
           },

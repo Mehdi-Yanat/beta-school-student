@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  app_links: ^6.3.3
   provider: ^6.1.2
   flutter_secure_storage: ^9.2.2
   flutter_dotenv: ^5.1.0
@@ -43,7 +44,6 @@ flutter_icons:
 flutter:
   generate: true # Add this line
   uses-material-design: true
-  
   assets:
     - assets/icons/
     - assets/icons/categories/

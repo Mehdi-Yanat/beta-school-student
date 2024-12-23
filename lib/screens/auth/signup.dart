@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:online_course/services/auth_service.dart';
+import 'package:online_course/widgets/snackbar.dart';
 import '../../models/student.dart';
 import '../../theme/color.dart';
 import '../../utils/constant.dart';
@@ -78,16 +79,27 @@ class _SignupScreenState extends State<SignupScreen> {
       final success = await AuthService.registerStudent(student, lang: locale);
 
       if (success) {
-        Navigator.pushReplacementNamed(context, '/login');
+        if (mounted) {
+          SnackBarHelper.showSuccessSnackBar(
+              context, AppLocalizations.of(context)!.signup_success);
+          Navigator.pushReplacementNamed(context, '/login');
+        }
       } else {
-        setState(() {
-          _errorMessage = AppLocalizations.of(context)!.signup_failed;
-        });
+        if (mounted) {
+          SnackBarHelper.showErrorSnackBar(
+              context, AppLocalizations.of(context)!.signup_failed);
+          setState(() {
+            _errorMessage = AppLocalizations.of(context)!.signup_failed;
+          });
+        }
       }
     } catch (e) {
-      setState(() {
-        _errorMessage = e.toString();
-      });
+      if (mounted) {
+        SnackBarHelper.showErrorSnackBar(context, e.toString());
+        setState(() {
+          _errorMessage = e.toString();
+        });
+      }
     } finally {
       setState(() {
         _isLoading = false;

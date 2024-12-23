@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:online_course/providers/auth_provider.dart';
+import 'package:online_course/widgets/snackbar.dart';
 import 'package:provider/provider.dart';
 import '../../theme/color.dart';
 import '../../widgets/gradient_button.dart';
@@ -37,13 +38,18 @@ class _LoginScreenState extends State<LoginScreen> {
         locale,
       );
 
-      if (mounted) {
-        if (result.success) {
-          Navigator.pushReplacementNamed(context, '/root');
-        } else {
-          setState(() => _errorMessage = result.message);
-        }
+       if (mounted) {
+      if (result.success) {
+        SnackBarHelper.showSuccessSnackBar(
+          context, 
+          AppLocalizations.of(context)!.login_success
+        );
+        Navigator.pushReplacementNamed(context, '/root');
+      } else {
+        SnackBarHelper.showErrorSnackBar(context, result.message);
+        setState(() => _errorMessage = result.message);
       }
+    }
     } finally {
       if (mounted) {
         setState(() => _isLoading = false);

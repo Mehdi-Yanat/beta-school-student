@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
 import 'package:online_course/screens/profile/update_profile.dart';
-import '../../main.dart';
+import '../../main.dart' show MyApp;
 import '../../theme/color.dart';
 import '../../widgets/appbar.dart';
 
@@ -84,7 +84,7 @@ class _SettingPageState extends State<SettingPage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>  UpdateProfileScreen()));
+                      builder: (context) => UpdateProfileScreen()));
             },
           ),
           ListTile(

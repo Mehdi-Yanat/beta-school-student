@@ -1,4 +1,5 @@
 {
+  "@@locale": "fr",
   "welcome_message": "Bon retour !",
   "sign_in_message": "Connectez-vous pour accéder à vos cours.",
   "email_hint": "Adresse e-mail",
@@ -195,5 +196,21 @@
   "upload_photo": "Télécharger la photo",
   "update_profile": "Mettre à jour le profil",
   "class_label": "Classe",
-  "update": "Mettre à jour"
+  "update": "Mettre à jour",
+  "wait_before_retry": "Veuillez patienter avant de réessayer.",
+  "reset_link_failed": "Échec de l'envoi du lien de réinitialisation du mot de passe. Veuillez réessayer.",
+  "reset_link_sent": "Un lien de réinitialisation du mot de passe a été envoyé à votre adresse e-mail.",
+  "retry_in": "Réessayer dans {seconds} secondes",
+  "login_success": "Connexion réussie.",
+  "signup_success": "Compte créé avec succès.",
+  "confirm_logout": "Voulez-vous vous déconnecter ?",
+  "confirm_logout_message": "Vous serez déconnecté de votre compte actuel.",
+  "cancel": "Annuler",
+  "logout": "Se déconnecter",
+  "logout_error": "échec de la déconnexion. Veuillez réessayer.",
+  "email_verification_in_progress": "Vérification de l'email en cours...",
+  "email_verification_success": "Email vérifié avec succès.",
+  "password_reset_success": "Mot de passe réinitialisé avec succès.",
+  "confirm_password_required": "Veuillez confirmer votre mot de passe",
+  "passwords_do_not_match": "Les mots de passe ne correspondent pas"
 }
