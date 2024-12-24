@@ -27,13 +27,11 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      final locale = Localizations.localeOf(context).languageCode;
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
       final result = await authProvider.login(
         _emailController.text.trim(),
         _passwordController.text,
-        locale,
       );
 
       if (mounted) {

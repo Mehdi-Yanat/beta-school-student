@@ -18,7 +18,7 @@ import 'package:provider/provider.dart';
 
 Future<void> main() async {
   // Ensure the environment file is loaded correctly
-  await dotenv.load(fileName: ".env.production");
+  await dotenv.load(fileName: ".env.development");
 
   Logger.enable();
 
@@ -42,10 +42,8 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-  static final ValueNotifier<Locale> currentLocale =
-      ValueNotifier<Locale>(Locale("ar"));
   late AppLinks _appLinks;
   StreamSubscription? _sub;
 
@@ -54,6 +52,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     _appLinks = AppLinks();
     _handleIncomingLinks();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   void _handleIncomingLinks() {
@@ -87,14 +86,25 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _sub?.cancel();
     super.dispose();
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (state == AppLifecycleState.resumed) {
+      authProvider.handleWindowFocus();
+    } else if (state == AppLifecycleState.paused) {
+      authProvider.handleWindowBlur();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<Locale>(
-      valueListenable: currentLocale,
+      valueListenable: MyApp.currentLocale,
       builder: (context, locale, _) {
         return Consumer<AuthProvider>(
           builder: (context, auth, _) {
@@ -118,7 +128,7 @@ class _MyAppState extends State<MyApp> {
                 ),
               ),
               home: auth.isLoading
-                  ? SplashScreen(currentLocale.value)
+                  ? SplashScreen(MyApp.currentLocale.value)
                   : auth.isAuthenticated
                       ? const RootApp()
                       : const LoginScreen(),

@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:http_interceptor/http_interceptor.dart';
+import 'package:online_course/main.dart';
+import 'package:online_course/utils/auth_interceptor.dart';
 import 'package:online_course/utils/storage.dart';
 import 'dart:convert';
 import '../models/student.dart';
@@ -17,9 +20,19 @@ class AuthResult {
 class AuthService {
   static final String baseUrl = dotenv.env['API_URL'] ?? '';
 
+  static final _client = InterceptedClient.build(
+    interceptors: [AuthInterceptor()],
+    requestTimeout: Duration(seconds: 60),
+  );
+
+  static String getCurrentLocale() {
+    return MyApp.currentLocale.value.languageCode;
+  }
+
   static Map<String, String> _headers([String? token]) {
     return {
       'Content-Type': 'application/json',
+      'Accept-Language': getCurrentLocale(),
       if (token != null) 'Authorization': 'Bearer $token',
     };
   }
@@ -30,7 +43,7 @@ class AuthService {
     try {
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse('$baseUrl/auth/student/register'),
+        Uri.parse('$baseUrl/auth/student/register?lng=${getCurrentLocale()}'),
       );
 
       // Add text fields
@@ -70,7 +83,7 @@ class AuthService {
       {String lang = 'ar'}) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/auth/login?lng=$lang'),
+        Uri.parse('$baseUrl/auth/login?lng=${getCurrentLocale()}'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'email': email,
@@ -99,14 +112,11 @@ class AuthService {
   }
 
   // Verify the token
-  static Future<Map<String, dynamic>?> verifyToken(String token,
-      {String lang = 'ar'}) async {
+  static Future<Map<String, dynamic>?> verifyToken({String lang = 'ar'}) async {
     try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/student/me?lng=$lang'),
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
+      final response = await _client.get(
+        Uri.parse('$baseUrl/student/me?lng=${getCurrentLocale()}'),
+        headers: _headers(),
       );
 
       if (response.statusCode == 200) {
@@ -131,7 +141,7 @@ class AuthService {
     try {
       var request = http.MultipartRequest(
         'PUT',
-        Uri.parse('$baseUrl/student/me?lng=$lang'),
+        Uri.parse('$baseUrl/student/me?lng=${getCurrentLocale()}'),
       );
 
       // Add auth header
@@ -158,7 +168,7 @@ class AuthService {
         );
       }
 
-      final streamedResponse = await request.send();
+      final streamedResponse = await _client.send(request);
       final response = await http.Response.fromStream(streamedResponse);
 
       final Map<String, dynamic> responseData = jsonDecode(response.body);
@@ -170,10 +180,110 @@ class AuthService {
     }
   }
 
+  static Future<AuthResult> updateEmail(String token, String email,
+      {String lang = 'ar'}) async {
+    try {
+      final response = await _client.put(
+        Uri.parse('$baseUrl/student/me?lng=${getCurrentLocale()}'),
+        headers: _headers(token),
+        body: jsonEncode({
+          'email': email,
+        }),
+      );
+
+      if (response.body.isNotEmpty) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        final String message = responseData['message'] ?? 'Unknown error';
+        return AuthResult(response.statusCode == 200, message);
+      }
+
+      return AuthResult(response.statusCode == 200,
+          'Email update ${response.statusCode == 200 ? 'successful' : 'failed'}');
+    } catch (e) {
+      print('Email update error: $e');
+      return AuthResult(false, e.toString());
+    }
+  }
+
+  static Future<AuthResult> updatePassword(
+      String token, String currentPassword, String newPassword,
+      {String lang = 'ar'}) async {
+    try {
+      final response = await _client.put(
+        Uri.parse('$baseUrl/student/me?lng=${getCurrentLocale()}'),
+        headers: _headers(token),
+        body: jsonEncode({
+          'password': newPassword,
+        }),
+      );
+
+      if (response.body.isNotEmpty) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        final String message = responseData['message'] ?? 'Unknown error';
+        return AuthResult(response.statusCode == 200, message);
+      }
+
+      return AuthResult(response.statusCode == 200,
+          'Password update ${response.statusCode == 200 ? 'successful' : 'failed'}');
+    } catch (e) {
+      print('Password update error: $e');
+      return AuthResult(false, e.toString());
+    }
+  }
+
+  static Future<AuthResult> refreshTokens(String refreshToken) async {
+    try {
+      print('🔄 Starting token refresh...');
+      print('📤 Using refresh token: ${refreshToken.substring(0, 10)}...');
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/auth/refresh-tokens?lng=${getCurrentLocale()}'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'refreshToken': refreshToken,
+        }),
+      );
+
+      print('📥 Refresh response status: ${response.statusCode}');
+      print('📥 Refresh response body: ${response.body}');
+
+      if (response.statusCode == 200 && response.body.isNotEmpty) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        print('📦 Response data structure: $responseData');
+
+        // Direct access to token objects
+        final String? accessToken = responseData['access']?['token'];
+        final String? newRefreshToken = responseData['refresh']?['token'];
+
+        if (accessToken != null && newRefreshToken != null) {
+          print('✅ Tokens extracted successfully');
+          print('📝 New access token: ${accessToken.substring(0, 10)}...');
+
+          await Future.wait([
+            StorageService.saveToken("accessToken", accessToken),
+            StorageService.saveToken("refreshToken", newRefreshToken),
+          ]);
+
+          return AuthResult(true, 'Tokens refreshed successfully');
+        } else {
+          print('❌ Token extraction failed - tokens were null');
+          return AuthResult(false, 'Invalid token format in response');
+        }
+      }
+
+      print('❌ Invalid response from server');
+      return AuthResult(false, 'Invalid response from server');
+    } catch (e, stack) {
+      print('💥 Refresh tokens error: $e');
+      print('Stack trace: $stack');
+      return AuthResult(false, e.toString());
+    }
+  }
+
   static Future<bool> forgotPassword(String email, {String lang = 'ar'}) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/auth/forgot-password?lng=$lang'),
+        Uri.parse('$baseUrl/auth/forgot-password?lng=${getCurrentLocale()}'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'email': email}),
       );
@@ -196,8 +306,8 @@ class AuthService {
       }
 
       // Make a logout request to the backend
-      final response = await http.post(
-        Uri.parse('$baseUrl/auth/logout?lng=$lang'),
+      final response = await _client.post(
+        Uri.parse('$baseUrl/auth/logout?lng=${getCurrentLocale()}'),
         headers: _headers(accessToken),
         body: jsonEncode({"refreshToken": refreshToken}),
       );
@@ -222,8 +332,9 @@ class AuthService {
   static Future<bool> sendEmailVerification({String lang = 'ar'}) async {
     final String token = await StorageService.getToken('accessToken') ?? '';
     try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/auth/send-verification-email'),
+      final response = await _client.post(
+        Uri.parse(
+            '$baseUrl/auth/send-verification-email?lng=${getCurrentLocale()}'),
         headers: _headers(token), // Pass the authorization token
       );
 
@@ -242,7 +353,7 @@ class AuthService {
 
   static Future<bool> verifyEmail(String token, {String lang = 'ar'}) async {
     try {
-      final response = await http.get(
+      final response = await _client.get(
         Uri.parse('$baseUrl/auth/verify-email?token=$token'),
         headers: {
           ..._headers(), // Include existing headers
@@ -256,7 +367,6 @@ class AuthService {
 
       if (response.body.isNotEmpty) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        print("responseData ${responseData}");
         if (isSuccess) {
           return true; // Success case
         }
@@ -272,7 +382,7 @@ class AuthService {
   static Future<AuthResult> resetPassword(String token, String newPassword,
       {String lang = 'ar'}) async {
     try {
-      final response = await http.post(
+      final response = await _client.post(
         Uri.parse('$baseUrl/auth/reset-password?token=$token'),
         headers: _headers(),
         body: jsonEncode({
@@ -291,6 +401,39 @@ class AuthService {
     } catch (e) {
       print('Password reset error: $e');
       return AuthResult(false, e.toString());
+    }
+  }
+
+  static Future<bool> deleteAccount({String lang = 'ar'}) async {
+    final String? token = await StorageService.getToken('accessToken');
+
+    if (token == null) {
+      print('No access token found, user not authenticated.');
+      return false; // If no token is found, consider the user as unauthenticated
+    }
+
+    try {
+      final response = await _client.delete(
+        Uri.parse(
+            '$baseUrl/student/me?lng=${getCurrentLocale()}'), // Use current locale
+        headers: _headers(token), // Send headers with Authorization token
+      );
+
+      // Check if the deletion was successful
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        // Optionally clear tokens after user deletion
+        await Future.wait([
+          StorageService.deleteToken("accessToken"),
+          StorageService.deleteToken("refreshToken"),
+        ]);
+        return true; // Successfully deleted account
+      } else {
+        print('Account deletion failed: ${response.body}');
+        return false; // Deletion failed
+      }
+    } catch (e) {
+      print('Error during account deletion: $e');
+      return false; // Error occurred, deletion not successful
     }
   }
 }

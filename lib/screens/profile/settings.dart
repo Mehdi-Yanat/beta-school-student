@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
-import 'package:online_course/screens/profile/update_profile.dart';
+import 'package:online_course/screens/profile/settings/secuirty.dart';
+import 'package:online_course/screens/profile/settings/update_profile.dart';
+import 'package:online_course/services/auth_service.dart';
+import 'package:online_course/widgets/dialog.dart';
+import 'package:online_course/widgets/snackbar.dart';
 import '../../main.dart' show MyApp;
 import '../../theme/color.dart';
 import '../../widgets/appbar.dart';
@@ -12,14 +16,20 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   // Define the default locale
-  Locale _currentLocale = Locale('fr'); // Default is French
+  late Locale _currentLocale;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentLocale = MyApp.currentLocale.value;
+  }
 
   // Function to switch the selected language and notify the app
   void _setLanguage(Locale locale) {
     setState(() {
-      _currentLocale = locale; // Update locale
+      _currentLocale = locale;
     });
-    MyApp.currentLocale.value = locale; // Notify the app
+    MyApp.currentLocale.value = locale;
   }
 
   // Function to show the language selection dialog
@@ -30,7 +40,7 @@ class _SettingPageState extends State<SettingPage> {
         return AlertDialog(
           title: Text(AppLocalizations.of(context)!.select_language),
           content: Column(
-            mainAxisSize: MainAxisSize.min, // Keep dialog content compact
+            mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
                 leading: Icon(
@@ -41,8 +51,8 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 title: Text(AppLocalizations.of(context)!.language_french),
                 onTap: () {
-                  _setLanguage(Locale('fr')); // Switch to French
-                  Navigator.of(context).pop(); // Close the dialog
+                  _setLanguage(Locale('fr'));
+                  Navigator.of(context).pop();
                 },
               ),
               ListTile(
@@ -54,13 +64,36 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 title: Text(AppLocalizations.of(context)!.language_arabic),
                 onTap: () {
-                  _setLanguage(Locale('ar')); // Switch to Arabic
-                  Navigator.of(context).pop(); // Close the dialog
+                  _setLanguage(Locale('ar'));
+                  Navigator.of(context).pop();
                 },
               ),
             ],
           ),
         );
+      },
+    );
+  }
+
+  void _showDeleteAccountDialog() {
+    showLogoutDialog(
+      context: context,
+      title: AppLocalizations.of(context)!.delete_account_title,
+      message: AppLocalizations.of(context)!.delete_account_message,
+      confirmText: AppLocalizations.of(context)!.delete_button,
+      cancelText: AppLocalizations.of(context)!.cancel_button,
+      onConfirm: () {
+        AuthService.deleteAccount().then((value) {
+          if (value) {
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/login', (route) => false);
+            SnackBarHelper.showSuccessSnackBar(
+                context, AppLocalizations.of(context)!.delete_account_success);
+          } else {
+            SnackBarHelper.showErrorSnackBar(
+                context, AppLocalizations.of(context)!.delete_account_error);
+          }
+        });
       },
     );
   }
@@ -94,18 +127,17 @@ class _SettingPageState extends State<SettingPage> {
               style: TextStyle(color: AppColor.mainColor),
             ),
             onTap: () {
-              // Handle Security tap
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SecurityScreen()));
             },
           ),
           ListTile(
-            leading: Icon(Icons.notifications, color: AppColor.primary),
+            leading: Icon(Icons.delete_forever, color: Colors.red),
             title: Text(
-              AppLocalizations.of(context)!.settings_notifications,
-              style: TextStyle(color: AppColor.mainColor),
+              AppLocalizations.of(context)!.delete_account,
+              style: TextStyle(color: Colors.red),
             ),
-            onTap: () {
-              // Handle Notifications tap
-            },
+            onTap: _showDeleteAccountDialog,
           ),
           const Divider(),
           // Language Selection ListTile
