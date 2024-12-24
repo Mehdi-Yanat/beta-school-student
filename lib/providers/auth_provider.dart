@@ -55,9 +55,8 @@ class AuthProvider with ChangeNotifier {
         print('No token found');
         _isAuthenticated = false;
       }
-    } catch (e, stackTrace) {
+    } catch (e) {
       print('Auth initialization error: $e');
-      print('Stack trace: $stackTrace');
       await logout();
     } finally {
       _isLoading = false;
@@ -71,7 +70,6 @@ class AuthProvider with ChangeNotifier {
       if (result.success) {
         await initAuth(); // Re-initialize auth state
       }
-      print(result);
       return result;
     } catch (e) {
       return AuthResult(false, e.toString());

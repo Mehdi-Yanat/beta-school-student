@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:online_course/providers/auth_provider.dart';
 import 'package:online_course/screens/account.dart';
@@ -5,10 +7,14 @@ import 'package:online_course/screens/announces.dart';
 import 'package:online_course/screens/explore.dart';
 import 'package:online_course/screens/home.dart';
 import 'package:online_course/screens/my_courses.dart';
+import 'package:online_course/services/auth_service.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
+import '../widgets/banner.dart';
 import '../widgets/bottombar_box.dart';
 import '../widgets/bottombar_item.dart';
+import '../widgets/snackbar.dart';
 
 class RootApp extends StatefulWidget {
   const RootApp({Key? key}) : super(key: key);
@@ -27,25 +33,72 @@ class _RootAppState extends State<RootApp> {
     {"icon": "assets/icons/profile.svg", "page": AccountPage()},
   ];
 
+  // Cooldown functionality variables
+  int? remainingCooldownTime;
+  Timer? cooldownTimer;
+  bool isOnCooldown = false;
+
+  @override
+  void dispose() {
+    cooldownTimer?.cancel(); // Cancel timer if the widget is disposed
+    super.dispose();
+  }
+
+  void startCooldown(int duration) {
+    setState(() {
+      remainingCooldownTime = duration;
+      isOnCooldown = true;
+    });
+
+    // Start the timer
+    cooldownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (remainingCooldownTime == null || remainingCooldownTime! <= 0) {
+        timer.cancel(); // Stop the timer when cooldown ends
+        setState(() {
+          isOnCooldown = false;
+          remainingCooldownTime = null;
+        });
+      } else {
+        setState(() {
+          remainingCooldownTime = remainingCooldownTime! - 1; // Decrease time
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Listen to changes in the AuthProvider
     return Consumer<AuthProvider>(
       builder: (context, authProvider, child) {
-        // If not authenticated, redirect to login
         if (!authProvider.isAuthenticated) {
-          // Navigate to login screen
           Future.microtask(
               () => Navigator.pushReplacementNamed(context, '/login'));
 
           return Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
-        }
-
-        // If authenticated, show the main app content
+        } // Show banner if email is not verified
         return Scaffold(
-          body: _buildMainApp(),
+          body: Column(
+            children: [
+              if (authProvider.student?.isEmailVerified == "false")
+                VerificationBanner(
+                  message:
+                      AppLocalizations.of(context)!.email_not_verified_message,
+                  buttonText: isOnCooldown
+                      ? "${AppLocalizations.of(context)!.wait} ${remainingCooldownTime}s" // Cooldown button text
+                      : AppLocalizations.of(context)!.send_verification_button,
+                  onButtonPressed: () {
+                    if (!isOnCooldown) {
+                      _handleVerificationButtonPressed();
+                    }
+                  },
+                ),
+
+              // Main app content
+              Expanded(child: _buildMainApp()),
+            ],
+          ),
           bottomNavigationBar: _buildBottomBar(),
         );
       },
@@ -79,5 +132,23 @@ class _RootAppState extends State<RootApp> {
         ),
       ),
     );
+  }
+
+  Future<void> _handleVerificationButtonPressed() async {
+    final success = await AuthService.sendEmailVerification();
+
+    // Use the reusable snackbar to display the result
+    if (success) {
+      SnackBarHelper.showSuccessSnackBar(
+        context,
+        AppLocalizations.of(context)!.verification_email_sent_success,
+      );
+      startCooldown(30); // Start cooldown only if the request is successful
+    } else {
+      SnackBarHelper.showErrorSnackBar(
+        context,
+        AppLocalizations.of(context)!.verification_email_sent_failure,
+      );
+    }
   }
 }

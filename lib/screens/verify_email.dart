@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:online_course/providers/auth_provider.dart';
 import 'package:online_course/services/auth_service.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:online_course/widgets/snackbar.dart';
+import 'package:provider/provider.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
   final String token;
+
   const VerifyEmailScreen({super.key, required this.token});
 
   @override
@@ -29,24 +32,36 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     });
 
     try {
+      print("Starting email verification...");
       final result = await AuthService.verifyEmail(widget.token);
-
-      if (result.success) {
+      print("result  ${result}");
+      if (result) {
         if (mounted) {
+          print("Email verification successful");
           SnackBarHelper.showSuccessSnackBar(
             context,
             AppLocalizations.of(context)!.email_verification_success,
           );
-          Navigator.pushReplacementNamed(context, '/login');
+          print("Navigating to /root...");
+          Navigator.pushReplacementNamed(context, '/root');
+          print("Refreshing profile...");
+          final authProvider = context.read<AuthProvider>();
+          await authProvider.refreshProfile();
+          print("Profile refresh completed successfully");
         }
       } else {
-        setState(() => _errorMessage = result.message);
-        SnackBarHelper.showErrorSnackBar(context, result.message);
+        print("Email verification failed");
+        setState(() => _errorMessage =
+            AppLocalizations.of(context)!.email_verification_failed);
+        SnackBarHelper.showErrorSnackBar(
+            context, AppLocalizations.of(context)!.email_verification_failed);
       }
     } catch (e) {
+      print("Error during email verification: $e");
       setState(() => _errorMessage = e.toString());
       SnackBarHelper.showErrorSnackBar(context, e.toString());
     } finally {
+      print("Email verification process completed");
       setState(() => _isLoading = false);
     }
   }
@@ -60,7 +75,8 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
             ? CircularProgressIndicator()
             : Text(
                 _errorMessage.isEmpty
-                    ? AppLocalizations.of(context)!.email_verification_in_progress
+                    ? AppLocalizations.of(context)!
+                        .email_verification_in_progress
                     : _errorMessage,
                 style: TextStyle(color: AppColor.textColor),
               ),

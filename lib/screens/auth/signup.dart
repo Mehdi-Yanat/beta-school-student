@@ -32,7 +32,6 @@ class _SignupScreenState extends State<SignupScreen> {
   String? _selectedWilaya;
   String? _selectedClass;
   bool _isLoading = false;
-  String _errorMessage = '';
   int _currentStep = 0;
 
   final List<String> wilayas = Wilaya.values.map((e) => e.name).toList();
@@ -57,7 +56,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
     setState(() {
       _isLoading = true;
-      _errorMessage = '';
     });
 
     try {
@@ -88,17 +86,11 @@ class _SignupScreenState extends State<SignupScreen> {
         if (mounted) {
           SnackBarHelper.showErrorSnackBar(
               context, AppLocalizations.of(context)!.signup_failed);
-          setState(() {
-            _errorMessage = AppLocalizations.of(context)!.signup_failed;
-          });
         }
       }
     } catch (e) {
       if (mounted) {
         SnackBarHelper.showErrorSnackBar(context, e.toString());
-        setState(() {
-          _errorMessage = e.toString();
-        });
       }
     } finally {
       setState(() {
@@ -488,15 +480,6 @@ class _SignupScreenState extends State<SignupScreen> {
                   },
                 ),
               ),
-              if (_errorMessage.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    _errorMessage,
-                    style: const TextStyle(color: Colors.red),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Row(

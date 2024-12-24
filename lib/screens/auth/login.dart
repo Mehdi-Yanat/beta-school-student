@@ -18,14 +18,12 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
-  String _errorMessage = '';
 
   void _login() async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() {
       _isLoading = true;
-      _errorMessage = '';
     });
 
     try {
@@ -38,18 +36,15 @@ class _LoginScreenState extends State<LoginScreen> {
         locale,
       );
 
-       if (mounted) {
-      if (result.success) {
-        SnackBarHelper.showSuccessSnackBar(
-          context, 
-          AppLocalizations.of(context)!.login_success
-        );
-        Navigator.pushReplacementNamed(context, '/root');
-      } else {
-        SnackBarHelper.showErrorSnackBar(context, result.message);
-        setState(() => _errorMessage = result.message);
+      if (mounted) {
+        if (result.success) {
+          SnackBarHelper.showSuccessSnackBar(
+              context, AppLocalizations.of(context)!.login_success);
+          Navigator.pushReplacementNamed(context, '/root');
+        } else {
+          SnackBarHelper.showErrorSnackBar(context, result.message);
+        }
       }
-    }
     } finally {
       if (mounted) {
         setState(() => _isLoading = false);
@@ -158,17 +153,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
 
               const SizedBox(height: 20),
-
-              // Error Message
-              if (_errorMessage.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    _errorMessage,
-                    style: const TextStyle(color: Colors.red),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
 
               // Login Button
               const SizedBox(height: 20),

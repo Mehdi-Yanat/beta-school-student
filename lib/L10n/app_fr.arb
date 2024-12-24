@@ -212,5 +212,11 @@
   "email_verification_success": "Email vérifié avec succès.",
   "password_reset_success": "Mot de passe réinitialisé avec succès.",
   "confirm_password_required": "Veuillez confirmer votre mot de passe",
-  "passwords_do_not_match": "Les mots de passe ne correspondent pas"
+  "passwords_do_not_match": "Les mots de passe ne correspondent pas",
+  "email_not_verified_message": "Your email is not verified. Please verify to continue.",
+  "send_verification_button": "Send Verification",
+  "verification_email_sent_success": "Verification email sent successfully.",
+  "verification_email_sent_failure": "Failed to send verification email. Try again later.",
+  "wait": "Attendre",
+  "email_verification_failed": "Échec de la vérification de l'e-mail"
 }

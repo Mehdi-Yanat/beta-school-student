@@ -6,6 +6,7 @@ import 'package:online_course/services/auth_service.dart';
 import 'package:online_course/theme/color.dart';
 
 import '../../widgets/gradient_button.dart';
+import '../../widgets/snackbar.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({super.key});
@@ -18,8 +19,6 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   bool _isLoading = false;
-  String _errorMessage = '';
-  DateTime? _lastRequestTime;
   Timer? _cooldownTimer;
   int _cooldownSeconds = 0;
 
@@ -31,7 +30,6 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   }
 
   void _startCooldown() {
-    _lastRequestTime = DateTime.now();
     _cooldownSeconds = 60; // 1 minute cooldown
     _cooldownTimer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
@@ -49,17 +47,16 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
 
     // Check cooldown
     if (_cooldownSeconds > 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(AppLocalizations.of(context)!
-                .wait_before_retry)),
+      // Use reusable SnackBar for cooldown message
+      SnackBarHelper.showErrorSnackBar(
+        context,
+        AppLocalizations.of(context)!.wait_before_retry,
       );
       return;
     }
 
     setState(() {
       _isLoading = true;
-      _errorMessage = '';
     });
 
     try {
@@ -72,17 +69,14 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
       if (success) {
         if (mounted) {
           _startCooldown(); // Start cooldown timer
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text(AppLocalizations.of(context)!.reset_link_sent)),
+          // Use reusable SnackBar for success feedback
+          SnackBarHelper.showSuccessSnackBar(
+            context,
+            AppLocalizations.of(context)!.reset_link_sent,
           );
         }
-      } else {
-        setState(() =>
-            _errorMessage = AppLocalizations.of(context)!.reset_link_failed);
       }
     } catch (e) {
-      setState(() => _errorMessage = e.toString());
     } finally {
       setState(() => _isLoading = false);
     }
@@ -153,16 +147,6 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                 },
               ),
               const SizedBox(height: 10),
-
-              if (_errorMessage.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: Text(
-                    _errorMessage,
-                    style: TextStyle(color: Colors.red),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
 
               GradientButton(
                 text: _isLoading

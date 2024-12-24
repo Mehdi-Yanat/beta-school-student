@@ -5,12 +5,15 @@ class SnackBarHelper {
   static void showSuccessSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Row(
-          children: [
-            Icon(Icons.check_circle, color: AppColor.sky),
-            SizedBox(width: 8),
-            Expanded(child: Text(message)),
-          ],
+        content: Padding(
+          padding: EdgeInsets.all(10), // Adding 20px padding around the content
+          child: Row(
+            children: [
+              Icon(Icons.check_circle, color: AppColor.sky),
+              SizedBox(width: 8),
+              Expanded(child: Text(message)),
+            ],
+          ),
         ),
         backgroundColor: AppColor.green,
         duration: Duration(seconds: 3),
@@ -24,12 +27,15 @@ class SnackBarHelper {
   static void showErrorSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Row(
-          children: [
-            Icon(Icons.error, color: AppColor.sky),
-            SizedBox(width: 8),
-            Expanded(child: Text(message)),
-          ],
+        content: Padding(
+          padding: EdgeInsets.all(10), // Same 20px padding applied here
+          child: Row(
+            children: [
+              Icon(Icons.error, color: AppColor.sky),
+              SizedBox(width: 8),
+              Expanded(child: Text(message)),
+            ],
+          ),
         ),
         backgroundColor: AppColor.red,
         duration: Duration(seconds: 3),

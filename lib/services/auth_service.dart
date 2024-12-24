@@ -10,6 +10,7 @@ import 'package:http_parser/http_parser.dart';
 class AuthResult {
   final bool success;
   final String message;
+
   AuthResult(this.success, this.message);
 }
 
@@ -218,25 +219,53 @@ class AuthService {
     }
   }
 
-  static Future<AuthResult> verifyEmail(String token,
-      {String lang = 'ar'}) async {
+  static Future<bool> sendEmailVerification({String lang = 'ar'}) async {
+    final String token = await StorageService.getToken('accessToken') ?? '';
     try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/auth/verify-email?token=$token'),
-        headers: _headers(),
+      final response = await http.post(
+        Uri.parse('$baseUrl/auth/send-verification-email'),
+        headers: _headers(token), // Pass the authorization token
       );
 
       if (response.body.isNotEmpty) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        final String message = responseData['message'] ?? 'Unknown error';
-        return AuthResult(response.statusCode == 200, message);
+        print("responseData ${responseData}");
+        return true;
       }
 
-      return AuthResult(response.statusCode == 200,
-          'Email verification ${response.statusCode == 200 ? 'successful' : 'failed'}');
+      return response.statusCode == 204 ? true : false;
     } catch (e) {
       print('Email verification error: $e');
-      return AuthResult(false, e.toString());
+      return false;
+    }
+  }
+
+  static Future<bool> verifyEmail(String token, {String lang = 'ar'}) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/auth/verify-email?token=$token'),
+        headers: {
+          ..._headers(), // Include existing headers
+          'Accept-Language': lang, // Pass the language for localization
+        },
+      );
+
+      // Check success based on the status code
+      final bool isSuccess =
+          response.statusCode >= 200 && response.statusCode < 300;
+
+      if (response.body.isNotEmpty) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        print("responseData ${responseData}");
+        if (isSuccess) {
+          return true; // Success case
+        }
+      }
+
+      return false; // Failure case
+    } catch (e) {
+      print('Error during email verification: $e');
+      return false; // Explicit failure in case of an exception
     }
   }
 
