@@ -173,7 +173,7 @@ class CourseDetailScreen extends StatelessWidget {
                 color: AppColor.cardColor,
                 boxShadow: [
                   BoxShadow(
-                    color: AppColor.shadowColor.withOpacity(0.1),
+                    color: AppColor.shadowColor.withValues(alpha: 0.1),
                     blurRadius: 10,
                   ),
                 ],

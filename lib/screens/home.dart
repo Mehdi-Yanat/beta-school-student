@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
 import 'package:online_course/providers/auth_provider.dart';
 import 'package:online_course/providers/course_provider.dart';
+import 'package:online_course/providers/teacher_provider.dart';
 import 'package:online_course/screens/course_detail.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:online_course/utils/data.dart';
 import 'package:online_course/widgets/category_box.dart';
 import 'package:online_course/widgets/feature_item.dart';
 import 'package:online_course/widgets/notification_box.dart';
-import 'package:online_course/widgets/recommend_item.dart';
+import 'package:online_course/widgets/teacher_item.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/sliver_app_bar.dart';
@@ -27,6 +28,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<CourseProvider>().fetchCourses();
+      context.read<TeacherProvider>().fetchTeachers();
     });
   }
 
@@ -59,6 +61,25 @@ class _HomePageState extends State<HomePage> {
   Widget _buildAppBar(localizations) {
     return Consumer<AuthProvider>(builder: (context, authProvider, widget) {
       final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+
+      String getFormattedName() {
+        if (authProvider.student == null) return '';
+
+        final firstName = isArabic
+            ? (authProvider.student!.firstNameAr ??
+                authProvider.student!.firstName ??
+                '')
+            : (authProvider.student!.firstName ?? '');
+
+        final lastName = isArabic
+            ? (authProvider.student!.lastNameAr ??
+                authProvider.student!.lastName ??
+                '')
+            : (authProvider.student!.lastName ?? '');
+
+        return '$firstName $lastName'.trim();
+      }
+
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -68,17 +89,15 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "${isArabic ? authProvider.student!.firstNameAr : authProvider.student!.firstName} ${isArabic ? authProvider.student!.lastNameAr : authProvider.student!.lastName}", // Localized "Hello" text
+                  getFormattedName(),
                   style: TextStyle(
                     color: AppColor.labelColor,
                     fontSize: 14,
                   ),
                 ),
-                const SizedBox(
-                  height: 5,
-                ),
+                const SizedBox(height: 5),
                 Text(
-                  localizations.greeting, // Localized greeting
+                  localizations.greeting,
                   style: TextStyle(
                     color: AppColor.mainColor,
                     fontWeight: FontWeight.w500,
@@ -88,9 +107,7 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          NotificationBox(
-            notifiedNumber: 1,
-          )
+          NotificationBox(notifiedNumber: 1),
         ],
       );
     });
@@ -125,7 +142,7 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  localizations.recommended, // Localized "Recommended" title
+                  localizations.teachers,
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w600,
@@ -142,7 +159,7 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          _buildRecommended(),
+          _buildAcceptedTeachers(),
         ],
       ),
     );
@@ -174,34 +191,63 @@ class _HomePageState extends State<HomePage> {
         if (courseProvider.isLoading) {
           return Center(child: CircularProgressIndicator());
         }
-  
+
+        if (courseProvider.courses.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.school_outlined,
+                    size: 64, color: AppColor.mainColor),
+                const SizedBox(height: 70),
+                Text(
+                  AppLocalizations.of(context)!.no_courses_found,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: AppColor.mainColor,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
         return CarouselSlider(
           options: CarouselOptions(
-            height: 300,
+            height: 320,
             enlargeCenterPage: true,
             disableCenter: true,
             viewportFraction: .75,
           ),
           items: courseProvider.courses.map((course) {
-            // Calculate total duration safely
-            final totalDuration = course.chapters.fold<int>(
-              0,
-              (sum, chapter) => sum + (chapter.duration ?? 0)
-            );
-            
-            // Calculate final price with discount
-            final finalPrice = course.discount != null 
+            print('course.icon?.url ${course.icon?.url}');
+            final firstChapter =
+                course.chapters.isNotEmpty ? course.chapters.first : null;
+            final totalDuration = course.chapters
+                .fold<int>(0, (sum, chapter) => sum + (chapter.duration ?? 0));
+            final finalPrice = course.discount != null
                 ? course.price - course.discount!
                 : course.price;
-  
+
+            final subject = course.teacher.subject ?? 'Unknown Subject';
+            final teacherName =
+                "${course.teacher.user.firstName} ${course.teacher.user.lastName}"
+                    .trim();
             return FeatureItem(
               data: {
-                "image": course.icon?.url ?? "assets/images/default_course.png",
+                "thumbnail": firstChapter?.thumbnail?.url ??
+                    "assets/images/default_course.png",
+                "icon": course.icon?.url ?? "assets/images/default_icon.png",
                 "name": course.title,
-                "price": "$finalPrice DA",
-                "session": "${course.chapters.length} Sessions",
-                "duration": "$totalDuration min",
-                "review": course.teacher.yearsOfExperience.toString(),
+                "price": "${finalPrice.toString()} DA",
+                "session":
+                    "${course.chapters.length} ${AppLocalizations.of(context)!.courses}",
+                "duration":
+                    "$totalDuration ${AppLocalizations.of(context)!.minutes}",
+                "teacherName":
+                    "${course.teacher.user.firstName} ${course.teacher.user.lastName}"
+                        .trim(),
               },
               onTap: () => Navigator.push(
                 context,
@@ -216,21 +262,67 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildRecommended() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(15, 5, 0, 5),
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: List.generate(
-          recommends.length,
-          (index) => Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: RecommendItem(
-              data: recommends[index],
+  Widget _buildAcceptedTeachers() {
+    return Consumer<TeacherProvider>(
+      builder: (context, teacherProvider, child) {
+        if (teacherProvider.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        print(teacherProvider.teachers);
+        if (teacherProvider.teachers.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.person_off, size: 64, color: AppColor.mainColor),
+                const SizedBox(height: 16),
+                Text(
+                  AppLocalizations.of(context)!.no_teachers_found,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: AppColor.mainColor,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
+          );
+        }
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(15, 15, 0, 15),
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: teacherProvider.teachers.map((teacher) {
+              final isArabic =
+                  Localizations.localeOf(context).languageCode == 'ar';
+              final fullName = isArabic
+                  ? "${teacher.firstNameAr ?? teacher.firstName} ${teacher.lastNameAr ?? teacher.lastName}"
+                  : "${teacher.firstName} ${teacher.lastName}";
+
+              final profilePic = teacher.profilePic?.url != null
+                  ? teacher.profilePic?.url
+                  : "/assets/images/profile.png";
+
+              print("teacher.profilePic?.url: ${teacher.profilePic?.url}");
+              return Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: TeacherItem(
+                  data: {
+                    "image": profilePic,
+                    "name": fullName,
+                    "subject": teacher.teacherInfo.subject,
+                    "institution": teacher.teacherInfo.institution,
+                    "experience":
+                        "${teacher.teacherInfo.yearsOfExperience} years",
+                    "review": "4.5",
+                  },
+                ),
+              );
+            }).toList(),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

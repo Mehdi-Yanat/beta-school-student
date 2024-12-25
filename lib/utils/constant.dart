@@ -1,4 +1,30 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 const int ANIMATED_BODY_MS = 500;
+
+class ImageUrls {
+  static final String baseUrl = dotenv.env['API_URL'] ?? '';
+
+  static const String defaultAvatar = "assets/images/profile.png";
+  static const String defaultCourse = "assets/images/default_course.png";
+
+  static String getFullUrl(String? url) {
+    if (url == null) return defaultAvatar;
+    if (url.startsWith('https')) return url;
+    if (url.startsWith('uploads')) {
+      return "$baseUrl/$url".replaceAll(r'\\', '/');
+    }
+    if (url.startsWith('assets')) return url;
+    return defaultAvatar;
+  }
+
+  static bool isNetworkUrl(String? url) {
+    if (url == null) return false;
+    return url.startsWith('https') ||
+        url.startsWith('uploads') ||
+        url.startsWith(baseUrl);
+  }
+}
 
 enum Wilaya {
   ADRAR,
@@ -106,10 +132,4 @@ enum EducationalBranch {
 
 enum CourseLevel { BEGINNER, INTERMEDIATE, ADVANCED }
 
-enum CourseStatus {
-  UNDER_CREATION,
-  PENDING,
-  ACCEPTED,
-  TO_REVIEW,
-  REJECT
-}
+enum CourseStatus { UNDER_CREATION, PENDING, ACCEPTED, TO_REVIEW, REJECT }

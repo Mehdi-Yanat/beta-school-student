@@ -30,7 +30,7 @@ class CourseService {
         Uri.parse('$baseUrl/course/accepted?lng=${getCurrentLocale()}'),
         headers: _headers(),
       );
-  
+
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         return data['courses'] ?? [];

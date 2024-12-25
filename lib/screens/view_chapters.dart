@@ -145,7 +145,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                       subtitle: Text(
                         episode["duration"]!,
                         style: TextStyle(
-                            color: AppColor.textColor.withOpacity(0.7)),
+                            color: AppColor.textColor.withValues(alpha:0.7)),
                       ),
                       onTap: () {
                         _changeVideo(episode["url"]!);

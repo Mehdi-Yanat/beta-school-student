@@ -195,7 +195,7 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: AppColor.shadowColor.withOpacity(0.1),
+                  color: AppColor.shadowColor.withValues(alpha:0.1),
                   spreadRadius: 2,
                   blurRadius: 5,
                   offset: const Offset(0, 3),

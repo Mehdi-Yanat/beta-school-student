@@ -1,21 +1,27 @@
+import 'package:online_course/models/shared.dart';
 import 'package:online_course/utils/constant.dart';
 
-class IconData {
-  final int id;
-  final String fileName;
-  final String url;
+class TeacherUser {
+  final String firstName;
+  final String lastName;
+  final String email;
+  final IconData? profilePic;
 
-  IconData({
-    required this.id,
-    required this.fileName,
-    required this.url,
+  TeacherUser({
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    this.profilePic,
   });
 
-  factory IconData.fromJson(Map<String, dynamic> json) {
-    return IconData(
-      id: json['id'],
-      fileName: json['fileName'],
-      url: json['url'],
+  factory TeacherUser.fromJson(Map<String, dynamic> json) {
+    return TeacherUser(
+      firstName: json['firstName'],
+      lastName: json['lastName'],
+      email: json['email'],
+      profilePic: json['profilePic'] != null
+          ? IconData.fromJson(json['profilePic'])
+          : null,
     );
   }
 }
@@ -32,6 +38,7 @@ class Chapter {
   final DateTime createdAt;
   final DateTime updatedAt;
   final int duration;
+  final IconData? thumbnail;
 
   Chapter({
     required this.id,
@@ -45,6 +52,7 @@ class Chapter {
     required this.createdAt,
     required this.updatedAt,
     required this.duration,
+    this.thumbnail,
   });
 
   factory Chapter.fromJson(Map<String, dynamic> json) {
@@ -60,6 +68,9 @@ class Chapter {
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
       duration: json['duration'],
+      thumbnail: json['thumbnail'] != null
+          ? IconData.fromJson(json['thumbnail'])
+          : null,
     );
   }
 }
@@ -72,6 +83,7 @@ class Teacher {
   final int yearsOfExperience;
   final String status;
   final String? description;
+  final TeacherUser user;
 
   Teacher({
     required this.id,
@@ -81,6 +93,7 @@ class Teacher {
     required this.yearsOfExperience,
     required this.status,
     this.description,
+    required this.user,
   });
 
   factory Teacher.fromJson(Map<String, dynamic> json) {
@@ -92,6 +105,7 @@ class Teacher {
       yearsOfExperience: json['yearsOfExperience'],
       status: json['status'],
       description: json['description'],
+      user: TeacherUser.fromJson(json['user']),
     );
   }
 }
@@ -153,7 +167,7 @@ class Course {
       description: json['description'],
       price: json['price'],
       discount: json['discount'],
-      teacherId: json['teacherId'],
+      teacherId: json['teacher']['id'],
       icon: json['icon'] != null ? IconData.fromJson(json['icon']) : null,
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),

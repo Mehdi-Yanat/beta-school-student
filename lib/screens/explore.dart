@@ -60,7 +60,7 @@ class ExploreScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColor.shadowColor.withOpacity(0.1),
+                    color: AppColor.shadowColor.withValues(alpha: 0.1),
                     blurRadius: 8,
                     offset: Offset(0, 3),
                   ),
@@ -129,7 +129,7 @@ class ExploreScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColor.shadowColor.withOpacity(0.1),
+                          color: AppColor.shadowColor.withValues(alpha: 0.1),
                           blurRadius: 8,
                           offset: Offset(0, 3),
                         ),

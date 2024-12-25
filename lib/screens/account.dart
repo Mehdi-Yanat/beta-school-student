@@ -261,7 +261,7 @@ Widget _buildSection3(BuildContext context, Student? student) {
       color: AppColor.cardColor,
       boxShadow: [
         BoxShadow(
-          color: AppColor.shadowColor.withOpacity(0.1),
+          color: AppColor.shadowColor.withValues(alpha:0.1),
           spreadRadius: 1,
           blurRadius: 1,
           offset: const Offset(0, 1),

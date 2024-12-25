@@ -25,7 +25,7 @@ class NotificationBox extends StatelessWidget {
           shape: BoxShape.circle,
           color: Colors.white,
           border: Border.all(
-            color: Colors.grey.withOpacity(.3),
+            color: Colors.grey.withValues(alpha: 0.3),
           ),
         ),
         child: notifiedNumber > 0 ? _buildIconNotified() : _buildIcon(),

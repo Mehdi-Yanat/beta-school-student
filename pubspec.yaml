@@ -49,5 +49,6 @@ flutter:
     - assets/icons/
     - assets/icons/categories/
     - assets/logo.png
+    - assets/images/
     - .env.development
     - .env.production

@@ -4,6 +4,7 @@ import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:online_course/providers/auth_provider.dart';
 import 'package:online_course/providers/course_provider.dart';
+import 'package:online_course/providers/teacher_provider.dart';
 import 'package:online_course/screens/auth/forget_password.dart';
 import 'package:online_course/screens/auth/login.dart';
 import 'package:online_course/screens/auth/reset_password.dart';
@@ -19,7 +20,7 @@ import 'package:provider/provider.dart';
 
 Future<void> main() async {
   // Ensure the environment file is loaded correctly
-  await dotenv.load(fileName: ".env.production");
+  await dotenv.load(fileName: ".env.development");
 
   Logger.enable();
 
@@ -27,6 +28,9 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(
+          create: (context) => TeacherProvider(),
+        ),
         ChangeNotifierProvider(
           create: (context) => CourseProvider(),
         ),

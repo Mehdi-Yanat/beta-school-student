@@ -233,5 +233,10 @@
   "delete_button": "حذف",
   "cancel_button": "إلغاء",
   "delete_account_error": "حدث خطأ أثناء حذف الحساب. الرجاء المحاولة مرة أخرى.",
-  "delete_account_success": "تم حذف الحساب بنجاح."
+  "delete_account_success": "تم حذف الحساب بنجاح.",
+  "no_courses_found": "لم يتم العثور على دورات",
+  "no_teachers_found": "لم يتم العثور على معلمين",
+  "teachers": "المعلمين",
+  "courses":"الدورات",
+  "minutes": "دقائق"
 }

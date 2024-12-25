@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:online_course/theme/color.dart';
+import 'package:online_course/widgets/course_image.dart';
 
 import 'custom_image.dart';
 
@@ -7,8 +8,8 @@ class FeatureItem extends StatelessWidget {
   FeatureItem({
     Key? key,
     required this.data,
-    this.width = 280,
-    this.height = 290,
+    this.width = 300,
+    this.height = 300,
     this.onTap,
   }) : super(key: key);
 
@@ -40,11 +41,65 @@ class FeatureItem extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            CustomImage(
-              data["image"],
-              width: double.infinity,
-              height: 190,
-              radius: 15,
+            // Background thumbnail with blur
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Stack(
+                children: [
+                  CourseImage(
+                    thumbnailUrl: data["thumbnail"],
+                    iconUrl: data["icon"],
+                    width: width,
+                    height: 190,
+                  ),
+                  // Gradient overlay
+                  Container(
+                    width: double.infinity,
+                    height: 190,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withValues(alpha: 0.1),
+                          Colors.black.withValues(alpha: 0.5),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Centered course icon
+            Positioned(
+              top: 60,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Container(
+                  width: 70,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.2),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(35),
+                    child: CustomImage(
+                      data["icon"] ?? "assets/images/course_icon.png",
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
             ),
             Positioned(
               top: 170,
@@ -95,7 +150,7 @@ class FeatureItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppColor.shadowColor.withOpacity(0.05),
+            color: AppColor.shadowColor.withValues(alpha: 0.05),
             spreadRadius: 1,
             blurRadius: 1,
             offset: Offset(0, 0),
@@ -113,50 +168,60 @@ class FeatureItem extends StatelessWidget {
   }
 
   Widget _buildAttributes() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _getAttribute(
-          Icons.play_circle_outlined,
-          AppColor.darker,
-          data["session"],
-        ),
-        const SizedBox(
-          width: 12,
-        ),
-        _getAttribute(
-          Icons.schedule_rounded,
-          AppColor.darker,
-          data["duration"],
-        ),
-        const SizedBox(
-          width: 12,
-        ),
-        _getAttribute(
-          Icons.star,
-          AppColor.yellow,
-          data["review"],
-        ),
-      ],
+    return Container(
+      width: width - 20,
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: _getAttribute(
+              Icons.play_circle_outlined,
+              AppColor.darker,
+              data["session"] ?? "0 Sessions",
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            flex: 2,
+            child: _getAttribute(
+              Icons.schedule_rounded,
+              AppColor.darker,
+              data["duration"] ?? "0 min",
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            flex: 3,
+            child: _getAttribute(
+              Icons.person_outline,
+              AppColor.darker,
+              data["teacherName"] ?? "Unknown",
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  _getAttribute(IconData icon, Color color, String info) {
+  Widget _getAttribute(IconData icon, Color color, String info) {
     return Row(
       children: [
         Icon(
           icon,
-          size: 18,
+          size: 16,
           color: color,
         ),
-        const SizedBox(
-          width: 3,
-        ),
-        Text(
-          info,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(color: AppColor.darker, fontSize: 13),
+        const SizedBox(width: 3),
+        Expanded(
+          child: Text(
+            info,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: AppColor.darker,
+              fontSize: 12,
+            ),
+          ),
         ),
       ],
     );

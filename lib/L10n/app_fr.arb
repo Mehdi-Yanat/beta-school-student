@@ -234,5 +234,10 @@
   "delete_button": "Supprimer",
   "cancel_button": "Annuler",
   "delete_account_error": "Une erreur s'est produite lors de la suppression du compte. Veuillez réessayer.",
-  "delete_account_success": "Compte supprimé avec succès."
+  "delete_account_success": "Compte supprimé avec succès.",
+  "no_courses_found": "Aucun cours trouvé",
+  "no_teachers_found": "Aucun enseignant trouvé",
+  "teachers": "Enseignants",
+  "courses": "Cours",
+  "minutes": "minutes"
 }
