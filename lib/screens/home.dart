@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
+import 'package:online_course/providers/auth_provider.dart';
+import 'package:online_course/providers/course_provider.dart';
 import 'package:online_course/screens/course_detail.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:online_course/utils/data.dart';
@@ -8,6 +10,7 @@ import 'package:online_course/widgets/category_box.dart';
 import 'package:online_course/widgets/feature_item.dart';
 import 'package:online_course/widgets/notification_box.dart';
 import 'package:online_course/widgets/recommend_item.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/sliver_app_bar.dart';
 
@@ -19,6 +22,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CourseProvider>().fetchCourses();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final localizations =
@@ -46,40 +57,43 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildAppBar(localizations) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                profile["name"]!,
-                style: TextStyle(
-                  color: AppColor.labelColor,
-                  fontSize: 14,
+    return Consumer<AuthProvider>(builder: (context, authProvider, widget) {
+      final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "${isArabic ? authProvider.student!.firstNameAr : authProvider.student!.firstName} ${isArabic ? authProvider.student!.lastNameAr : authProvider.student!.lastName}", // Localized "Hello" text
+                  style: TextStyle(
+                    color: AppColor.labelColor,
+                    fontSize: 14,
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              Text(
-                localizations.greeting, // Localized greeting
-                style: TextStyle(
-                  color: AppColor.textColor,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 18,
+                const SizedBox(
+                  height: 5,
                 ),
-              ),
-            ],
+                Text(
+                  localizations.greeting, // Localized greeting
+                  style: TextStyle(
+                    color: AppColor.mainColor,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 18,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        NotificationBox(
-          notifiedNumber: 1,
-        )
-      ],
-    );
+          NotificationBox(
+            notifiedNumber: 1,
+          )
+        ],
+      );
+    });
   }
 
   Widget _buildBody(localizations) {
@@ -103,10 +117,8 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          _buildFeatured(),
-          const SizedBox(
-            height: 15,
-          ),
+          _buildCoursesAccepted(),
+          const SizedBox(height: 1),
           Padding(
             padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
             child: Row(
@@ -156,27 +168,51 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildFeatured() {
-    return CarouselSlider(
-      options: CarouselOptions(
-        height: 300,
-        enlargeCenterPage: true,
-        disableCenter: true,
-        viewportFraction: .75,
-      ),
-      items: List.generate(
-        features.length,
-        (index) => FeatureItem(
-          data: features[index],
-          onTap: () {
-            Navigator.push(
+  Widget _buildCoursesAccepted() {
+    return Consumer<CourseProvider>(
+      builder: (context, courseProvider, child) {
+        if (courseProvider.isLoading) {
+          return Center(child: CircularProgressIndicator());
+        }
+  
+        return CarouselSlider(
+          options: CarouselOptions(
+            height: 300,
+            enlargeCenterPage: true,
+            disableCenter: true,
+            viewportFraction: .75,
+          ),
+          items: courseProvider.courses.map((course) {
+            // Calculate total duration safely
+            final totalDuration = course.chapters.fold<int>(
+              0,
+              (sum, chapter) => sum + (chapter.duration ?? 0)
+            );
+            
+            // Calculate final price with discount
+            final finalPrice = course.discount != null 
+                ? course.price - course.discount!
+                : course.price;
+  
+            return FeatureItem(
+              data: {
+                "image": course.icon?.url ?? "assets/images/default_course.png",
+                "name": course.title,
+                "price": "$finalPrice DA",
+                "session": "${course.chapters.length} Sessions",
+                "duration": "$totalDuration min",
+                "review": course.teacher.yearsOfExperience.toString(),
+              },
+              onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        CourseDetailScreen(courseId: "course_1")));
-          },
-        ),
-      ),
+                  builder: (context) => CourseDetailScreen(courseId: course.id),
+                ),
+              ),
+            );
+          }).toList(),
+        );
+      },
     );
   }
 
