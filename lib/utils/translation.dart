@@ -212,4 +212,31 @@ class TranslationHelper {
         .map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
         .join(' ');
   }
+  
+  static String getTranslatedSubject(BuildContext context, String? subjectKey) {
+    if (subjectKey == null) return AppLocalizations.of(context)!.not_specified;
+  
+    switch (subjectKey.toUpperCase()) {
+      case 'MATHEMATICS':
+        return AppLocalizations.of(context)!.subject_MATHEMATICS;
+      case 'SCIENCE':
+        return AppLocalizations.of(context)!.subject_SCIENCE;
+      case 'PHYSICS':
+        return AppLocalizations.of(context)!.subject_PHYSICS;
+      case 'HISTORY_GEOGRAPHY':
+        return AppLocalizations.of(context)!.subject_HISTORY_GEOGRAPHY;
+      case 'ISLAMIC_STUDIES':
+        return AppLocalizations.of(context)!.subject_ISLAMIC_STUDIES;
+      case 'ARABIC':
+        return AppLocalizations.of(context)!.subject_ARABIC;
+      case 'FRENCH':
+        return AppLocalizations.of(context)!.subject_FRENCH;
+      case 'ENGLISH':
+        return AppLocalizations.of(context)!.subject_ENGLISH;
+      case 'OTHER':
+        return AppLocalizations.of(context)!.subject_OTHER;
+      default:
+        return AppLocalizations.of(context)!.not_specified;
+    }
+  }
 }

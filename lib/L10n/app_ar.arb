@@ -259,5 +259,20 @@
   "branch_SECONDARY_TECHNIQUE_MATH": "تقني رياضي",
   "branch_SECONDARY_MANAGEMENT_ECONOMIES": "تسيير واقتصاد",
   "branch_ALL_BRANCHES": "جميع الفروع",
-  "chapters": "الفصول"
+  "chapters": "الفصول",
+  "subject_MATHEMATICS": "رياضيات",
+  "subject_SCIENCE": "علوم",
+  "subject_PHYSICS": "فيزياء",
+  "subject_HISTORY_GEOGRAPHY": "تاريخ وجغرافيا",
+  "subject_ISLAMIC_STUDIES": "دراسات إسلامية",
+  "subject_ARABIC": "اللغة العربية",
+  "subject_FRENCH": "اللغة الفرنسية",
+  "subject_ENGLISH": "اللغة الإنجليزية",
+  "subject_OTHER": "مواد أخرى",
+  "years_experience": "سنوات الخبرة",
+  "courses_count": "الدورات",
+  "students_count": "الطلاب",
+  "about_teacher": "نبذة عن الأستاذ",
+  "teacher_not_found": "لم يتم العثور على الأستاذ",
+  "institution_unknown": "مؤسسة غير معروفة"
 }

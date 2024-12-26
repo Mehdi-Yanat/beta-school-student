@@ -260,5 +260,20 @@
   "branch_SECONDARY_TECHNIQUE_MATH": "Technique Mathématique",
   "branch_SECONDARY_MANAGEMENT_ECONOMIES": "Gestion et Économie",
   "branch_ALL_BRANCHES": "Toutes les Branches",
-  "chapters": "Chapitres"
+  "chapters": "Chapitres",
+  "subject_MATHEMATICS": "Mathématiques",
+  "subject_SCIENCE": "Sciences",
+  "subject_PHYSICS": "Physique",
+  "subject_HISTORY_GEOGRAPHY": "Histoire-Géographie",
+  "subject_ISLAMIC_STUDIES": "Études Islamiques",
+  "subject_ARABIC": "Langue Arabe",
+  "subject_FRENCH": "Langue Française",
+  "subject_ENGLISH": "Langue Anglaise",
+  "subject_OTHER": "Autres Matières",
+  "years_experience": "Années d'expérience",
+  "courses_count": "Cours",
+  "students_count": "Étudiants",
+  "about_teacher": "À propos du professeur",
+  "teacher_not_found": "Professeur introuvable",
+  "institution_unknown": "Institution inconnue"
 }
