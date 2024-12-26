@@ -5,8 +5,8 @@ import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:screen_protector/screen_protector.dart';
 
-import '../theme/color.dart';
-import '../widgets/appbar.dart';
+import '../../theme/color.dart';
+import '../../widgets/appbar.dart';
 
 class ViewChapterScreen extends StatefulWidget {
   final String chapterId;

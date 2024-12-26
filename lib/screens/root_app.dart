@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:online_course/providers/auth_provider.dart';
-import 'package:online_course/screens/account.dart';
+import 'package:online_course/screens/profile/account.dart';
 import 'package:online_course/screens/announces.dart';
 import 'package:online_course/screens/explore.dart';
 import 'package:online_course/screens/home.dart';
-import 'package:online_course/screens/my_courses.dart';
+import 'package:online_course/screens/course/my_courses.dart';
 import 'package:online_course/services/auth_service.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:provider/provider.dart';

@@ -139,7 +139,7 @@ class AuthService {
     File? newProfilePic,
   }) async {
     try {
-      var request = http.MultipartRequest(
+      final request = http.MultipartRequest(
         'PUT',
         Uri.parse('$baseUrl/student/me?lng=${getCurrentLocale()}'),
       );
@@ -168,7 +168,7 @@ class AuthService {
         );
       }
 
-      final streamedResponse = await _client.send(request);
+      final http.StreamedResponse streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
 
       final Map<String, dynamic> responseData = jsonDecode(response.body);
@@ -244,12 +244,8 @@ class AuthService {
         }),
       );
 
-      print('📥 Refresh response status: ${response.statusCode}');
-      print('📥 Refresh response body: ${response.body}');
-
       if (response.statusCode == 200 && response.body.isNotEmpty) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        print('📦 Response data structure: $responseData');
 
         // Direct access to token objects
         final String? accessToken = responseData['access']?['token'];

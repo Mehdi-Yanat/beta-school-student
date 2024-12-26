@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:online_course/services/auth_service.dart';
+import 'package:online_course/utils/translation.dart';
 import 'package:online_course/widgets/snackbar.dart';
 import '../../models/student.dart';
 import '../../theme/color.dart';
@@ -26,6 +27,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final _passwordController = TextEditingController();
   final _addressController = TextEditingController();
   final _phoneController = TextEditingController();
+  bool _isPasswordVisible = false;
+  
   File? _profileImage;
   final _picker = ImagePicker();
 
@@ -214,6 +217,19 @@ class _SignupScreenState extends State<SignupScreen> {
               decoration: InputDecoration(
                 hintText: AppLocalizations.of(context)!.password,
                 prefixIcon: Icon(Icons.lock, color: AppColor.textColor),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isPasswordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                    color: AppColor.textColor,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isPasswordVisible = !_isPasswordVisible;
+                    });
+                  },
+                ),
                 filled: true,
                 fillColor: AppColor.textBoxColor,
                 border: OutlineInputBorder(
@@ -221,7 +237,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   borderSide: BorderSide.none,
                 ),
               ),
-              obscureText: true,
+              obscureText: !_isPasswordVisible,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return AppLocalizations.of(context)!.password_required;
@@ -304,7 +320,13 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ),
               items: wilayas.map((String wilaya) {
-                return DropdownMenuItem(value: wilaya, child: Text(wilaya));
+                return DropdownMenuItem(
+                  value: wilaya,
+                  child: Text(
+                    TranslationHelper.getTranslatedWilaya(context, wilaya),
+                    textDirection: TextDirection.rtl,
+                  ),
+                );
               }).toList(),
               onChanged: (String? value) {
                 setState(() {
@@ -334,7 +356,10 @@ class _SignupScreenState extends State<SignupScreen> {
               items: classes.map((String classItem) {
                 return DropdownMenuItem(
                   value: classItem,
-                  child: Text(classItem),
+                  child: Text(
+                    TranslationHelper.getTranslatedClass(context, classItem),
+                    textDirection: TextDirection.rtl,
+                  ),
                 );
               }).toList(),
               onChanged: (String? value) {

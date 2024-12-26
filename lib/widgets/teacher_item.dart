@@ -14,6 +14,8 @@ class TeacherItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isNetwork = data["image"].startsWith("https");
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -38,6 +40,8 @@ class TeacherItem extends StatelessWidget {
               data["image"],
               radius: 15,
               height: 80,
+              width: 80,
+              isNetwork: isNetwork,
             ),
             const SizedBox(
               width: 10,

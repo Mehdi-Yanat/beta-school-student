@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
-import 'package:online_course/screens/profile/settings/secuirty.dart';
+import 'package:online_course/screens/profile/settings/security.dart';
 import 'package:online_course/screens/profile/settings/update_profile.dart';
 import 'package:online_course/services/auth_service.dart';
 import 'package:online_course/widgets/dialog.dart';

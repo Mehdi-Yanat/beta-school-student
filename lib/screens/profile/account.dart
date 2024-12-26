@@ -14,7 +14,7 @@ import 'package:online_course/widgets/dialog.dart';
 import 'package:online_course/widgets/setting_box.dart';
 import 'package:online_course/widgets/setting_item.dart';
 import 'package:provider/provider.dart';
-import '../widgets/appbar.dart';
+import '../../widgets/appbar.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({Key? key}) : super(key: key);
@@ -76,7 +76,6 @@ Widget _buildBody(context, Student? student) {
 }
 
 Widget _buildProfile(context, Student? student) {
-  print(student?.profilePic);
   return Column(
     children: [
       CustomImage(

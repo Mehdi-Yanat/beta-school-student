@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:online_course/theme/color.dart';
@@ -8,12 +10,15 @@ class CourseImage extends StatelessWidget {
     required this.iconUrl,
     this.width = 280,
     this.height = 190,
+    this.borderRadius = 15,
   });
 
   final String? thumbnailUrl;
   final String? iconUrl;
   final double width;
   final double height;
+  final double borderRadius;
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +32,18 @@ class CourseImage extends StatelessWidget {
 
   Widget _buildThumbnail() {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(15),
+      borderRadius: BorderRadius.circular(borderRadius),
       child: Stack(
         children: [
           _buildBlurredImage(),
+          BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+            child: Container(
+              width: width,
+              height: height,
+              color: Colors.white.withValues(alpha: 0.0),
+            ),
+          ),
           _buildGradientOverlay(),
         ],
       ),

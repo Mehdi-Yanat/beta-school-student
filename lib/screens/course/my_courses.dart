@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
-import 'package:online_course/screens/view_chapters.dart';
+import 'package:online_course/screens/course/view_chapters.dart';
 import 'package:online_course/theme/color.dart';
 
-import '../widgets/appbar.dart';
+import '../../widgets/appbar.dart';
 
 class MyCourseScreen extends StatefulWidget {
   @override

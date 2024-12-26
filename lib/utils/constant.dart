@@ -26,6 +26,7 @@ class ImageUrls {
   }
 }
 
+
 enum Wilaya {
   ADRAR,
   CHLEF,

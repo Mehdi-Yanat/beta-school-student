@@ -4,7 +4,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localiza
 import 'package:online_course/providers/auth_provider.dart';
 import 'package:online_course/providers/course_provider.dart';
 import 'package:online_course/providers/teacher_provider.dart';
-import 'package:online_course/screens/course_detail.dart';
+import 'package:online_course/screens/course/course_detail.dart';
+import 'package:online_course/screens/teacher/teacher_view.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:online_course/utils/data.dart';
 import 'package:online_course/widgets/category_box.dart';
@@ -221,7 +222,6 @@ class _HomePageState extends State<HomePage> {
             viewportFraction: .75,
           ),
           items: courseProvider.courses.map((course) {
-            print('course.icon?.url ${course.icon?.url}');
             final firstChapter =
                 course.chapters.isNotEmpty ? course.chapters.first : null;
             final totalDuration = course.chapters
@@ -230,10 +230,6 @@ class _HomePageState extends State<HomePage> {
                 ? course.price - course.discount!
                 : course.price;
 
-            final subject = course.teacher.subject ?? 'Unknown Subject';
-            final teacherName =
-                "${course.teacher.user.firstName} ${course.teacher.user.lastName}"
-                    .trim();
             return FeatureItem(
               data: {
                 "thumbnail": firstChapter?.thumbnail?.url ??
@@ -268,7 +264,6 @@ class _HomePageState extends State<HomePage> {
         if (teacherProvider.isLoading) {
           return const Center(child: CircularProgressIndicator());
         }
-        print(teacherProvider.teachers);
         if (teacherProvider.teachers.isEmpty) {
           return Center(
             child: Column(
@@ -302,12 +297,17 @@ class _HomePageState extends State<HomePage> {
 
               final profilePic = teacher.profilePic?.url != null
                   ? teacher.profilePic?.url
-                  : "/assets/images/profile.png";
+                  : "assets/images/profile.png";
 
-              print("teacher.profilePic?.url: ${teacher.profilePic?.url}");
               return Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: TeacherItem(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TeacherView(teacherId: teacher.id),
+                    ),
+                  ),
                   data: {
                     "image": profilePic,
                     "name": fullName,

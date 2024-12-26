@@ -7,6 +7,7 @@ import 'package:online_course/services/auth_service.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:online_course/utils/constant.dart';
 import 'package:online_course/utils/storage.dart';
+import 'package:online_course/utils/translation.dart';
 import 'package:online_course/widgets/appbar.dart';
 import 'package:online_course/widgets/gradient_button.dart';
 import 'package:provider/provider.dart';
@@ -47,8 +48,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     try {
       final student = context.read<AuthProvider>().student;
       if (student != null) {
-        print(student);
-
         _firstNameController.text = student.firstName;
         _lastNameController.text = student.lastName;
         _firstNameArController.text = student.firstNameAr ?? '';
@@ -151,7 +150,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       items: wilayas.map((String wilaya) {
         return DropdownMenuItem(
           value: wilaya,
-          child: Text(wilaya),
+          child: Text(
+            TranslationHelper.getTranslatedWilaya(context, wilaya),
+            textDirection: TextDirection.rtl,
+          ),
         );
       }).toList(),
       onChanged: (String? value) {
@@ -182,7 +184,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       items: classes.map((String classItem) {
         return DropdownMenuItem(
           value: classItem,
-          child: Text(classItem),
+          child: Text(
+            TranslationHelper.getTranslatedClass(context, classItem),
+            textDirection: TextDirection.rtl,
+          ),
         );
       }).toList(),
       onChanged: (String? value) {
