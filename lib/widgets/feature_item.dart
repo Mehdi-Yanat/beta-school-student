@@ -96,6 +96,9 @@ class FeatureItem extends StatelessWidget {
                     child: CustomImage(
                       data["icon"] ?? "assets/images/course_icon.png",
                       fit: BoxFit.cover,
+                      isNetwork: data["icon"].toString().startsWith('https')
+                          ? true
+                          : false,
                     ),
                   ),
                 ),

@@ -15,14 +15,22 @@ class CourseProvider with ChangeNotifier {
   String? _selectedBranch;
 
   Map<String, dynamic>? get courseData => _courseData;
+
   bool get isLoading => _isLoading;
+
   String? get error => _error;
+
   List<Course> get courses => _courses;
+
   // Getters
   bool get hasMore => _currentPage < _totalPages;
+
   String? get searchQuery => _searchQuery;
+
   String? get selectedSubject => _selectedSubject;
+
   String? get selectedClass => _selectedClass;
+
   String? get selectedBranch => _selectedBranch;
 
   List<dynamic> get courseChapters =>
@@ -87,8 +95,8 @@ class CourseProvider with ChangeNotifier {
       final data = await CourseService.getCourse(courseId);
       if (data != null) {
         _courseData = {
-          'course': Map<String, dynamic>.from(data['course'] as Map),
-          'teacher': Map<String, dynamic>.from(data['teacher'] as Map),
+          'course': Map<String, dynamic>.from(data['course'] as Map? ?? {}),
+          'teacher': Map<String, dynamic>.from(data['teacher'] as Map? ?? {}),
         };
 
         print('✅ Course data fetched successfully');

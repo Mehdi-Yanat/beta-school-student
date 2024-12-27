@@ -279,5 +279,7 @@
   "select_subject": "اختر المادة",
   "select_branch": "اختر الفرع",
   "reset_filters": "إعادة تعيين التصفية",
-  "apply_filters": "تطبيق التصفية"
+  "apply_filters": "تطبيق التصفية",
+  "no_chapters_available": "لا توجد فصول متاحة",
+  "dzd": "دج"
 }

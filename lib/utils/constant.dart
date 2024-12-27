@@ -6,7 +6,7 @@ class ImageUrls {
   static final String baseUrl = dotenv.env['API_URL'] ?? '';
 
   static const String defaultAvatar = "assets/images/profile.png";
-  static const String defaultCourse = "assets/images/default_course.png";
+  static const String defaultCourse = "assets/images/course_icon.png";
 
   static String getFullUrl(String? url) {
     if (url == null) return defaultAvatar;
@@ -25,7 +25,6 @@ class ImageUrls {
         url.startsWith(baseUrl);
   }
 }
-
 
 enum Wilaya {
   ADRAR,

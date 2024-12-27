@@ -19,7 +19,6 @@ class CourseImage extends StatelessWidget {
   final double height;
   final double borderRadius;
 
-
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -51,7 +50,7 @@ class CourseImage extends StatelessWidget {
   }
 
   Widget _buildBlurredImage() {
-    final imageUrl = thumbnailUrl ?? "assets/images/default_course.png";
+    final imageUrl = thumbnailUrl ?? "assets/images/course_icon.png";
     final isNetwork = thumbnailUrl?.startsWith('http') ?? false;
 
     if (!isNetwork) {
@@ -104,8 +103,11 @@ class CourseImage extends StatelessWidget {
   }
 
   Widget _buildIconImage() {
-    final imageUrl = iconUrl ?? "assets/images/course_icon.png";
-    final isNetwork = iconUrl?.startsWith('http') ?? false;
+    final imageUrl =
+        iconUrl != null && iconUrl!.isNotEmpty // Check for both null and empty
+            ? iconUrl! // Use iconUrl if it's valid
+            : "assets/images/course_icon.png"; // Fallback if iconUrl is invalid
+    final isNetwork = imageUrl.startsWith('http');
 
     if (!isNetwork) {
       return Image.asset(imageUrl, fit: BoxFit.cover);

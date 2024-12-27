@@ -10,6 +10,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localiza
 
 class TeacherView extends StatelessWidget {
   final int teacherId;
+
   const TeacherView({Key? key, required this.teacherId}) : super(key: key);
 
   @override
@@ -25,6 +26,7 @@ class TeacherView extends StatelessWidget {
           }
 
           final teacher = provider.teacher;
+          print(teacher);
           if (teacher == null) {
             return Scaffold(
               body: Center(child: Text('Teacher not found')),
@@ -217,27 +219,38 @@ class TeacherView extends StatelessWidget {
             ),
           ),
           SizedBox(height: 16),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              childAspectRatio: 0.8,
-            ),
-            itemCount: courses.length,
-            itemBuilder: (context, index) => CourseCard(
-              course: courses[index],
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      CourseDetailScreen(courseId: courses[index]['id']),
+          if (courses.isEmpty)
+            Center(
+              child: Text(
+                AppLocalizations.of(context)!.no_courses_found,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: AppColor.mainColor,
+                ),
+              ),
+            )
+          else
+            GridView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                childAspectRatio: 0.8,
+              ),
+              itemCount: courses.length,
+              itemBuilder: (context, index) => CourseCard(
+                course: courses[index],
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        CourseDetailScreen(courseId: courses[index]['id']),
+                  ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );

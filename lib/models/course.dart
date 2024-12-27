@@ -1,11 +1,27 @@
 import 'package:online_course/models/shared.dart';
 import 'package:online_course/utils/constant.dart';
 
+class ImageData {
+  final String? url;
+  final String? fileName;
+
+  ImageData({this.url, this.fileName});
+
+  factory ImageData.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return ImageData(); // Return default if json is null
+
+    return ImageData(
+      url: json['url'],
+      fileName: json['fileName'],
+    );
+  }
+}
+
 class TeacherUser {
-  final String firstName;
-  final String lastName;
-  final String email;
-  final IconData? profilePic;
+  final String? firstName; //Make these nullable for more safety
+  final String? lastName;
+  final String? email;
+  final ImageData? profilePic; // Use ImageData
 
   TeacherUser({
     required this.firstName,
@@ -14,14 +30,20 @@ class TeacherUser {
     this.profilePic,
   });
 
-  factory TeacherUser.fromJson(Map<String, dynamic> json) {
+  factory TeacherUser.fromJson(Map<String, dynamic>? json) {
+    if (json == null)
+      return TeacherUser(
+          firstName: null,
+          lastName: null,
+          email: null,
+          profilePic: null); // Handle null json
+
     return TeacherUser(
       firstName: json['firstName'],
       lastName: json['lastName'],
       email: json['email'],
-      profilePic: json['profilePic'] != null
-          ? IconData.fromJson(json['profilePic'])
-          : null,
+      profilePic:
+          ImageData.fromJson(json['profilePic']), // Correctly create ImageData
     );
   }
 }
@@ -38,7 +60,7 @@ class Chapter {
   final DateTime createdAt;
   final DateTime updatedAt;
   final int duration;
-  final IconData? thumbnail;
+  final ImageData? thumbnail; //Use ImageData instead of IconData
 
   Chapter({
     required this.id,
@@ -68,9 +90,7 @@ class Chapter {
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
       duration: json['duration'],
-      thumbnail: json['thumbnail'] != null
-          ? IconData.fromJson(json['thumbnail'])
-          : null,
+      thumbnail: ImageData.fromJson(json['thumbnail']),
     );
   }
 }
@@ -118,7 +138,7 @@ class Course {
   final int price;
   final int? discount;
   final int teacherId;
-  final IconData? icon;
+  final ImageData? icon; // Use ImageData
   final DateTime createdAt;
   final DateTime updatedAt;
   final int? duration;
@@ -168,7 +188,7 @@ class Course {
       price: json['price'],
       discount: json['discount'],
       teacherId: json['teacher']['id'],
-      icon: json['icon'] != null ? IconData.fromJson(json['icon']) : null,
+      icon: ImageData.fromJson(json['icon']), // Correctly create ImageData
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
       duration: json['duration'],

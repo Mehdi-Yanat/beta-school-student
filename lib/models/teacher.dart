@@ -108,7 +108,7 @@ class Teacher {
 
     try {
       return Teacher(
-        id: json['id'] ?? 0,
+        id: json['Teacher']['id'] ?? 0,
         email: json['email'] ?? '',
         firstName: json['firstName'] ?? '',
         lastName: json['lastName'] ?? '',

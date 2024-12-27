@@ -3,7 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:online_course/providers/course_provider.dart';
 import 'package:online_course/screens/course/course_detail.dart';
 import 'package:online_course/theme/color.dart';
-import 'package:online_course/widgets/course_card.dart';
 import 'package:online_course/widgets/course_image.dart';
 import 'package:online_course/widgets/filter_modal.dart';
 import 'package:provider/provider.dart';
@@ -160,9 +159,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                     SizedBox(height: 8),
                                     Row(
                                       children: [
-                                        Icon(Icons.attach_money,
-                                            color: AppColor.darker, size: 18),
-                                        Text(course.price.toString(),
+                                        Text(
+                                            course.price.toString() +
+                                                " ${AppLocalizations.of(context)?.dzd}",
                                             style: TextStyle(
                                                 color: AppColor.darker)),
                                         SizedBox(width: 12),

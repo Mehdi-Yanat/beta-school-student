@@ -246,7 +246,7 @@ class _HomePageState extends State<HomePage> {
             return FeatureItem(
               data: {
                 "thumbnail": firstChapter?.thumbnail?.url ??
-                    "assets/images/default_course.png",
+                    "assets/images/course_icon.png",
                 "icon": course.icon?.url ?? "assets/images/course_icon.png",
                 "name": course.title,
                 "price": "${finalPrice.toString()} DA",
@@ -302,6 +302,7 @@ class _HomePageState extends State<HomePage> {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: teacherProvider.teachers.map((teacher) {
+              print(teacher.id);
               final isArabic =
                   Localizations.localeOf(context).languageCode == 'ar';
               final fullName = isArabic

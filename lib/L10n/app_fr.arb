@@ -280,5 +280,7 @@
   "select_subject": "Sélectionner la matière",
   "select_branch": "Sélectionner la branche",
   "reset_filters": "Réinitialiser les filtres",
-  "apply_filters": " Appliquer les filtres"
+  "apply_filters": " Appliquer les filtres",
+  "no_chapters_available": "Aucun chapitre disponible",
+  "dzd": "DZD"
 }
