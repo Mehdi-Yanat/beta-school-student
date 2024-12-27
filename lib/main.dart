@@ -20,7 +20,7 @@ import 'package:provider/provider.dart';
 
 Future<void> main() async {
   // Ensure the environment file is loaded correctly
-  await dotenv.load(fileName: ".env.development");
+  await dotenv.load(fileName: ".env.production");
 
   Logger.enable();
 

@@ -5,16 +5,52 @@ var profile = {
 };
 
 List categories = [
-  {"name": "Tout", "icon": "assets/icons/categories/all.svg"},
-  {"name": "Mathématiques", "icon": "assets/icons/categories/mathematics.svg"},
-  {"name": "Sciences", "icon": "assets/icons/categories/science.svg"},
-  {"name": "Physique", "icon": "assets/icons/categories/physics.svg"},
-  {"name": "Histoire", "icon": "assets/icons/categories/geography.svg"},
-  {"name": "Islamiques", "icon": "assets/icons/categories/islamic.svg"},
-  {"name": "Arabe", "icon": "assets/icons/categories/ar-language-icon.svg"},
-  {"name": "Français", "icon": "assets/icons/categories/fr-language-icon.svg"},
-  {"name": "Anglais", "icon": "assets/icons/categories/en-language-icon.svg"},
-  {"name": "Autres", "icon": "assets/icons/categories/other.svg"},
+  {"id": "", "name": "Tout", "icon": "assets/icons/categories/all.svg"},
+  {
+    "id": "MATHEMATICS",
+    "name": "Mathématiques",
+    "icon": "assets/icons/categories/mathematics.svg"
+  },
+  {
+    "id": "SCIENCE",
+    "name": "Sciences",
+    "icon": "assets/icons/categories/science.svg"
+  },
+  {
+    "id": "PHYSICS",
+    "name": "Physique",
+    "icon": "assets/icons/categories/physics.svg"
+  },
+  {
+    "id": "HISTORY_GEOGRAPHY",
+    "name": "Histoire",
+    "icon": "assets/icons/categories/geography.svg"
+  },
+  {
+    "id": "ISLAMIC_STUDIES",
+    "name": "Islamiques",
+    "icon": "assets/icons/categories/islamic.svg"
+  },
+  {
+    "id": "ARABIC",
+    "name": "Arabe",
+    "icon": "assets/icons/categories/ar-language-icon.svg"
+  },
+  {
+    "id": "FRENCH",
+    "name": "Français",
+    "icon": "assets/icons/categories/fr-language-icon.svg"
+  },
+  {
+    "id": "ENGLISH",
+    "name": "Anglais",
+    "icon": "assets/icons/categories/en-language-icon.svg"
+  },
+  {
+    "id": "OTHER",
+    "name": "Autres",
+    "icon": "assets/icons/categories/other.svg"
+  },
 ];
 
 List courses = [

@@ -274,5 +274,10 @@
   "students_count": "الطلاب",
   "about_teacher": "نبذة عن الأستاذ",
   "teacher_not_found": "لم يتم العثور على الأستاذ",
-  "institution_unknown": "مؤسسة غير معروفة"
+  "institution_unknown": "مؤسسة غير معروفة",
+  "filter_title": "تصفية",
+  "select_subject": "اختر المادة",
+  "select_branch": "اختر الفرع",
+  "reset_filters": "إعادة تعيين التصفية",
+  "apply_filters": "تطبيق التصفية"
 }

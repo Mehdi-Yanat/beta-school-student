@@ -27,20 +27,20 @@ class CategoryBox extends StatelessWidget {
             curve: Curves.fastOutSlowIn,
             padding: EdgeInsets.all(15),
             decoration: BoxDecoration(
-              color: isSelected ? AppColor.red : Colors.white,
+              color: isSelected ? AppColor.primary : Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: AppColor.shadowColor.withValues(alpha: 0.1),
+                  color: AppColor.shadowColor.withOpacity(0.1),
                   spreadRadius: 1,
                   blurRadius: 1,
-                  offset: Offset(1, 1), // changes position of shadow
+                  offset: Offset(1, 1),
                 ),
               ],
               shape: BoxShape.circle,
             ),
             child: SvgPicture.asset(
               data["icon"],
-              color: isSelected ? selectedColor : AppColor.mainColor,
+              color: isSelected ? Colors.white : AppColor.mainColor,
               width: 30,
               height: 30,
             ),

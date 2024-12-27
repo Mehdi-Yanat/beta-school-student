@@ -24,11 +24,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String _selectedCategory = '';
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<CourseProvider>().fetchCourses();
+      context.read<CourseProvider>().fetchCourses(
+        refresh: true,
+        filters: {'subject': null}, // Start with all courses
+      );
       context.read<TeacherProvider>().fetchTeachers();
     });
   }
@@ -171,17 +176,25 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.fromLTRB(15, 10, 0, 10),
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: List.generate(
-          categories.length,
-          (index) => Padding(
+        children: categories.map((category) {
+          final isSelected = _selectedCategory == category['id'];
+          return Padding(
             padding: const EdgeInsets.only(right: 15),
             child: CategoryBox(
+              data: category,
+              isSelected: isSelected,
               selectedColor: AppColor.mainColor,
-              data: categories[index],
-              onTap: null,
+              onTap: () {
+                setState(() => _selectedCategory = category['id']);
+                // Filter courses based on selected category
+                context.read<CourseProvider>().setFilters(
+                      subject: category['id'] == '' ? null : category['id'],
+                      refresh: true,
+                    );
+              },
             ),
-          ),
-        ),
+          );
+        }).toList(),
       ),
     );
   }
@@ -234,7 +247,7 @@ class _HomePageState extends State<HomePage> {
               data: {
                 "thumbnail": firstChapter?.thumbnail?.url ??
                     "assets/images/default_course.png",
-                "icon": course.icon?.url ?? "assets/images/default_icon.png",
+                "icon": course.icon?.url ?? "assets/images/course_icon.png",
                 "name": course.title,
                 "price": "${finalPrice.toString()} DA",
                 "session":

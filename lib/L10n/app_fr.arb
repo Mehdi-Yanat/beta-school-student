@@ -275,5 +275,10 @@
   "students_count": "Étudiants",
   "about_teacher": "À propos du professeur",
   "teacher_not_found": "Professeur introuvable",
-  "institution_unknown": "Institution inconnue"
+  "institution_unknown": "Institution inconnue",
+  "filter_title": "Filtrer",
+  "select_subject": "Sélectionner la matière",
+  "select_branch": "Sélectionner la branche",
+  "reset_filters": "Réinitialiser les filtres",
+  "apply_filters": " Appliquer les filtres"
 }

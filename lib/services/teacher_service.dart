@@ -32,7 +32,6 @@ class TeacherService {
         headers: _headers(),
       );
   
-      print('📥 Response status: ${response.statusCode}');
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data != null && data['users'] != null) {

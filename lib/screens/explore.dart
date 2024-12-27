@@ -1,244 +1,341 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:online_course/providers/course_provider.dart';
+import 'package:online_course/screens/course/course_detail.dart';
 import 'package:online_course/theme/color.dart';
+import 'package:online_course/widgets/course_card.dart';
+import 'package:online_course/widgets/course_image.dart';
+import 'package:online_course/widgets/filter_modal.dart';
+import 'package:provider/provider.dart';
+import 'package:online_course/widgets/appbar.dart';
 
-import '../widgets/appbar.dart';
+class ExploreScreen extends StatefulWidget {
+  @override
+  _ExploreScreenState createState() => _ExploreScreenState();
+}
 
-class ExploreScreen extends StatelessWidget {
-  final List<String> categoryKeys = [
-    'categories_all',
-    'categories_mathematics',
-    'categories_science',
-    'categories_physics',
-    'categories_history_geography',
-    'categories_islamic_studies',
-    'categories_arabic',
-    'categories_french',
-    'categories_english',
-    'categories_other',
-  ];
+class _ExploreScreenState extends State<ExploreScreen> {
+  final _searchController = TextEditingController();
+  final _scrollController = ScrollController();
+  String _selectedCategory = 'ALL';
 
-  final List<Map<String, dynamic>> courses = [
-    {
-      'title': 'UI/UX Design',
-      'price': '\$110.00',
-      'lessons': '6 lessons',
-      'duration': '10 hours',
-      'rating': '4.5',
-      'image':
-          'https://images.unsplash.com/photo-1596548438137-d51ea5c83ca5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60',
-    },
-    {
-      'title': 'Flutter Development',
-      'price': '\$120.00',
-      'lessons': '8 lessons',
-      'duration': '12 hours',
-      'rating': '4.7',
-      'image':
-          'https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60',
-    },
+  final List<String> subjectKeys = [
+    'ALL',
+    'MATHEMATICS',
+    'SCIENCE',
+    'PHYSICS',
+    'HISTORY_GEOGRAPHY',
+    'ISLAMIC_STUDIES',
+    'ARABIC',
+    'FRENCH',
+    'ENGLISH',
+    'OTHER'
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CourseProvider>().fetchCourses(refresh: true);
+    });
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      final provider = context.read<CourseProvider>();
+      if (!provider.isLoading && provider.hasMore) {
+        provider.fetchCourses();
+      }
+    }
+  }
+
+  void _showFilterModal() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => FilterModal(),
+      isScrollControlled: true,
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: AppColor.appBgColor,
       appBar: CustomAppBar(
-        title: localizations!.explore_title, // Localized title
+        title: AppLocalizations.of(context)!.explore_title,
       ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Search Bar
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Container(
-              height: 50,
-              decoration: BoxDecoration(
-                color: AppColor.cardColor,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColor.shadowColor.withValues(alpha: 0.1),
-                    blurRadius: 8,
-                    offset: Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: localizations.search_hint,
-                  // Localized search hint
-                  prefixIcon: Icon(Icons.search, color: AppColor.inActiveColor),
-                  suffixIcon: Icon(
-                    Icons.filter_alt_outlined,
-                    color: AppColor.primary,
-                  ),
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(vertical: 14),
-                ),
-              ),
-            ),
-          ),
+          _buildSearchBar(),
 
           // Categories
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: categoryKeys
-                    .map((key) => Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: Chip(
-                            label: Text(localizations.getCategoryName(
-                                key)), // Fetch translated category name
-                            backgroundColor: key == 'categories_all'
-                                ? AppColor.primary
-                                : AppColor.cardColor,
-                            labelStyle: TextStyle(
-                              color: key == 'categories_all'
-                                  ? AppColor.glassTextColor
-                                  : AppColor.mainColor,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
-                        ))
-                    .toList(),
-              ),
-            ),
-          ),
+          _buildCategories(),
 
-          SizedBox(height: 10),
-
-          // Course List
+          // Course Grid
+          // Replace Expanded section with:
+          // Replace Expanded section with:
           Expanded(
-            child: ListView.builder(
-              itemCount: courses.length,
-              itemBuilder: (context, index) {
-                final course = courses[index];
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: AppColor.cardColor,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColor.shadowColor.withValues(alpha: 0.1),
-                          blurRadius: 8,
-                          offset: Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Course Image
-                        ClipRRect(
-                          borderRadius:
-                              BorderRadius.vertical(top: Radius.circular(12)),
-                          child: Image.network(
-                            course['image'],
-                            height: 180,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+            child: Consumer<CourseProvider>(
+              builder: (context, provider, _) {
+                if (provider.isLoading && provider.courses.isEmpty) {
+                  return Center(child: CircularProgressIndicator());
+                }
 
-                        // Course Info
-                        Padding(
-                          padding: const EdgeInsets.all(12.0),
+                if (provider.courses.isEmpty) {
+                  return _buildEmptyState();
+                }
+
+                return ListView.builder(
+                  controller: _scrollController,
+                  itemCount:
+                      provider.courses.length + (provider.hasMore ? 1 : 0),
+                  itemBuilder: (context, index) {
+                    if (index == provider.courses.length) {
+                      return Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(16),
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+
+                    final course = provider.courses[index];
+                    final firstChapter = course.chapters.isNotEmpty
+                        ? course.chapters.first
+                        : null;
+
+                    return GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              CourseDetailScreen(courseId: course.id),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColor.cardColor,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color:
+                                    AppColor.shadowColor.withValues(alpha: 0.1),
+                                blurRadius: 8,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                course['title'],
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColor.mainColor,
+                              ClipRRect(
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(12)),
+                                child: CourseImage(
+                                  thumbnailUrl: firstChapter?.thumbnail?.url,
+                                  iconUrl: course.icon?.url,
+                                  width: double.infinity,
+                                  height: 190,
                                 ),
                               ),
-                              SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  Icon(Icons.attach_money,
-                                      color: AppColor.darker, size: 18),
-                                  Text(course['price'],
-                                      style: TextStyle(color: AppColor.darker)),
-                                  SizedBox(width: 12),
-                                  Icon(Icons.play_circle_fill,
-                                      color: AppColor.darker, size: 18),
-                                  Text(
-                                    localizations.course_lessons(int.parse(
-                                        course['lessons'].split(
-                                            ' ')[0])), // Localized lessons
-                                    style: TextStyle(color: AppColor.darker),
-                                  ),
-                                  SizedBox(width: 12),
-                                  Icon(Icons.schedule,
-                                      color: AppColor.darker, size: 18),
-                                  Text(
-                                    localizations.course_duration(
-                                        course['duration'].split(
-                                            " ")[0]), // Localized duration
-                                    style: TextStyle(color: AppColor.darker),
-                                  ),
-                                  Spacer(),
-                                  Row(
-                                    children: [
-                                      Icon(Icons.star,
-                                          color: AppColor.yellow, size: 18),
-                                      Text(course['rating'],
-                                          style: TextStyle(
-                                              color: AppColor.darker)),
-                                    ],
-                                  ),
-                                ],
+                              Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      course.title,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColor.mainColor,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        Icon(Icons.attach_money,
+                                            color: AppColor.darker, size: 18),
+                                        Text(course.price.toString(),
+                                            style: TextStyle(
+                                                color: AppColor.darker)),
+                                        SizedBox(width: 12),
+                                        Icon(Icons.play_circle_fill,
+                                            color: AppColor.darker, size: 18),
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .course_lessons(
+                                                  course.chapters.length),
+                                          style:
+                                              TextStyle(color: AppColor.darker),
+                                        ),
+                                        SizedBox(width: 12),
+                                        Icon(Icons.schedule,
+                                            color: AppColor.darker, size: 18),
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .course_duration(
+                                                  course.duration.toString()),
+                                          style:
+                                              TextStyle(color: AppColor.darker),
+                                        ),
+                                        Spacer(),
+                                        Row(
+                                          children: [
+                                            Icon(Icons.star,
+                                                color: AppColor.yellow,
+                                                size: 18),
+                                            Text("4.5",
+                                                style: TextStyle(
+                                                    color: AppColor.darker)),
+                                          ],
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
                               )
                             ],
                           ),
-                        )
-                      ],
-                    ),
-                  ),
+                        ),
+                      ),
+                    );
+                  },
                 );
               },
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSearchBar() {
+    return Padding(
+      padding: EdgeInsets.all(16),
+      child: Container(
+        height: 50,
+        decoration: BoxDecoration(
+          color: AppColor.cardColor,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: AppColor.shadowColor.withValues(alpha: 0.1),
+              blurRadius: 8,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: TextField(
+          controller: _searchController,
+          onChanged: (value) {
+            context.read<CourseProvider>().setFilters(
+                  searchQuery: value.isEmpty ? null : value,
+                );
+          },
+          decoration: InputDecoration(
+            hintText: AppLocalizations.of(context)!.search_hint,
+            prefixIcon: Icon(Icons.search, color: AppColor.inActiveColor),
+            suffixIcon: IconButton(
+              icon: Icon(Icons.filter_alt_outlined, color: AppColor.primary),
+              onPressed: _showFilterModal,
+            ),
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.symmetric(vertical: 14),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategories() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        children: subjectKeys.map((category) {
+          return Padding(
+            padding: EdgeInsets.only(right: 8),
+            child: FilterChip(
+              selected: _selectedCategory == category,
+              onSelected: (selected) {
+                setState(() => _selectedCategory = category);
+                context.read<CourseProvider>().setFilters(
+                      subject: category == 'ALL' ? null : category,
+                    );
+              },
+              label: Text(
+                AppLocalizations.of(context)!.getCategoryName(category),
+              ),
+              backgroundColor: AppColor.cardColor,
+              selectedColor: AppColor.primary,
+              labelStyle: TextStyle(
+                color: _selectedCategory == category
+                    ? AppColor.glassTextColor
+                    : AppColor.mainColor,
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.school_outlined, size: 64, color: AppColor.mainColor),
+          SizedBox(height: 16),
+          Text(
+            AppLocalizations.of(context)!.no_courses_found,
+            style: TextStyle(
+              fontSize: 16,
+              color: AppColor.mainColor,
             ),
           ),
         ],
       ),
     );
   }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
 }
 
 extension LocalizationsExtensions on AppLocalizations {
   String getCategoryName(String key) {
     switch (key) {
-      case 'categories_all':
+      case 'ALL':
         return categories_all;
-      case 'categories_mathematics':
+      case 'MATHEMATICS':
         return categories_mathematics;
-      case 'categories_science':
+      case 'SCIENCE':
         return categories_science;
-      case 'categories_physics':
+      case 'PHYSICS':
         return categories_physics;
-      case 'categories_history_geography':
+      case 'HISTORY_GEOGRAPHY':
         return categories_history_geography;
-      case 'categories_islamic_studies':
+      case 'ISLAMIC_STUDIES':
         return categories_islamic_studies;
-      case 'categories_arabic':
+      case 'ARABIC':
         return categories_arabic;
-      case 'categories_french':
+      case 'FRENCH':
         return categories_french;
-      case 'categories_english':
+      case 'ENGLISH':
         return categories_english;
-      case 'categories_other':
+      case 'OTHER':
         return categories_other;
       default:
         return '';

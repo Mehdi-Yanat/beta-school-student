@@ -28,8 +28,7 @@ class AuthInterceptor implements InterceptorContract {
   @override
   Future<BaseResponse> interceptResponse(
       {required BaseResponse response}) async {
-    print('🔵 Response status: ${response.statusCode}');
-
+        
     if (response.statusCode == 401 &&
         !_isRefreshing &&
         _retryCount < maxRetries) {

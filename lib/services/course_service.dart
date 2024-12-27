@@ -24,21 +24,43 @@ class CourseService {
   }
 
   // Get all courses
-  static Future<List<dynamic>> getCourses() async {
+  static Future<Map<String, dynamic>> getCourses({
+    String? title,
+    String? subject,
+    String? teacherClass,
+    String? educationalBranch,
+    int? limit = 10,
+    int? page = 1,
+  }) async {
     try {
+      final queryParams = {
+        if (title != null) 'title': title,
+        if (subject != null) 'subject': subject,
+        if (teacherClass != null) 'teacherClass': teacherClass,
+        if (educationalBranch != null) 'educationalBranch': educationalBranch,
+        'limit': limit.toString(),
+        'page': page.toString(),
+      };
+
+      final uri =
+          Uri.parse('$baseUrl/course/accepted').replace(queryParameters: queryParams);
+
       final response = await _client.get(
-        Uri.parse('$baseUrl/course/accepted?lng=${getCurrentLocale()}'),
+        uri,
         headers: _headers(),
       );
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        return data['courses'] ?? [];
+        return {
+          'courses': data['courses'] ?? [],
+          'total': data['totalCount'] ?? 0,
+        };
       }
-      return [];
+      return {'courses': [], 'total': 0, 'page': 1, 'limit': 10};
     } catch (e) {
       print('❌ Error getting courses: $e');
-      return [];
+      return {'courses': [], 'total': 0, 'page': 1, 'limit': 10};
     }
   }
 
