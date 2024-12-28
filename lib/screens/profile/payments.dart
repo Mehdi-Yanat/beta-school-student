@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
+import 'package:online_course/screens/profile/payment/methods.dart';
+import 'package:online_course/screens/profile/payment/transactions.dart';
 import '../../theme/color.dart';
 import '../../widgets/appbar.dart';
 
@@ -14,33 +16,31 @@ class PaymentPage extends StatelessWidget {
       body: ListView(
         children: [
           ListTile(
-            leading: Icon(Icons.credit_card, color: AppColor.primary),
-            title: Text(
-              AppLocalizations.of(context)!.add_card,
-              style: TextStyle(color: AppColor.textColor),
-            ),
-            onTap: () {
-              // Handle Add Card tap
-            },
-          ),
-          ListTile(
             leading: Icon(Icons.payment, color: AppColor.primary),
             title: Text(
               AppLocalizations.of(context)!.payment_methods,
-              style: TextStyle(color: AppColor.textColor),
+              style: TextStyle(color: AppColor.mainColor),
             ),
             onTap: () {
               // Handle Payment Methods tap
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PaymentMethodsScreen()),
+              );
             },
           ),
           ListTile(
             leading: Icon(Icons.history, color: AppColor.primary),
             title: Text(
               AppLocalizations.of(context)!.transaction_history,
-              style: TextStyle(color: AppColor.textColor),
+              style: TextStyle(color: AppColor.mainColor),
             ),
             onTap: () {
               // Handle Transaction History tap
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TransactionsPage()),
+              );
             },
           ),
         ],

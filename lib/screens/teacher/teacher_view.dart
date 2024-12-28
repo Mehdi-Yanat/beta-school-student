@@ -26,7 +26,6 @@ class TeacherView extends StatelessWidget {
           }
 
           final teacher = provider.teacher;
-          print(teacher);
           if (teacher == null) {
             return Scaffold(
               body: Center(child: Text('Teacher not found')),
@@ -118,6 +117,7 @@ class TeacherView extends StatelessWidget {
               fontWeight: FontWeight.bold,
               color: AppColor.darker,
             ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),

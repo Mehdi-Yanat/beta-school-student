@@ -17,6 +17,7 @@ class CourseCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        height: 300, // Adjust the height according to your layout
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
@@ -38,6 +39,7 @@ class CourseCard extends StatelessWidget {
                 borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                 child: Stack(
                   children: [
+                    // Course Image
                     Container(
                       height: 120,
                       width: double.infinity,
@@ -79,6 +81,33 @@ class CourseCard extends StatelessWidget {
                         ),
                       ),
                     ),
+                    // Course Class Label - Position Absolute (Bottom Left of the Image)
+                    if (course['class'] != null &&
+                        (course['class'] as List).isNotEmpty)
+                      Positioned(
+                        bottom: 8, // Position near the bottom of the image
+                        left: 8, // Offset from the left edge
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4), // Label Padding
+                          decoration: BoxDecoration(
+                            color: Colors.black
+                                .withValues(alpha: 0.6), // Background
+                            borderRadius:
+                                BorderRadius.circular(8), // Rounded edges
+                          ),
+                          child: Text(
+                            TranslationHelper.getTranslatedClass(
+                              context,
+                              (course['class'] as List).first.toString(),
+                            ),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -108,21 +137,6 @@ class CourseCard extends StatelessWidget {
                       fontSize: 14,
                     ),
                   ),
-                  if (course['class'] != null &&
-                      (course['class'] as List).isNotEmpty)
-                    Padding(
-                      padding: EdgeInsets.only(top: 4),
-                      child: Text(
-                        TranslationHelper.getTranslatedClass(
-                          context,
-                          (course['class'] as List).first.toString(),
-                        ),
-                        style: TextStyle(
-                          color: AppColor.mainColor,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
                 ],
               ),
             ),

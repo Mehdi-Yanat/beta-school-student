@@ -3,12 +3,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localiza
 import 'package:online_course/models/student.dart';
 import 'package:online_course/providers/auth_provider.dart';
 import 'package:online_course/screens/profile/bookmark.dart';
-import 'package:online_course/screens/profile/notification.dart';
 import 'package:online_course/screens/profile/payments.dart';
 import 'package:online_course/screens/profile/privacy.dart';
 import 'package:online_course/screens/profile/settings.dart';
 import 'package:online_course/theme/color.dart';
-import 'package:online_course/utils/logger.dart';
 import 'package:online_course/widgets/custom_image.dart';
 import 'package:online_course/widgets/dialog.dart';
 import 'package:online_course/widgets/setting_box.dart';
@@ -29,8 +27,6 @@ class _AccountPageState extends State<AccountPage> {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, _) {
         final student = authProvider.student;
-        Logger.log(
-            'Current student: ${student!.email}'); // Replace print with Logger
         return Scaffold(
           appBar: CustomAppBar(
             title: AppLocalizations.of(context)!.account_title,
@@ -218,25 +214,6 @@ Widget _buildSection2(context, Student? student) {
     child: Column(
       children: [
         SettingItem(
-          title: AppLocalizations.of(context)!.notifications_title,
-          // Localized text
-          leadingIcon: "assets/icons/bell.svg",
-          bgIconColor: AppColor.purple,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => NotificationPage()),
-            );
-          },
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 45),
-          child: Divider(
-            height: 0,
-            color: Colors.grey.withValues(alpha: 0.8),
-          ),
-        ),
-        SettingItem(
           title: AppLocalizations.of(context)!.privacy_title, // Localized text
           leadingIcon: "assets/icons/shield.svg",
           bgIconColor: AppColor.orange,
@@ -260,7 +237,7 @@ Widget _buildSection3(BuildContext context, Student? student) {
       color: AppColor.cardColor,
       boxShadow: [
         BoxShadow(
-          color: AppColor.shadowColor.withValues(alpha:0.1),
+          color: AppColor.shadowColor.withValues(alpha: 0.1),
           spreadRadius: 1,
           blurRadius: 1,
           offset: const Offset(0, 1),
@@ -274,13 +251,14 @@ Widget _buildSection3(BuildContext context, Student? student) {
       onTap: () {
         showLogoutDialog(
           context: context,
-          title: AppLocalizations.of(context)!.confirm_logout, // Translated title
+          title:
+              AppLocalizations.of(context)!.confirm_logout, // Translated title
           message: AppLocalizations.of(context)!
               .confirm_logout_message, // Translated message
-          confirmText: AppLocalizations.of(context)!
-              .logout, // Translated confirm text
-          cancelText: AppLocalizations.of(context)!
-              .cancel, // Translated cancel text
+          confirmText:
+              AppLocalizations.of(context)!.logout, // Translated confirm text
+          cancelText:
+              AppLocalizations.of(context)!.cancel, // Translated cancel text
           onConfirm: () {
             // Handle logout logic
             final authProvider =

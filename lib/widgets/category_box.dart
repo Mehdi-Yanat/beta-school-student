@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:online_course/theme/color.dart';
+import 'package:online_course/utils/translation.dart';
 
 class CategoryBox extends StatelessWidget {
   CategoryBox({
@@ -30,7 +31,7 @@ class CategoryBox extends StatelessWidget {
               color: isSelected ? AppColor.primary : Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: AppColor.shadowColor.withOpacity(0.1),
+                  color: AppColor.shadowColor.withValues(alpha: 0.1),
                   spreadRadius: 1,
                   blurRadius: 1,
                   offset: Offset(1, 1),
@@ -49,7 +50,7 @@ class CategoryBox extends StatelessWidget {
             height: 10,
           ),
           Text(
-            data["name"],
+            TranslationHelper.getTranslatedSubject(context, data["id"]),
             maxLines: 1,
             overflow: TextOverflow.fade,
             style: TextStyle(
