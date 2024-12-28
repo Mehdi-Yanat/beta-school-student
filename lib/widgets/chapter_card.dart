@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:online_course/theme/color.dart';
+import 'package:online_course/utils/helper.dart';
 
 class ChapterCard extends StatelessWidget {
   final Map<String, dynamic> chapter; // Contains chapter information
@@ -122,7 +123,8 @@ class ChapterCard extends StatelessWidget {
                               ),
                               SizedBox(width: 4),
                               Text(
-                                chapter['duration'] ?? '0 mins',
+                                Helpers.formatDuration(chapter['duration']) ??
+                                    '0 mins',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 12,

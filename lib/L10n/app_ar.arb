@@ -87,7 +87,7 @@
   "progress_tab": "التقدم",
   "completed_tab": "المكتملة",
   "lessons": "الدروس",
-  "chapter_title": "تصميم واجهة المستخدم/تجربة المستخدم",
+  "chapter_title": "الفصول",
   "attachments_tab": "المرفقات",
   "no_attachments": "لا توجد مرفقات",
   "next": "التالي",
@@ -281,5 +281,13 @@
   "reset_filters": "إعادة تعيين التصفية",
   "apply_filters": "تطبيق التصفية",
   "no_chapters_available": "لا توجد فصول متاحة",
-  "dzd": "دج"
+  "dzd": "دج",
+  "no_video_available": "لا يوجد فيديو متاح.",
+  "video_url_not_found": "لم يتم العثور على رابط الفيديو لهذا الفصل.",
+  "failed_to_load_chapter": "فشل في تحميل الفصل. الرجاء المحاولة مرة أخرى.",
+  "failed_to_play_video": "فشل تشغيل الفيديو. الرجاء المحاولة مرة أخرى.",
+  "attachment_file_name_unknown": "اسم الملف غير معروف",
+  "failed_to_open_attachment": "فشل في فتح المرفق.",
+  "loading_video": "جاري تحميل الفيديو...",
+  "no_attachments_chapter": "لا توجد مرفقات لـ {chapterTitle}."
 }

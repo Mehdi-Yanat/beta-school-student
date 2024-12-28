@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
 import 'package:online_course/providers/course_provider.dart';
+import 'package:online_course/screens/course/view_chapters.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:online_course/utils/translation.dart';
 import 'package:online_course/widgets/course_image.dart';
@@ -201,7 +202,7 @@ class CourseDetailScreen extends StatelessWidget {
                                       // Convert duration to a String (e.g., "5 mins")
                                       final duration =
                                           chapter['duration'] != null
-                                              ? '${chapter['duration']} mins'
+                                              ? chapter['duration']
                                               : '0 mins';
 
                                       return ChapterCard(
@@ -210,10 +211,16 @@ class CourseDetailScreen extends StatelessWidget {
                                           'title': title,
                                           'duration': duration,
                                         },
-                                        onTap: () {
-                                          // Define what happens on chapter card tap
-                                          print("Tapped on chapter: $title");
-                                        },
+                                        onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ViewChapterScreen(
+                                              chapterId: chapter['id'],
+                                              courseId: course['id'],
+                                            ),
+                                          ),
+                                        ),
                                       );
                                     }).toList()
                                   : [

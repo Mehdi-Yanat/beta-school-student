@@ -88,7 +88,7 @@
   "progress_tab": "En cours",
   "completed_tab": "Terminé",
   "lessons": "leçons",
-  "chapter_title": "UI/UX Design",
+  "chapter_title": "Chapitres",
   "attachments_tab": "Pièces jointes",
   "no_attachments": "Aucune pièce jointe disponible",
   "next": "Suivant",
@@ -282,5 +282,13 @@
   "reset_filters": "Réinitialiser les filtres",
   "apply_filters": " Appliquer les filtres",
   "no_chapters_available": "Aucun chapitre disponible",
-  "dzd": "DZD"
+  "dzd": "DZD",
+  "no_video_available": "Aucune vidéo disponible.",
+  "video_url_not_found": "Aucune URL de vidéo trouvée pour ce chapitre.",
+  "failed_to_load_chapter": "Échec du chargement du chapitre. Veuillez réessayer.",
+  "failed_to_play_video": "Échec de la lecture de la vidéo. Veuillez réessayer.",
+  "attachment_file_name_unknown": "Nom de fichier inconnu",
+  "failed_to_open_attachment": "Échec de l'ouverture de la pièce jointe.",
+  "loading_video": "Chargement de la vidéo en cours...",
+  "no_attachments_chapter": "Aucune pièce jointe pour {chapterTitle}."
 }

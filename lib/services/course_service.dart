@@ -42,8 +42,8 @@ class CourseService {
         'page': page.toString(),
       };
 
-      final uri =
-          Uri.parse('$baseUrl/course/accepted').replace(queryParameters: queryParams);
+      final uri = Uri.parse('$baseUrl/course/accepted')
+          .replace(queryParameters: queryParams);
 
       final response = await _client.get(
         uri,
@@ -79,6 +79,25 @@ class CourseService {
       return null;
     } catch (e) {
       print('Error getting course: $e');
+      return null;
+    }
+  } // Get chapter details by chapterId
+
+  static Future<Map<String, dynamic>?> viewChapter(chapterId) async {
+    try {
+      final response = await _client.get(
+        Uri.parse('$baseUrl/chapter/view/$chapterId'),
+        headers: _headers(),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        print(data);
+        return data; // The chapter details, including presigned video URL
+      }
+      return null;
+    } catch (e) {
+      print('Error getting chapter: $e');
       return null;
     }
   }

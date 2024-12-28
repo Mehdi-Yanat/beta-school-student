@@ -4,6 +4,9 @@ import '../services/course_service.dart';
 
 class CourseProvider with ChangeNotifier {
   List<Course> _courses = [];
+  Map<String, dynamic>? _currentChapter;
+  Map<String, dynamic>?
+      _currentVideo; // Holds the video information (including URL)// Add currentChapter
   bool _isLoading = false;
   Map<String, dynamic>? _courseData;
   String? _error;
@@ -15,6 +18,8 @@ class CourseProvider with ChangeNotifier {
   String? _selectedBranch;
 
   Map<String, dynamic>? get courseData => _courseData;
+
+  Map<String, dynamic>? get currentVideo => _currentVideo;
 
   bool get isLoading => _isLoading;
 
@@ -32,6 +37,19 @@ class CourseProvider with ChangeNotifier {
   String? get selectedClass => _selectedClass;
 
   String? get selectedBranch => _selectedBranch;
+
+  Map<String, dynamic>? get currentChapter => _currentChapter;
+
+  // Setter for currentChapter
+  void setCurrentChapter(Map<String, dynamic> chapter) {
+    _currentChapter = chapter;
+    notifyListeners(); // Notify listeners that the current chapter has changed
+  }
+
+  void setCurrentVideo(Map<String, dynamic>? video) {
+    _currentVideo = video;
+    notifyListeners(); // Notify the listeners that the video has changed
+  }
 
   List<dynamic> get courseChapters =>
       (_courseData?['course'] as Map<String, dynamic>?)?['chapters']
