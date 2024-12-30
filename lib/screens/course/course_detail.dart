@@ -211,16 +211,22 @@ class CourseDetailScreen extends StatelessWidget {
                                           'title': title,
                                           'duration': duration,
                                         },
-                                        onTap: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                ViewChapterScreen(
-                                              chapterId: chapter['id'],
-                                              courseId: course['id'],
-                                            ),
-                                          ),
-                                        ),
+                                        onTap: () {
+                                          WidgetsBinding.instance
+                                              .addPostFrameCallback((_) {
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute<dynamic>(
+                                                maintainState: true,
+                                                builder: (context) =>
+                                                    ViewChapterScreen(
+                                                  chapterId: chapter['id'],
+                                                  courseId: course['id'],
+                                                ),
+                                              ),
+                                            );
+                                          });
+                                        },
                                       );
                                     }).toList()
                                   : [

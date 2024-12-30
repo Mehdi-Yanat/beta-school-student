@@ -311,5 +311,14 @@
   "transaction_date": "Date : {date}",
   "transaction_amount": "Montant payé : {amount} DZD",
   "available_payment_methods": "Méthodes de paiement disponibles",
-  "description": "Vous pouvez payer avec la carte CIB, la carte EDAHABIA ou la passerelle Chargily. Choisissez la méthode de paiement qui vous convient le mieux."
+  "description": "Vous pouvez payer avec la carte CIB, la carte EDAHABIA ou la passerelle Chargily. Choisissez la méthode de paiement qui vous convient le mieux.",
+  "payment_success_title": "Paiement réussi",
+  "payment_success_message": "Merci pour votre paiement. Votre transaction a été réalisée avec succès.",
+  "back_to_home_button": "Retour à l'accueil",
+  "payment_failed_title": "Paiement échoué",
+  "payment_failed_message": "Malheureusement, votre paiement n'a pas pu être traité.",
+  "transaction_id": "ID de la transaction",
+  "try_again_button": "Réessayer",
+  "cannot_open_payment_url": "Impossible d'ouvrir la page de paiement. Veuillez réessayer.",
+  "enrollment_error_message": "Échec de l'inscription au cours. Veuillez réessayer plus tard."
 }

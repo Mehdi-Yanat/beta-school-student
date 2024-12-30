@@ -10,6 +10,7 @@ class TeacherInfo {
   final String status;
   final String? description;
   final List<Course> courses;
+  
 
   TeacherInfo({
     required this.id,
@@ -40,9 +41,9 @@ class TeacherInfo {
     try {
       print('📝 Parsing TeacherInfo: ${json['id']}');
 
-      final coursesList = json['Course'] as List<dynamic>? ?? [];
+      final coursesList = json['Course'] as List<dynamic>?;
       final parsedCourses = coursesList
-          .map((courseJson) {
+          ?.map((courseJson) {
             try {
               return Course.fromJson(courseJson as Map<String, dynamic>);
             } catch (e) {
@@ -52,7 +53,7 @@ class TeacherInfo {
           })
           .where((course) => course != null)
           .cast<Course>()
-          .toList();
+          .toList() ?? <Course>[] ;
 
       return TeacherInfo(
         id: json['id'] ?? 0,

@@ -310,5 +310,14 @@
   "transaction_date": "التاريخ: {date}",
   "transaction_amount": "المبلغ المدفوع: {amount} د.ج",
   "available_payment_methods": "طرق الدفع المتوفرة",
-  "description": "يمكنك الدفع عبر بطاقة CIB أو بطاقة الذهبية أو بوابة Chargily. اختر طريقة الدفع التي تناسبك."
+  "description": "يمكنك الدفع عبر بطاقة CIB أو بطاقة الذهبية أو بوابة Chargily. اختر طريقة الدفع التي تناسبك.",
+  "payment_success_title": "تم الدفع بنجاح",
+  "payment_success_message": "شكراً لك على الدفع. تمت عملية الدفع بنجاح.",
+  "back_to_home_button": "العودة إلى الصفحة الرئيسية",
+  "payment_failed_title": "فشل الدفع",
+  "payment_failed_message": "للأسف، لم يتم تنفيذ عملية الدفع الخاصة بك.",
+  "transaction_id": "رقم المعاملة",
+  "try_again_button": "حاول مرة أخرى",
+  "cannot_open_payment_url": "لا يمكن فتح صفحة الدفع. يرجى المحاولة مرة أخرى.",
+  "enrollment_error_message": "فشل التسجيل في الدورة. يُرجى إعادة المحاولة لاحقًا."
 }

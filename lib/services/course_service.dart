@@ -92,7 +92,6 @@ class CourseService {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        print(data);
         return data; // The chapter details, including presigned video URL
       }
       return null;
@@ -122,18 +121,27 @@ class CourseService {
   }
 
   // Enroll in a course
-  static Future<bool> enrollCourse(String courseId) async {
+  static Future<String?> enrollCourse(String courseId) async {
     try {
       final response = await _client.post(
-        Uri.parse('$baseUrl/student/course/enroll?lng=${getCurrentLocale()}'),
+        Uri.parse('$baseUrl/course/$courseId/enroll?lng=${getCurrentLocale()}'),
         headers: _headers(),
-        body: jsonEncode({'courseId': courseId}),
       );
 
-      return response.statusCode == 201;
+      if (response.statusCode == 200) {
+        //  Successful response - Extract the paymentUrl
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        return responseBody[
+            'paymentUrl']; // ✅ Return the paymentUrl from the response
+      } else {
+        //  Something went wrong - Log the status code
+        print('❌ Failed to enroll in course: ${response.statusCode}');
+        return null; // Return null to indicate failure
+      }
     } catch (e) {
-      print('Error enrolling in course: $e');
-      return false;
+      //  Handle unexpected errors
+      print('⚠️ Error enrolling in course: $e');
+      return null; // 🚫 Return null if an exception occurs
     }
   }
 

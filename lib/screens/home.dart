@@ -302,7 +302,6 @@ class _HomePageState extends State<HomePage> {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: teacherProvider.teachers.map((teacher) {
-              print(teacher.id);
               final isArabic =
                   Localizations.localeOf(context).languageCode == 'ar';
               final fullName = isArabic

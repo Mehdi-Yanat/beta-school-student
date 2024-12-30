@@ -5,7 +5,6 @@ import 'package:online_course/widgets/snackbar.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 import 'package:screen_protector/screen_protector.dart';
 
 import '../../providers/course_provider.dart';
@@ -36,9 +35,23 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
   bool _isChangingVideo = false;
   bool _isDataFetched = false; // Tracks whether data was fetched
 
+  Map<String, dynamic>? _chapterData; // Nullable Map to hold chapter details.
+
+  bool _isScreenActive = true;
+
   @override
   void initState() {
     super.initState();
+
+    _isScreenActive = true;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final courseProvider =
+          Provider.of<CourseProvider>(context, listen: false);
+      courseProvider
+          .fetchCourse(widget.courseId); // Or any other provider updates
+      _fetchChapterData(widget.chapterId.toString());
+    });
 
     // Print chapter ID for debugging purposes
     print("chapterId: ${widget.chapterId.toString()}");
@@ -57,18 +70,13 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    // If data hasn't been fetched yet
     if (!_isDataFetched) {
-      // Fetch the list of chapters for the course
-      final courseProvider =
-          Provider.of<CourseProvider>(context, listen: false);
-      if (widget.courseId != null) {
-        courseProvider
-            .fetchCourse(widget.courseId); // Fetch course and its chapters
-      }
-
-      // Fetch data for the current chapter
-      _fetchChapterData(widget.chapterId.toString());
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final courseProvider =
+            Provider.of<CourseProvider>(context, listen: false);
+        courseProvider.fetchCourse(widget.courseId);
+        _fetchChapterData(widget.chapterId.toString());
+      });
       _isDataFetched = true;
     }
   }
@@ -80,6 +88,15 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
       if (chapterData != null && chapterData['url'] != null) {
         final videoUrl = chapterData['url'];
         final provider = Provider.of<CourseProvider>(context, listen: false);
+
+        if (_isScreenActive) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (!mounted) return;
+            setState(() {
+              _chapterData = chapterData;
+            });
+          });
+        }
 
         if (provider.currentVideo == null ||
             provider.currentVideo?['url'] != videoUrl) {
@@ -104,10 +121,12 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
 
     try {
       // Safely create a new VideoPlayerController instance
-      _videoController = VideoPlayerController.network(url);
+      _videoController = VideoPlayerController.networkUrl(Uri.parse(url));
 
       // Load the video and wait for initialization
       await _videoController!.initialize();
+
+      _videoController!.addListener(_videoListener);
 
       // Dispose of the ChewieController if it already exists
       if (_chewieController != null) {
@@ -168,21 +187,26 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
 
   @override
   void dispose() {
-    // Safely dispose of the video controllers
+    _isScreenActive = false;
+
+    // Stop listening to VideoPlayerController events
     if (_videoController != null) {
+      _videoController!
+          .removeListener(_videoListener); // Ensure listeners are removed
       if (_videoController!.value.isInitialized) {
-        _videoController!.pause();
+        _videoController!.pause(); // Pause any playback
       }
-      _videoController!.dispose();
-      _videoController = null; // Reset to null
+      _videoController!.dispose(); // Dispose of the controller
+      _videoController = null; // Nullify for safety
     }
 
+    // Dispose the ChewieController
     if (_chewieController != null) {
       _chewieController!.dispose();
-      _chewieController = null; // Reset to null
+      _chewieController = null; // Nullify for safety
     }
 
-    // Other disposals
+    // Clean up tab controller and lifecycle observers
     _tabController.dispose();
     WidgetsBinding.instance.removeObserver(this);
 
@@ -204,10 +228,23 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
   void deactivate() {
     super.deactivate();
 
-    // Safely pause the video if it is initialized
+    // Pause the video playback safely without triggering build
     if (_videoController != null && _videoController!.value.isInitialized) {
       _videoController!.pause();
     }
+  }
+
+  void _videoListener() {
+    // Ensure this listener fires only when mounted and active
+    if (!mounted || !_isScreenActive) return;
+
+    // Defer state updates until the next frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      setState(() {
+        // Any necessary state updates
+      });
+    });
   }
 
   @override
@@ -215,7 +252,6 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
     final localizations = AppLocalizations.of(context); // Localization strings
     final courseProvider = Provider.of<CourseProvider>(context);
     final chapters = courseProvider.courseChapters;
-    final currentVideo = courseProvider.currentVideo;
 
     return Scaffold(
       backgroundColor: AppColor.appBgColor,
@@ -233,7 +269,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                     style: TextStyle(color: AppColor.textColor),
                   ),
                 )
-              : currentVideo == null
+              : _chapterData == null
                   ? Center(
                       child: Text(
                         localizations.no_video_available,
@@ -250,17 +286,20 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               // Current Chapter Title
-                              if (courseProvider.currentChapter != null)
+                              if (_chapterData != null)
                                 Padding(
                                   padding: const EdgeInsets.all(10.0),
-                                  child: Text(
-                                    courseProvider.currentChapter!['title'] ??
-                                        'Untitled Chapter',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        _chapterData?['title'] ?? 'No Title',
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
                                   ),
                                 ),
 
@@ -324,27 +363,32 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                                           chapter['id']);
                                               if (chapterData != null &&
                                                   chapterData['url'] != null) {
-                                                final videoUrl =
-                                                    chapterData['url'];
-                                                courseProvider
-                                                    .setCurrentChapter(chapter);
-                                                courseProvider.setCurrentVideo({
-                                                  'url': videoUrl,
-                                                  'chapterId': chapter['id']
+                                                Future.microtask(() {
+                                                  courseProvider
+                                                      .setCurrentChapter(
+                                                          chapter);
+                                                  courseProvider
+                                                      .setCurrentVideo({
+                                                    'url': chapterData['url'],
+                                                    'chapterId': chapter['id'],
+                                                  });
                                                 });
-                                                await _changeVideo(videoUrl);
+                                                await _changeVideo(
+                                                    chapterData['url']);
                                               } else {
-                                                SnackBarHelper.showErrorSnackBar(
-                                                    context,
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .failed_to_play_video);
+                                                SnackBarHelper
+                                                    .showErrorSnackBar(
+                                                  context,
+                                                  AppLocalizations.of(context)!
+                                                      .failed_to_play_video,
+                                                );
                                               }
                                             } catch (e) {
                                               SnackBarHelper.showErrorSnackBar(
-                                                  context,
-                                                  AppLocalizations.of(context)!
-                                                      .failed_to_load_chapter);
+                                                context,
+                                                AppLocalizations.of(context)!
+                                                    .failed_to_load_chapter,
+                                              );
                                             }
                                           })
                                       : SizedBox.shrink();

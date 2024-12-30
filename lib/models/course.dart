@@ -1,4 +1,3 @@
-import 'package:online_course/models/shared.dart';
 import 'package:online_course/utils/constant.dart';
 
 class ImageData {
@@ -180,40 +179,72 @@ class Course {
   });
 
   factory Course.fromJson(Map<String, dynamic> json) {
-    return Course(
-      id: json['id'],
-      handle: json['handle'],
-      title: json['title'],
-      description: json['description'],
-      price: json['price'],
-      discount: json['discount'],
-      teacherId: json['teacher']['id'],
-      icon: ImageData.fromJson(json['icon']), // Correctly create ImageData
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
-      duration: json['duration'],
-      language: json['language'],
-      level: CourseLevel.values.firstWhere(
-        (e) => e.toString() == 'CourseLevel.${json['level']}',
-        orElse: () => CourseLevel.BEGINNER,
-      ),
-      maxParticipants: json['maxParticipants'],
-      currentEnrollment: json['currentEnrollment'],
-      enrollmentDeadline: json['enrollmentDeadline'] != null
-          ? DateTime.parse(json['enrollmentDeadline'])
-          : null,
-      classes: List<String>.from(json['class'] ?? []),
-      branches: List<String>.from(json['EducationalBranch'] ?? []),
-      chapters: (json['chapters'] as List? ?? [])
-          .map((c) => Chapter.fromJson(c))
-          .toList(),
-      status: CourseStatus.values.firstWhere(
-        (e) => e.toString() == 'CourseStatus.${json['status']}',
-        orElse: () => CourseStatus.PENDING,
-      ),
-      statusNote: json['statusNote'],
-      teacher: Teacher.fromJson(json['teacher']),
-    );
+    if (json['teacher'] != null) {
+      return Course(
+        id: json['id'],
+        handle: json['handle'],
+        title: json['title'],
+        description: json['description'],
+        price: json['price'],
+        discount: json['discount'],
+        teacherId: json['teacher'] != null ? (json['teacher']['id'] ?? 0) : 0,
+        icon: ImageData.fromJson(json['icon']), // Correctly create ImageData
+        createdAt: DateTime.parse(json['createdAt']),
+        updatedAt: DateTime.parse(json['updatedAt']),
+        duration: json['duration'],
+        language: json['language'],
+        level: CourseLevel.values.firstWhere(
+          (e) => e.toString() == 'CourseLevel.${json['level']}',
+          orElse: () => CourseLevel.BEGINNER,
+        ),
+        maxParticipants: json['maxParticipants'],
+        currentEnrollment: json['currentEnrollment'],
+        enrollmentDeadline: json['enrollmentDeadline'] != null
+            ? DateTime.parse(json['enrollmentDeadline'])
+            : null,
+        classes: List<String>.from(json['class'] ?? []),
+        branches: List<String>.from(json['EducationalBranch'] ?? []),
+        chapters: (json['chapters'] as List? ?? [])
+            .map((c) => Chapter.fromJson(c))
+            .toList(),
+        status: CourseStatus.values.firstWhere(
+          (e) => e.toString() == 'CourseStatus.${json['status']}',
+          orElse: () => CourseStatus.PENDING,
+        ),
+        statusNote: json['statusNote'],
+        teacher: Teacher.fromJson(json['teacher']),
+      );
+    } else {
+      return Course(
+        id: '',
+        handle: '',
+        title: '',
+        description: '',
+        price: 0,
+        teacherId: 0,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        classes: [],
+        branches: [],
+        chapters: [],
+        status: CourseStatus.PENDING,
+        teacher: Teacher(
+          id: 0,
+          userId: 0,
+          subject: '',
+          institution: '',
+          yearsOfExperience: 0,
+          status: '',
+          user: TeacherUser(
+            firstName: '',
+            lastName: '',
+            email: '',
+            profilePic: ImageData(),
+          ),
+        ),
+        level: CourseLevel.BEGINNER,
+      );
+    }
   }
 
   @override

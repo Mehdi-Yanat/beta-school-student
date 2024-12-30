@@ -9,6 +9,8 @@ import 'package:online_course/screens/auth/forget_password.dart';
 import 'package:online_course/screens/auth/login.dart';
 import 'package:online_course/screens/auth/reset_password.dart';
 import 'package:online_course/screens/auth/signup.dart';
+import 'package:online_course/screens/payments/failed.dart';
+import 'package:online_course/screens/payments/success.dart';
 import 'package:online_course/screens/root_app.dart';
 import 'package:online_course/screens/splash.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -20,7 +22,7 @@ import 'package:provider/provider.dart';
 
 Future<void> main() async {
   // Ensure the environment file is loaded correctly
-  await dotenv.load(fileName: ".env.production");
+  await dotenv.load(fileName: ".env.development");
 
   Logger.enable();
 
@@ -46,6 +48,7 @@ Future<void> main() async {
 class MyApp extends StatefulWidget {
   static final ValueNotifier<Locale> currentLocale =
       ValueNotifier<Locale>(Locale("ar"));
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -82,6 +85,26 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             navigatorKey.currentState?.push(
               MaterialPageRoute(
                 builder: (context) => VerifyEmailScreen(token: token),
+              ),
+            );
+          }
+        } else if (uri.host == 'payment-success') {
+          final checkout_id = uri.queryParameters['checkout_id'];
+          if (checkout_id != null) {
+            navigatorKey.currentState?.push(
+              MaterialPageRoute(
+                builder: (context) =>
+                    PaymentSuccessPage(checkoutId: checkout_id),
+              ),
+            );
+          }
+        } else if (uri.host == 'payment-failed') {
+          final checkout_id = uri.queryParameters['checkout_id'];
+          if (checkout_id != null) {
+            navigatorKey.currentState?.push(
+              MaterialPageRoute(
+                builder: (context) =>
+                    PaymentFailedPage(checkoutId: checkout_id),
               ),
             );
           }
