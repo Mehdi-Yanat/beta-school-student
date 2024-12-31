@@ -100,7 +100,11 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
 
         if (provider.currentVideo == null ||
             provider.currentVideo?['url'] != videoUrl) {
-          provider.setCurrentVideo({'url': videoUrl, 'chapterId': chapterId});
+          provider.setCurrentVideo({
+            'url': videoUrl,
+            'chapterId': chapterId,
+            'title': provider.courseData?['title']
+          });
         }
 
         await _changeVideo(
@@ -253,6 +257,8 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
     final courseProvider = Provider.of<CourseProvider>(context);
     final chapters = courseProvider.courseChapters;
 
+    print("provider.currentVideo ${courseProvider.currentVideo}");
+
     return Scaffold(
       backgroundColor: AppColor.appBgColor,
       appBar: CustomAppBar(
@@ -286,18 +292,20 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               // Current Chapter Title
-                              if (_chapterData != null)
+                              if (courseProvider.currentVideo?["title"] != null)
                                 Padding(
-                                  padding: const EdgeInsets.all(10.0),
+                                  padding: const EdgeInsets.all(5.0),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        _chapterData?['title'] ?? 'No Title',
+                                        courseProvider.currentVideo?['title'] ??
+                                            'No Title',
                                         style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
                                       ),
                                     ],
                                   ),
@@ -342,7 +350,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                             children: [
                               // Lessons Tab
                               ListView.builder(
-                                itemCount: chapters.length ?? 0,
+                                itemCount: chapters.length,
                                 itemBuilder: (context, index) {
                                   final chapter =
                                       chapters[index] as Map<String, dynamic>?;
@@ -371,6 +379,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                                       .setCurrentVideo({
                                                     'url': chapterData['url'],
                                                     'chapterId': chapter['id'],
+                                                    'title': chapter['title']
                                                   });
                                                 });
                                                 await _changeVideo(
@@ -397,7 +406,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
 
                               // Attachments Tab
                               ListView.builder(
-                                itemCount: chapters.length ?? 0,
+                                itemCount: chapters.length,
                                 itemBuilder: (context, index) {
                                   final chapter =
                                       chapters[index] as Map<String, dynamic>?;

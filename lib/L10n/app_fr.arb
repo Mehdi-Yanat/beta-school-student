@@ -320,5 +320,14 @@
   "transaction_id": "ID de la transaction",
   "try_again_button": "Réessayer",
   "cannot_open_payment_url": "Impossible d'ouvrir la page de paiement. Veuillez réessayer.",
-  "enrollment_error_message": "Échec de l'inscription au cours. Veuillez réessayer plus tard."
+  "enrollment_error_message": "Échec de l'inscription au cours. Veuillez réessayer plus tard.",
+  "transaction_details_title": "Détails de la transaction",
+  "transaction_date_label": "Date",
+  "transaction_amount_label": "Montant",
+  "transaction_status_label": "Statut",
+  "transaction_payment_method_label": "Méthode de paiement",
+  "close_button": "Fermer",
+  "transaction_status_pending": "En attente",
+  "transaction_status_failed": "Échoué",
+  "transaction_status_paid": "Payé"
 }

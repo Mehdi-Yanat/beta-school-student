@@ -9,7 +9,7 @@ class TeacherService {
 
   static final _client = InterceptedClient.build(
     interceptors: [AuthInterceptor()],
-    requestTimeout: Duration(seconds: 60),
+    requestTimeout: Duration(seconds: 10),
   );
 
   static String getCurrentLocale() {
@@ -31,7 +31,7 @@ class TeacherService {
         Uri.parse('$baseUrl/teacher/accepted?lng=${getCurrentLocale()}'),
         headers: _headers(),
       );
-  
+
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data != null && data['users'] != null) {
@@ -71,7 +71,8 @@ class TeacherService {
   static Future<List<dynamic>> getTeacherCourses(int teacherId) async {
     try {
       final response = await _client.get(
-        Uri.parse('$baseUrl/teacher/$teacherId/courses?lng=${getCurrentLocale()}'),
+        Uri.parse(
+            '$baseUrl/teacher/$teacherId/courses?lng=${getCurrentLocale()}'),
         headers: _headers(),
       );
 

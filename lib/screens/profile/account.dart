@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
 import 'package:online_course/models/student.dart';
 import 'package:online_course/providers/auth_provider.dart';
-import 'package:online_course/screens/profile/bookmark.dart';
 import 'package:online_course/screens/profile/payments.dart';
 import 'package:online_course/screens/profile/privacy.dart';
 import 'package:online_course/screens/profile/settings.dart';
@@ -84,7 +83,8 @@ Widget _buildProfile(context, Student? student) {
         height: 10,
       ),
       Text(
-        "${student?.firstName} ${student?.lastName}", // User's name (static data)
+        "${student?.firstName} ${student?.lastName}",
+        // User's name (static data)
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w500,
@@ -173,24 +173,6 @@ Widget _buildSection1(context, Student? student) {
             );
           },
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 45),
-          child: Divider(
-            height: 0,
-            color: Colors.grey.withValues(alpha: 0.8),
-          ),
-        ),
-        SettingItem(
-          title: AppLocalizations.of(context)!.bookmark_title, // Localized text
-          leadingIcon: "assets/icons/bookmark.svg",
-          bgIconColor: AppColor.primary,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => BookmarkPage()),
-            );
-          },
-        ),
       ],
     ),
   );
@@ -251,14 +233,14 @@ Widget _buildSection3(BuildContext context, Student? student) {
       onTap: () {
         showLogoutDialog(
           context: context,
-          title:
-              AppLocalizations.of(context)!.confirm_logout, // Translated title
-          message: AppLocalizations.of(context)!
-              .confirm_logout_message, // Translated message
-          confirmText:
-              AppLocalizations.of(context)!.logout, // Translated confirm text
-          cancelText:
-              AppLocalizations.of(context)!.cancel, // Translated cancel text
+          title: AppLocalizations.of(context)!.confirm_logout,
+          // Translated title
+          message: AppLocalizations.of(context)!.confirm_logout_message,
+          // Translated message
+          confirmText: AppLocalizations.of(context)!.logout,
+          // Translated confirm text
+          cancelText: AppLocalizations.of(context)!.cancel,
+          // Translated cancel text
           onConfirm: () {
             // Handle logout logic
             final authProvider =

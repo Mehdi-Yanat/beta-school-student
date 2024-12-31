@@ -319,5 +319,14 @@
   "transaction_id": "رقم المعاملة",
   "try_again_button": "حاول مرة أخرى",
   "cannot_open_payment_url": "لا يمكن فتح صفحة الدفع. يرجى المحاولة مرة أخرى.",
-  "enrollment_error_message": "فشل التسجيل في الدورة. يُرجى إعادة المحاولة لاحقًا."
+  "enrollment_error_message": "فشل التسجيل في الدورة. يُرجى إعادة المحاولة لاحقًا.",
+  "transaction_details_title": "تفاصيل المعاملة",
+  "transaction_date_label": "التاريخ",
+  "transaction_amount_label": "المبلغ",
+  "transaction_status_label": "الحالة",
+  "transaction_payment_method_label": "طريقة الدفع",
+  "close_button": "إغلاق",
+  "transaction_status_pending": "قيد الانتظار",
+  "transaction_status_failed": "فشل",
+  "transaction_status_paid": "مدفوع"
 }

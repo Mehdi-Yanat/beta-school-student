@@ -9,7 +9,7 @@ class CourseService {
 
   static final _client = InterceptedClient.build(
     interceptors: [AuthInterceptor()],
-    requestTimeout: Duration(seconds: 60),
+    requestTimeout: Duration(seconds: 10),
   );
 
   static String getCurrentLocale() {

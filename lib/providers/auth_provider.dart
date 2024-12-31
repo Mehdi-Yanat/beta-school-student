@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../models/transaction.dart';
 import '../services/auth_service.dart';
 import '../models/student.dart';
+import '../services/student_service.dart';
 
 class AuthProvider with ChangeNotifier {
   Student? _student;
@@ -9,9 +11,16 @@ class AuthProvider with ChangeNotifier {
   bool _isLoading = true;
   bool _focused = true;
 
+  List<Transaction> _studentTransactions = []; // Use Transaction model
+
   bool get isAuthenticated => _isAuthenticated;
+
   bool get isLoading => _isLoading;
+
   Student? get student => _student;
+
+  // Expose transactions
+  List<Transaction> get studentTransactions => _studentTransactions;
 
   Future<void> handleWindowFocus() async {
     if (!_focused) {
@@ -47,6 +56,7 @@ class AuthProvider with ChangeNotifier {
         print('Token verified, loading student data');
         _student = Student.fromJson(studentData);
         _isAuthenticated = true;
+        fetchStudentTransactions();
       } else {
         print('Token invalid, logging out');
         await logout();
@@ -81,6 +91,24 @@ class AuthProvider with ChangeNotifier {
       print('Logout error: $e');
     } finally {
       notifyListeners();
+    }
+  }
+
+  // Fetch student transactions from the service
+  Future<void> fetchStudentTransactions() async {
+    if (_student != null) {
+      try {
+        print('Fetching student transactions...');
+        // Use updated service to get parsed Transaction objects
+        final transactions = await StudentService.getStudentTransactions();
+        _studentTransactions = transactions;
+        print('Transactions fetched successfully');
+      } catch (e) {
+        print('Error fetching transactions: $e');
+        _studentTransactions = []; // Clear on error
+      } finally {
+        notifyListeners(); // Notify the UI
+      }
     }
   }
 }

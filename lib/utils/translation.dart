@@ -190,6 +190,20 @@ class TranslationHelper {
     }
   }
 
+  static String getTranslatedStatus(
+      AppLocalizations localization, String status) {
+    switch (status) {
+      case 'PENDING':
+        return localization.transaction_status_pending; // Translated "Pending"
+      case 'FAILED':
+        return localization.transaction_status_failed; // Translated "Failed"
+      case 'PAID':
+        return localization.transaction_status_paid; // Translated "Paid"
+      default:
+        return status; // Fallback to original status if no match
+    }
+  }
+
   static String getTranslatedLevel(BuildContext context, String? levelKey) {
     if (levelKey == null) return AppLocalizations.of(context)!.not_specified;
 
@@ -212,10 +226,10 @@ class TranslationHelper {
         .map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
         .join(' ');
   }
-  
+
   static String getTranslatedSubject(BuildContext context, String? subjectKey) {
     if (subjectKey == null) return AppLocalizations.of(context)!.not_specified;
-  
+
     switch (subjectKey.toUpperCase()) {
       case 'MATHEMATICS':
         return AppLocalizations.of(context)!.subject_MATHEMATICS;
