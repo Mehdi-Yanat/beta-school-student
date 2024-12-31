@@ -333,5 +333,8 @@
   "transaction_status_paid": "مدفوع",
   "enter_account_name": "أدخل اسم الحساب",
   "delete_account_name_error": "حدث خطأ أثناء حذف اسم الحساب",
-  "delete_account_name_instruction": "هل أنت متأكد أنك تريد حذف الحساب الخاص بـ {firstName} {lastName}؟"
+  "delete_account_name_instruction": "هل أنت متأكد أنك تريد حذف الحساب الخاص بـ {firstName} {lastName}؟",
+  "no_courses_message": "لا توجد دورات متاحة",
+  "lessons_completed": "دروس مكتملة",
+  "total_lessons": "إجمالي الدروس"
 }
