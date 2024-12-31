@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../models/course.dart';
 import '../services/course_service.dart';
+import '../widgets/snackbar.dart';
 
 class CourseProvider with ChangeNotifier {
   List<Course> _courses = [];
@@ -16,12 +18,15 @@ class CourseProvider with ChangeNotifier {
   String? _selectedSubject;
   String? _selectedClass;
   String? _selectedBranch;
+  bool _isSuccess = false;
 
   Map<String, dynamic>? get courseData => _courseData;
 
   Map<String, dynamic>? get currentVideo => _currentVideo;
 
   bool get isLoading => _isLoading;
+
+  bool get isSuccess => _isSuccess;
 
   String? get error => _error;
 
@@ -49,6 +54,11 @@ class CourseProvider with ChangeNotifier {
   void setCurrentVideo(Map<String, dynamic>? video) {
     _currentVideo = video;
     notifyListeners(); // Notify the listeners that the video has changed
+  }
+
+  void resetSuccess() {
+    _isSuccess = false;
+    notifyListeners(); // Notify listeners to update the UI
   }
 
   List<dynamic> get courseChapters =>
@@ -129,6 +139,49 @@ class CourseProvider with ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  Future enrollAndRedirect(BuildContext context, String courseId) async {
+    try {
+      _isLoading = true; // Set loading to true
+      _isSuccess = false; // Reset success state
+      notifyListeners(); // Notify listeners to update the UI
+
+      // Make API call to enroll the course and get the payment URL
+      final paymentUrl = await CourseService.enrollCourse(courseId);
+
+      if (paymentUrl != null) {
+        // 🎉 Payment URL is returned - Try redirecting to the payment page
+        if (await canLaunchUrl(Uri.parse(paymentUrl))) {
+          await launchUrl(
+            Uri.parse(paymentUrl),
+          );
+
+          // Set success state to true after successful redirection
+          _isSuccess = true;
+
+          return true;
+        } else {
+          throw Exception('Cannot launch payment URL: $paymentUrl');
+        }
+      } else {
+        // ❌ Enrollment failed - Payment URL is null
+        throw Exception('Enrollment failed, payment URL not provided.');
+      }
+    } catch (e) {
+      // Show error message in a SnackBar
+      SnackBarHelper.showErrorSnackBar(
+        context,
+        e.toString(),
+      );
+
+      // Debugging: Log the error details for developers
+      debugPrint(
+          '❌ Exception during course enrollment and payment redirection: $e');
+    } finally {
+      _isLoading = false; // Set loading to false regardless of success/failure
+      notifyListeners(); // Notify listeners to update the UI
     }
   }
 

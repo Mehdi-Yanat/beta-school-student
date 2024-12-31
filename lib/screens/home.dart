@@ -203,7 +203,18 @@ class _HomePageState extends State<HomePage> {
     return Consumer<CourseProvider>(
       builder: (context, courseProvider, child) {
         if (courseProvider.isLoading) {
-          return Center(child: CircularProgressIndicator());
+          return Center(
+            child: Column(
+              mainAxisSize:
+                  MainAxisSize.min, // Keeps the column as compact as possible
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(
+                    height:
+                        50), // Adds spacing of 50 below the progress indicator
+              ],
+            ),
+          );
         }
 
         if (courseProvider.courses.isEmpty) {
@@ -213,7 +224,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Icon(Icons.school_outlined,
                     size: 64, color: AppColor.mainColor),
-                const SizedBox(height: 70),
+                const SizedBox(height: 50),
                 Text(
                   AppLocalizations.of(context)!.no_courses_found,
                   style: TextStyle(
@@ -275,7 +286,19 @@ class _HomePageState extends State<HomePage> {
     return Consumer<TeacherProvider>(
       builder: (context, teacherProvider, child) {
         if (teacherProvider.isLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(
+            child: Column(
+              mainAxisSize:
+                  MainAxisSize.min, // Keeps the column as compact as possible
+              children: [
+                SizedBox(height: 50),
+                CircularProgressIndicator(),
+                SizedBox(
+                    height:
+                        50), // Adds spacing of 50 below the progress indicator
+              ],
+            ),
+          );
         }
         if (teacherProvider.teachers.isEmpty) {
           return Center(
@@ -283,7 +306,7 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.person_off, size: 64, color: AppColor.mainColor),
-                const SizedBox(height: 16),
+                const SizedBox(height: 50),
                 Text(
                   AppLocalizations.of(context)!.no_teachers_found,
                   style: TextStyle(

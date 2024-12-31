@@ -285,11 +285,42 @@ class CourseDetailScreen extends StatelessWidget {
                                 ],
                               ),
                               GradientButton(
-                                text: AppLocalizations.of(context)!.buy_now,
+                                text: context.watch<CourseProvider>().isLoading
+                                    ? AppLocalizations.of(context)!
+                                        .loading // Show "Loading..." when in progress
+                                    : context.watch<CourseProvider>().isSuccess
+                                        ? AppLocalizations.of(context)!
+                                            .loading // Show "Enrolled" when successful
+                                        : AppLocalizations.of(context)!
+                                            .buy_now, // Default "Buy Now" text
                                 variant: 'primary',
                                 color: Colors.white,
-                                onTap: () {},
-                              ),
+                                onTap: context
+                                            .watch<CourseProvider>()
+                                            .isLoading ||
+                                        context
+                                            .watch<CourseProvider>()
+                                            .isSuccess
+                                    ? () {} // Disable button if loading or enrollment is already successful
+                                    : () async {
+                                        final courseProvider =
+                                            context.read<CourseProvider>();
+                                        final courseId = courseProvider
+                                            .courseData?['course']['id'];
+
+                                        print(
+                                            'Course ID: $courseId'); // Log course ID for debugging
+
+                                        // Trigger enrollment and redirection
+                                        final response = await courseProvider
+                                            .enrollAndRedirect(
+                                                context, courseId);
+
+                                        if (response) {
+                                          courseProvider.resetSuccess();
+                                        }
+                                      },
+                              )
                             ],
                           ),
                         ),
