@@ -4,7 +4,9 @@ import 'package:online_course/screens/profile/settings/security.dart';
 import 'package:online_course/screens/profile/settings/update_profile.dart';
 import 'package:online_course/services/auth_service.dart';
 import 'package:online_course/widgets/snackbar.dart';
+import 'package:provider/provider.dart';
 import '../../main.dart' show MyApp;
+import '../../providers/auth_provider.dart';
 import '../../theme/color.dart';
 import '../../widgets/appbar.dart';
 
@@ -76,8 +78,9 @@ class _SettingPageState extends State<SettingPage> {
 
   void _showDeleteAccountDialog() {
     final TextEditingController nameController = TextEditingController();
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final accountName =
-        "YourAccountName"; // Replace with the actual account name
+        "${authProvider.student?.firstName} ${authProvider.student?.lastName}";
 
     showDialog(
       context: context,
@@ -90,7 +93,13 @@ class _SettingPageState extends State<SettingPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                AppLocalizations.of(context)!.delete_account_message,
+                // Explicitly explain what to enter
+                AppLocalizations.of(context)!.delete_account_message +
+                    "\n\n" +
+                    AppLocalizations.of(context)!
+                        .delete_account_name_instruction(
+                            authProvider.student?.firstName ?? "",
+                            authProvider.student?.lastName ?? ""),
               ),
               const SizedBox(height: 16),
               TextField(
@@ -98,7 +107,6 @@ class _SettingPageState extends State<SettingPage> {
                 decoration: InputDecoration(
                   labelText: AppLocalizations.of(context)!.enter_account_name,
                   hintText: accountName,
-                  // Show the correct account name as a hint
                   border: const OutlineInputBorder(),
                 ),
               ),
