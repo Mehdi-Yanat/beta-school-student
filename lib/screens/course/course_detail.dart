@@ -308,9 +308,6 @@ class CourseDetailScreen extends StatelessWidget {
                                         final courseId = courseProvider
                                             .courseData?['course']['id'];
 
-                                        print(
-                                            'Course ID: $courseId'); // Log course ID for debugging
-
                                         // Trigger enrollment and redirection
                                         final response = await courseProvider
                                             .enrollAndRedirect(

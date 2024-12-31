@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../models/course.dart';
+import '../models/course.dart' as Course;
+import '../models/mycourses.dart';
 import '../services/course_service.dart';
+import '../services/student_service.dart';
 import '../widgets/snackbar.dart';
 
 class CourseProvider with ChangeNotifier {
-  List<Course> _courses = [];
+  List<Course.Course> _courses = [];
   Map<String, dynamic>? _currentChapter;
   Map<String, dynamic>?
       _currentVideo; // Holds the video information (including URL)// Add currentChapter
@@ -19,6 +21,7 @@ class CourseProvider with ChangeNotifier {
   String? _selectedClass;
   String? _selectedBranch;
   bool _isSuccess = false;
+  List<MyCourse> _myCourses = []; // To store the list of MyCourse objects
 
   Map<String, dynamic>? get courseData => _courseData;
 
@@ -30,7 +33,7 @@ class CourseProvider with ChangeNotifier {
 
   String? get error => _error;
 
-  List<Course> get courses => _courses;
+  List<Course.Course> get courses => _courses;
 
   // Getters
   bool get hasMore => _currentPage < _totalPages;
@@ -44,6 +47,8 @@ class CourseProvider with ChangeNotifier {
   String? get selectedBranch => _selectedBranch;
 
   Map<String, dynamic>? get currentChapter => _currentChapter;
+
+  List<MyCourse> get myCourses => _myCourses; // Getter for "myCourses"
 
   // Setter for currentChapter
   void setCurrentChapter(Map<String, dynamic> chapter) {
@@ -88,7 +93,7 @@ class CourseProvider with ChangeNotifier {
       );
 
       final newCourses = (result['courses'] as List?)
-              ?.map((data) => Course.fromJson(data))
+              ?.map((data) => Course.Course.fromJson(data))
               .toList() ??
           [];
 
@@ -182,6 +187,20 @@ class CourseProvider with ChangeNotifier {
     } finally {
       _isLoading = false; // Set loading to false regardless of success/failure
       notifyListeners(); // Notify listeners to update the UI
+    }
+  }
+
+  Future<void> fetchMyCourses() async {
+    try {
+      _isLoading = true; // Use the existing loading state
+      notifyListeners();
+
+      _myCourses = await StudentService.getStudentCourses();
+    } catch (e) {
+      print('❌ Error fetching my courses: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 

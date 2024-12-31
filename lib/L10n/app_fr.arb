@@ -46,8 +46,8 @@
   "language_french": "Français",
   "language_arabic": "Arabe",
   "account_title": "Compte",
-  "account_courses": "12 cours",
-  "account_hours": "55 heures",
+  "account_courses": "{length} cours",
+  "account_hours": "{length} heures",
   "account_rating": "4.8",
   "account_logout": "Se Déconnecter",
   "announces_title": "Annonces",
@@ -212,6 +212,8 @@
   "email_verification_success": "Adresse e-mail vérifiée avec succès.",
   "password_reset_success": "Mot de passe réinitialisé avec succès.",
   "confirm_password_required": "Veuillez confirmer votre mot de passe",
+  "confirm_password": "Confirmez le mot de passe",
+  "please_fill_all_fields": "Veuillez remplir tous les champs",
   "passwords_do_not_match": "Les mots de passe ne correspondent pas",
   "email_not_verified_message": "Votre e-mail n'est pas vérifié.",
   "send_verification_button": "Envoyer l'e-mail",
@@ -329,5 +331,7 @@
   "close_button": "Fermer",
   "transaction_status_pending": "En attente",
   "transaction_status_failed": "Échoué",
-  "transaction_status_paid": "Payé"
+  "transaction_status_paid": "Payé",
+  "enter_account_name": "Entrez le nom du compte",
+  "delete_account_name_error": "Une erreur s'est produite lors de la suppression du nom du compte"
 }

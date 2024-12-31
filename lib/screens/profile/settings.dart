@@ -3,7 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localiza
 import 'package:online_course/screens/profile/settings/security.dart';
 import 'package:online_course/screens/profile/settings/update_profile.dart';
 import 'package:online_course/services/auth_service.dart';
-import 'package:online_course/widgets/dialog.dart';
 import 'package:online_course/widgets/snackbar.dart';
 import '../../main.dart' show MyApp;
 import '../../theme/color.dart';
@@ -76,24 +75,74 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void _showDeleteAccountDialog() {
-    showLogoutDialog(
+    final TextEditingController nameController = TextEditingController();
+    final accountName =
+        "YourAccountName"; // Replace with the actual account name
+
+    showDialog(
       context: context,
-      title: AppLocalizations.of(context)!.delete_account_title,
-      message: AppLocalizations.of(context)!.delete_account_message,
-      confirmText: AppLocalizations.of(context)!.delete_button,
-      cancelText: AppLocalizations.of(context)!.cancel_button,
-      onConfirm: () {
-        AuthService.deleteAccount().then((value) {
-          if (value) {
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/login', (route) => false);
-            SnackBarHelper.showSuccessSnackBar(
-                context, AppLocalizations.of(context)!.delete_account_success);
-          } else {
-            SnackBarHelper.showErrorSnackBar(
-                context, AppLocalizations.of(context)!.delete_account_error);
-          }
-        });
+      builder: (context) {
+        return AlertDialog(
+          title: Text(
+            AppLocalizations.of(context)!.delete_account_title,
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                AppLocalizations.of(context)!.delete_account_message,
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.enter_account_name,
+                  hintText: accountName,
+                  // Show the correct account name as a hint
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog
+              },
+              child: Text(AppLocalizations.of(context)!.cancel_button),
+            ),
+            TextButton(
+              onPressed: () {
+                // Validate user input
+                if (nameController.text.trim() == accountName) {
+                  // If the user enters the correct name, proceed with deletion
+                  AuthService.deleteAccount().then((value) {
+                    if (value) {
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, '/login', (route) => false);
+                      SnackBarHelper.showSuccessSnackBar(
+                        context,
+                        AppLocalizations.of(context)!.delete_account_success,
+                      );
+                    } else {
+                      SnackBarHelper.showErrorSnackBar(
+                        context,
+                        AppLocalizations.of(context)!.delete_account_error,
+                      );
+                    }
+                  });
+                } else {
+                  // If the input is incorrect, show an error snackbar
+                  SnackBarHelper.showErrorSnackBar(
+                    context,
+                    AppLocalizations.of(context)!.delete_account_name_error,
+                  );
+                }
+              },
+              child: Text(AppLocalizations.of(context)!.delete_button),
+            ),
+          ],
+        );
       },
     );
   }

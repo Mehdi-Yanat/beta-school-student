@@ -27,8 +27,9 @@ class _SignupScreenState extends State<SignupScreen> {
   final _passwordController = TextEditingController();
   final _addressController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   bool _isPasswordVisible = false;
-  
+
   File? _profileImage;
   final _picker = ImagePicker();
 
@@ -52,6 +53,52 @@ class _SignupScreenState extends State<SignupScreen> {
     } catch (e) {
       print('Error picking image: $e');
     }
+  }
+
+  bool _validateCurrentStep() {
+    // Create a map of form fields for each step
+    final stepFields = {
+      0: [
+        _firstNameController,
+        _lastNameController,
+        _firstNameArController,
+        _lastNameArController
+      ],
+      1: [_emailController, _passwordController],
+      2: [_addressController, _phoneController],
+      3: [], // Dropdown fields handled separately
+      4: [], // Profile photo is optional
+    };
+
+    // For step 3 (Location and Class), check dropdown values
+    if (_currentStep == 3) {
+      return _selectedWilaya != null && _selectedClass != null;
+    }
+
+    // For step 4 (Profile Photo), always return true as it's optional
+    if (_currentStep == 4) {
+      return true;
+    }
+
+    // For step 1 (Account Info), validate special rules (e.g., password length)
+    if (_currentStep == 1) {
+      final email = _emailController.text;
+      final password = _passwordController.text;
+
+      // Check if email and password are not empty
+      if (email.isEmpty || password.isEmpty) {
+        return false;
+      }
+
+      // Add custom password length validation
+      if (password.length <= 6) {
+        return false;
+      }
+    }
+
+    // For other steps, check if all required fields are filled
+    final currentStepFields = stepFields[_currentStep] ?? [];
+    return currentStepFields.every((controller) => controller.text.isNotEmpty);
   }
 
   void _signup() async {
@@ -429,6 +476,26 @@ class _SignupScreenState extends State<SignupScreen> {
     ];
   }
 
+  void _updateStepValidation() {
+    setState(() {}); // Triggers UI rebuild to recheck button state
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Add listeners to all controllers involved in validation
+    _firstNameController.addListener(_updateStepValidation);
+    _lastNameController.addListener(_updateStepValidation);
+    _firstNameArController.addListener(_updateStepValidation);
+    _lastNameArController.addListener(_updateStepValidation);
+    _emailController.addListener(_updateStepValidation);
+    _passwordController.addListener(_updateStepValidation);
+    _confirmPasswordController.addListener(_updateStepValidation);
+    _addressController.addListener(_updateStepValidation);
+    _phoneController.addListener(_updateStepValidation);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -454,7 +521,15 @@ class _SignupScreenState extends State<SignupScreen> {
                   steps: getSteps(),
                   onStepContinue: () {
                     final isLastStep = _currentStep == getSteps().length - 1;
+
+                    if (!_validateCurrentStep()) {
+                      SnackBarHelper.showErrorSnackBar(context,
+                          AppLocalizations.of(context)!.please_fill_all_fields);
+                      return;
+                    }
+
                     if (isLastStep) {
+                      // Call the signup function
                       _signup();
                     } else {
                       setState(() {
@@ -471,6 +546,8 @@ class _SignupScreenState extends State<SignupScreen> {
                         },
                   controlsBuilder: (context, details) {
                     final isLastStep = _currentStep == getSteps().length - 1;
+                    final isStepValid = _validateCurrentStep();
+
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       child: Row(
@@ -494,7 +571,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                           .signup_button)
                                   : AppLocalizations.of(context)!.next,
                               variant: 'primary',
-                              disabled: _isLoading,
+                              disabled: _isLoading || !isStepValid,
                               onTap: details.onStepContinue!,
                               color: AppColor.primary,
                             ),

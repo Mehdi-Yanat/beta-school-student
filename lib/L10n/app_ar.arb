@@ -45,9 +45,9 @@
   "language_french": "الفرنسية",
   "language_arabic": "العربية",
   "account_title": "الحساب",
-  "account_courses": "١٢ دورة",
-  "account_hours": "٥٥ ساعة",
-  "account_rating": "٤.٨",
+  "account_courses": "{length} دورة",
+  "account_hours": "{length} ساعة",
+  "account_rating": "4.5",
   "account_logout": "تسجيل الخروج",
   "announces_title": "الإعلانات",
   "search_hint": "ابحث",
@@ -211,6 +211,8 @@
   "email_verification_in_progress": "جاري التحقق من البريد الإلكتروني...",
   "password_reset_success": " تمت إعادة تعيين كلمة المرور بنجاح.",
   "confirm_password_required": "الرجاء إدخال تأكيد كلمة المرور",
+  "confirm_password": "تأكيد كلمة المرور",
+  "please_fill_all_fields": "يرجى ملء جميع فارغ",
   "passwords_do_not_match": "كلمات المرور غير متطابقة",
   "email_not_verified_message": "بريدك الإلكتروني غير مُفعَّل. يرجى تفعيله للمتابعة.",
   "send_verification_button": "إرسال التفعيل",
@@ -328,5 +330,7 @@
   "close_button": "إغلاق",
   "transaction_status_pending": "قيد الانتظار",
   "transaction_status_failed": "فشل",
-  "transaction_status_paid": "مدفوع"
+  "transaction_status_paid": "مدفوع",
+  "enter_account_name": "أدخل اسم الحساب",
+  "delete_account_name_error": "حدث خطأ أثناء حذف اسم الحساب"
 }

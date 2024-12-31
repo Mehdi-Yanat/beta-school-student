@@ -11,6 +11,7 @@ import 'package:online_course/services/auth_service.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
+import '../providers/course_provider.dart';
 import '../widgets/banner.dart';
 import '../widgets/bottombar_box.dart';
 import '../widgets/bottombar_item.dart';
@@ -67,9 +68,25 @@ class _RootAppState extends State<RootApp> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    // Fetch courses when AuthProvider indicates user is authenticated
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final courseProvider =
+          Provider.of<CourseProvider>(context, listen: false);
+
+      if (authProvider.isAuthenticated && (courseProvider.myCourses.isEmpty)) {
+        courseProvider.fetchMyCourses();
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Consumer<AuthProvider>(
-      builder: (context, authProvider, child) {
+    return Consumer2<AuthProvider, CourseProvider>(
+      builder: (context, authProvider, courseProvider, child) {
         if (!authProvider.isAuthenticated) {
           Future.microtask(
               () => Navigator.pushReplacementNamed(context, '/login'));

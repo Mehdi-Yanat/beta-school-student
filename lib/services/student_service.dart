@@ -5,6 +5,8 @@ import 'package:online_course/utils/auth_interceptor.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 
+import '../models/mycourses.dart';
+
 class StudentService {
   static final String baseUrl = dotenv.env['API_URL'] ?? '';
 
@@ -49,17 +51,18 @@ class StudentService {
   }
 
   // Example: Get courses taken by the student
-  static Future<List<dynamic>> getStudentCourses(int studentId) async {
+  static Future<List<MyCourse>> getStudentCourses() async {
     try {
       final response = await _client.get(
-        Uri.parse(
-            '$baseUrl/student/$studentId/courses?lng=${getCurrentLocale()}'),
+        Uri.parse('$baseUrl/student/mycourses?lng=${getCurrentLocale()}'),
         headers: _headers(),
       );
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        return data['courses'] ?? [];
+        return (data['courses'] as List<dynamic>)
+            .map((json) => MyCourse.fromJson(json))
+            .toList();
       }
       return [];
     } catch (e) {
