@@ -24,7 +24,7 @@ class ChapterCard extends StatelessWidget {
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 0,
                 spreadRadius: 2,
               ),
@@ -95,7 +95,7 @@ class ChapterCard extends StatelessWidget {
                               colors: [
                                 Colors.transparent,
                                 Colors.black
-                                    .withOpacity(0.5), // Gradient effect
+                                    .withValues(alpha: 0.5), // Gradient effect
                               ],
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
@@ -111,7 +111,7 @@ class ChapterCard extends StatelessWidget {
                           padding:
                               EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.6),
+                            color: Colors.black.withValues(alpha: 0.6),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Row(
@@ -123,8 +123,8 @@ class ChapterCard extends StatelessWidget {
                               ),
                               SizedBox(width: 4),
                               Text(
-                                Helpers.formatDuration(chapter['duration']) ??
-                                    '0 mins',
+                                Helpers.formatDuration(
+                                    context, chapter['duration']),
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 12,
@@ -164,7 +164,7 @@ class ChapterCard extends StatelessWidget {
                         chapter['description'] ?? '',
                         style: TextStyle(
                           fontSize: 14,
-                          color: AppColor.textColor.withOpacity(0.8),
+                          color: AppColor.textColor.withValues(alpha: 0.8),
                         ),
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,

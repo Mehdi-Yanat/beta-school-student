@@ -50,7 +50,29 @@ class StudentService {
     }
   }
 
-  // Example: Get courses taken by the student
+// Get a specific transaction by ID
+  static Future getTransactionByCheckoutId(String checkoutId) async {
+    try {
+      final response = await _client.get(
+        Uri.parse(
+            '$baseUrl/transactions/transaction/invoice/$checkoutId?lng=${getCurrentLocale()}'),
+        headers: _headers(),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        // Parse JSON into a Transaction object
+        if (data != null) {
+          return data['transaction'];
+        }
+      }
+      return null;
+    } catch (e) {
+      print('❌ Error getting transaction by ID: $e');
+      return null;
+    }
+  }
+
   static Future<List<MyCourse>> getStudentCourses() async {
     try {
       final response = await _client.get(

@@ -336,5 +336,15 @@
   "delete_account_name_instruction": "هل أنت متأكد أنك تريد حذف الحساب الخاص بـ {firstName} {lastName}؟",
   "no_courses_message": "لا توجد دورات متاحة",
   "lessons_completed": "دروس مكتملة",
-  "total_lessons": "إجمالي الدروس"
+  "total_lessons": "إجمالي الدروس",
+  "payment_failed": "فشلت عملية الدفع",
+  "no_transaction_found": "لا توجد معاملة.",
+  "transaction_id_label": "رقم المعاملة",
+  "amount_label": "المبلغ",
+  "date_label": "التاريخ",
+  "retry_button": "إعادة المحاولة",
+  "already_purchased": "تم الشراء بالفعل",
+  "watch": "مشاهدة",
+  "total_watch_time": "إجمالي وقت المشاهدة",
+  "second": "ثانية"
 }

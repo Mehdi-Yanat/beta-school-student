@@ -12,6 +12,7 @@ class CourseProvider with ChangeNotifier {
   Map<String, dynamic>?
       _currentVideo; // Holds the video information (including URL)// Add currentChapter
   bool _isLoading = false;
+  bool _isLoadingCourses = false;
   Map<String, dynamic>? _courseData;
   String? _error;
   int _currentPage = 1;
@@ -28,6 +29,8 @@ class CourseProvider with ChangeNotifier {
   Map<String, dynamic>? get currentVideo => _currentVideo;
 
   bool get isLoading => _isLoading;
+
+  bool get isLoadingCourses => _isLoadingCourses;
 
   bool get isSuccess => _isSuccess;
 
@@ -49,6 +52,11 @@ class CourseProvider with ChangeNotifier {
   Map<String, dynamic>? get currentChapter => _currentChapter;
 
   List<MyCourse> get myCourses => _myCourses; // Getter for "myCourses"
+
+  bool hasPurchasedCourse(String courseId) {
+    // Check if the course exists in the user's purchased courses
+    return _myCourses.any((course) => course.course.id == courseId);
+  }
 
   // Setter for currentChapter
   void setCurrentChapter(Map<String, dynamic> chapter) {
@@ -132,6 +140,7 @@ class CourseProvider with ChangeNotifier {
           'teacher': Map<String, dynamic>.from(data['teacher'] as Map? ?? {}),
         };
 
+        fetchMyCourses();
         print('✅ Course data fetched successfully');
         print('📝 Course chapters: ${courseChapters.length}');
       } else {
@@ -192,6 +201,7 @@ class CourseProvider with ChangeNotifier {
 
   Future<void> fetchMyCourses() async {
     try {
+      _isLoadingCourses = true;
       _isLoading = true; // Use the existing loading state
       notifyListeners();
 
@@ -199,6 +209,7 @@ class CourseProvider with ChangeNotifier {
     } catch (e) {
       print('❌ Error fetching my courses: $e');
     } finally {
+      _isLoadingCourses = false;
       _isLoading = false;
       notifyListeners();
     }

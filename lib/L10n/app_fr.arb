@@ -337,5 +337,15 @@
   "delete_account_name_instruction": "Êtes-vous sûr de vouloir supprimer le compte de {firstName} {lastName} ?",
   "no_courses_message": "Aucun cours disponible",
   "lessons_completed": "Leçons terminées",
-  "total_lessons": "Total des leçons"
+  "total_lessons": "Total des leçons",
+  "payment_failed": "Échec du paiement",
+  "no_transaction_found": "Aucune transaction trouvée.",
+  "transaction_id_label": "Identifiant de transaction",
+  "amount_label": "Montant",
+  "date_label": "Date",
+  "retry_button": "Réessayer",
+  "already_purchased": "Déjà acheté",
+  "watch": "Regarder",
+  "total_watch_time": "Temps total de visionnage",
+  "second": "seconde"
 }

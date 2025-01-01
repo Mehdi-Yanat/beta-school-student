@@ -12,6 +12,7 @@ import 'package:online_course/theme/color.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
 import '../providers/course_provider.dart';
+import '../providers/teacher_provider.dart';
 import '../widgets/banner.dart';
 import '../widgets/bottombar_box.dart';
 import '../widgets/bottombar_item.dart';
@@ -24,8 +25,10 @@ class RootApp extends StatefulWidget {
   _RootAppState createState() => _RootAppState();
 }
 
-class _RootAppState extends State<RootApp> {
+class _RootAppState extends State<RootApp> with WidgetsBindingObserver {
   int _activeTab = 0;
+  bool _isFirstFocus = true;
+
   List _barItems = [
     {"icon": "assets/icons/home.svg", "page": HomePage()},
     {"icon": "assets/icons/search.svg", "page": ExploreScreen()},
@@ -38,12 +41,6 @@ class _RootAppState extends State<RootApp> {
   int? remainingCooldownTime;
   Timer? cooldownTimer;
   bool isOnCooldown = false;
-
-  @override
-  void dispose() {
-    cooldownTimer?.cancel(); // Cancel timer if the widget is disposed
-    super.dispose();
-  }
 
   void startCooldown(int duration) {
     setState(() {
@@ -71,16 +68,68 @@ class _RootAppState extends State<RootApp> {
   void initState() {
     super.initState();
 
-    // Fetch courses when AuthProvider indicates user is authenticated
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    // Register as an observer for app lifecycle changes
+    WidgetsBinding.instance.addObserver(this);
+
+    // Perform initial fetch when the app starts
+    _fetchInitialData();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final isFocused = state == AppLifecycleState.resumed;
+
+    if (isFocused) {
+      // Trigger refresh when the app regains focus
+      _handleWindowFocus();
+    }
+  }
+
+  Future<void> _fetchInitialData() async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       final courseProvider =
           Provider.of<CourseProvider>(context, listen: false);
+      final teacherProvider =
+          Provider.of<TeacherProvider>(context, listen: false);
 
-      if (authProvider.isAuthenticated && (courseProvider.myCourses.isEmpty)) {
-        courseProvider.fetchMyCourses();
+      // Fetch data only if authenticated
+      if (authProvider.isAuthenticated) {
+        try {
+          await Future.wait([
+            courseProvider.fetchCourses(refresh: true),
+            courseProvider.fetchMyCourses(),
+            teacherProvider.fetchTeachers(),
+          ]);
+          print('✅ Initial data fetched successfully');
+        } catch (e) {
+          print('❌ Error fetching initial data: $e');
+        }
       }
     });
+  }
+
+  Future<void> _handleWindowFocus() async {
+    if (_isFirstFocus) {
+      // Avoid unnecessary refresh when the app initially starts
+      _isFirstFocus = false;
+      return;
+    }
+
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final courseProvider = Provider.of<CourseProvider>(context, listen: false);
+    final teacherProvider =
+        Provider.of<TeacherProvider>(context, listen: false);
+
+    // Refresh data when the window regains focus
+    if (authProvider.isAuthenticated) {
+      print('🔄 App regained focus. Refreshing data...');
+      await Future.wait([
+        courseProvider.fetchCourses(refresh: true),
+        courseProvider.fetchMyCourses(),
+        teacherProvider.fetchTeachers(),
+      ]);
+    }
   }
 
   @override
@@ -167,5 +216,12 @@ class _RootAppState extends State<RootApp> {
         AppLocalizations.of(context)!.verification_email_sent_failure,
       );
     }
+  }
+
+  @override
+  void dispose() {
+    cooldownTimer?.cancel(); // Cancel timer if the widget is disposed
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 }

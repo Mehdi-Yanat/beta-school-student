@@ -10,6 +10,10 @@ class AuthProvider with ChangeNotifier {
   bool _isAuthenticated = false;
   bool _isLoading = true;
   bool _focused = true;
+  Map<String, dynamic>? _transactionDetails; // To store the transaction details
+
+  bool _isTransactionLoading = false;
+  String? _transactionError;
 
   List<Transaction> _studentTransactions = []; // Use Transaction model
 
@@ -18,6 +22,12 @@ class AuthProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
 
   Student? get student => _student;
+
+  Map<String, dynamic>? get transactionDetails => _transactionDetails;
+
+  bool get isTransactionLoading => _isTransactionLoading;
+
+  String? get transactionError => _transactionError;
 
   // Expose transactions
   List<Transaction> get studentTransactions => _studentTransactions;
@@ -90,6 +100,30 @@ class AuthProvider with ChangeNotifier {
     } catch (e) {
       print('Logout error: $e');
     } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchTransactionByCheckoutId(String checkoutId) async {
+    try {
+      _isTransactionLoading = true;
+      _transactionError = null;
+      notifyListeners();
+
+      // Call the transaction service to fetch transaction details
+      final transaction =
+          await StudentService.getTransactionByCheckoutId(checkoutId);
+
+      _transactionDetails = transaction as Map<String, dynamic>?;
+
+      if (_transactionDetails == null) {
+        _transactionError = 'Transaction not found';
+      }
+    } catch (e) {
+      _transactionError = e.toString();
+      print('❌ Error fetching transaction: $e');
+    } finally {
+      _isTransactionLoading = false;
       notifyListeners();
     }
   }
