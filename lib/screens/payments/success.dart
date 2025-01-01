@@ -46,9 +46,9 @@ class _PaymentStatusContentState extends State<PaymentStatusContent> {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final courseProvider = Provider.of<CourseProvider>(context, listen: false);
     await authProvider.fetchTransactionByCheckoutId(widget.checkoutId);
-    await courseProvider.fetchMyCourses();
-    await courseProvider
-        .fetchCourse(authProvider.transactionDetails?['courseId']);
+    await courseProvider.fetchMyCourses(context);
+    await courseProvider.fetchCourse(
+        authProvider.transactionDetails?['courseId'], context);
   }
 
   @override
@@ -164,7 +164,8 @@ class _PaymentStatusContentState extends State<PaymentStatusContent> {
   Widget _buildHomeButton(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        Provider.of<CourseProvider>(context, listen: false).fetchMyCourses();
+        Provider.of<CourseProvider>(context, listen: false)
+            .fetchMyCourses(context);
         Navigator.pop(context);
       },
       style: ElevatedButton.styleFrom(

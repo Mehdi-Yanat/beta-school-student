@@ -86,4 +86,23 @@ class TeacherService {
       return [];
     }
   }
+
+  static Future<List<dynamic>> getTeacherAnnoucement(int teacherId) async {
+    try {
+      final response = await _client.get(
+        Uri.parse(
+            '$baseUrl/teacher/$teacherId/courses?lng=${getCurrentLocale()}'),
+        headers: _headers(),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return data['data'] ?? [];
+      }
+      return [];
+    } catch (e) {
+      print('❌ Error getting teacher courses: $e');
+      return [];
+    }
+  }
 }

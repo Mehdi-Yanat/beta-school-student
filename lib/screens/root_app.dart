@@ -97,8 +97,8 @@ class _RootAppState extends State<RootApp> with WidgetsBindingObserver {
       if (authProvider.isAuthenticated) {
         try {
           await Future.wait([
-            courseProvider.fetchCourses(refresh: true),
-            courseProvider.fetchMyCourses(),
+            courseProvider.fetchCourses(refresh: true, context: context),
+            courseProvider.fetchMyCourses(context),
             teacherProvider.fetchTeachers(),
           ]);
           print('✅ Initial data fetched successfully');
@@ -125,8 +125,8 @@ class _RootAppState extends State<RootApp> with WidgetsBindingObserver {
     if (authProvider.isAuthenticated) {
       print('🔄 App regained focus. Refreshing data...');
       await Future.wait([
-        courseProvider.fetchCourses(refresh: true),
-        courseProvider.fetchMyCourses(),
+        courseProvider.fetchCourses(refresh: true, context: context),
+        courseProvider.fetchMyCourses(context),
         teacherProvider.fetchTeachers(),
       ]);
     }
@@ -147,7 +147,7 @@ class _RootAppState extends State<RootApp> with WidgetsBindingObserver {
         return Scaffold(
           body: Column(
             children: [
-              if (authProvider.student?.isEmailVerified == "false")
+              if (!authProvider.student?.isEmailVerified)
                 VerificationBanner(
                   message:
                       AppLocalizations.of(context)!.email_not_verified_message,

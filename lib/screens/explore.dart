@@ -36,7 +36,10 @@ class _ExploreScreenState extends State<ExploreScreen> {
     super.initState();
     _scrollController.addListener(_onScroll);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<CourseProvider>().fetchCourses(refresh: true);
+      context.read<CourseProvider>().fetchCourses(
+            refresh: true,
+            context: context,
+          );
     });
   }
 
@@ -45,7 +48,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
         _scrollController.position.maxScrollExtent) {
       final provider = context.read<CourseProvider>();
       if (!provider.isLoading && provider.hasMore) {
-        provider.fetchCourses();
+        provider.fetchCourses(context: context);
       }
     }
   }

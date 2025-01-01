@@ -346,5 +346,20 @@
   "already_purchased": "تم الشراء بالفعل",
   "watch": "مشاهدة",
   "total_watch_time": "إجمالي وقت المشاهدة",
-  "second": "ثانية"
+  "second": "ثانية",
+  "email_verification_required":"يرجى التحقق من عنوان بريدك الإلكتروني للوصول إلى جميع الميزات ، بما في ذلك شراء الدورات التدريبية." ,
+  "account_not_verified": "لم يتم التحقق من الحساب",
+  "error_fetching_chapters": "حدث خطأ أثناء جلب الفصول الدراسية لهذا الكورس",
+  "chapter_fetch_successfully": "تم جلب الفصول الدراسية بنجاح",
+  "course_fetch_error": "حدث خطأ أثناء جلب البيانات الخاصة بالكورس",
+  "course_fetch_success": "تم جلب بيانات الكورس بنجاح",
+  "chapters_count": "عدد الفصول: ",
+  "payment_redirect_success": "تم إعادة التوجيه بنجاح إلى صفحة الدفع",
+  "payment_redirect_failed": "لا يمكن فتح رابط الدفع",
+  "enrollment_error": "حدث خطأ أثناء التسجيل في الكورس",
+  "enrollment_payment_error": "فشل التسجيل، لم يتم توفير رابط الدفع",
+  "fetch_courses_error": "حدث خطأ أثناء جلب الكورسات",
+  "fetch_my_courses_error": "حدث خطأ أثناء جلب كورساتي",
+  "clear_filters": "تم مسح المرشحات بنجاح",
+  "no_description_available": "لا يوجد وصف متاح"
 }

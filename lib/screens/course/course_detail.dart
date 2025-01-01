@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
+import 'package:online_course/providers/auth_provider.dart';
 import 'package:online_course/providers/course_provider.dart';
 import 'package:online_course/screens/course/view_chapters.dart';
 import 'package:online_course/theme/color.dart';
@@ -20,10 +21,12 @@ class CourseDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => CourseProvider()..fetchCourse(courseId),
-      child: Consumer<CourseProvider>(
-        builder: (context, provider, _) {
-          if (provider.isLoading) {
+      create: (_) => CourseProvider()
+        ..fetchCourse(courseId, context)
+        ..fetchChaptersForCourse(courseId, context),
+      child: Consumer2<CourseProvider, AuthProvider>(
+        builder: (context, provider, authProvider, _) {
+          if (provider.isLoading || provider.isLoadingChapter) {
             return Scaffold(
               appBar: CustomAppBar(
                 title: AppLocalizations.of(context)!.course_detail_title,
@@ -55,6 +58,7 @@ class CourseDetailScreen extends StatelessWidget {
             );
           }
 
+          bool isVerified = (authProvider.student?.status == "ACCEPTED");
           bool isPurchased = provider.hasPurchasedCourse(course['id']);
 
           return Scaffold(
@@ -196,39 +200,38 @@ class CourseDetailScreen extends StatelessWidget {
                               // Chapters List
                               ...(provider.courseChapters.isNotEmpty
                                   ? provider.courseChapters.map((chapter) {
-                                      final title = chapter['title'] ??
-                                          'Untitled Chapter';
-                                      final thumbnail = (chapter['thumbnail']
-                                              as Map<String, dynamic>?) ??
-                                          {};
-                                      final imageUrl = thumbnail['url'] ?? '';
-                                      // Convert duration to a String (e.g., "5 mins")
-                                      final duration =
-                                          chapter['duration'] != null
-                                              ? chapter['duration']
-                                              : '0 mins';
+                                      final title = chapter
+                                          .title; // Access via the field, no ['title']
+                                      final thumbnail = chapter
+                                          .thumbnail; // Thumbnail is an object
+                                      final imageUrl = thumbnail
+                                          .url; // Access url from Thumbnail// Convert duration to a string
 
                                       return ChapterCard(
                                         chapter: {
                                           'thumbnail': imageUrl,
                                           'title': title,
-                                          'duration': duration,
+                                          'duration': chapter.duration,
                                         },
                                         onTap: () {
-                                          WidgetsBinding.instance
-                                              .addPostFrameCallback((_) {
-                                            Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute<dynamic>(
-                                                maintainState: true,
-                                                builder: (context) =>
-                                                    ViewChapterScreen(
-                                                  chapterId: chapter['id'],
-                                                  courseId: course['id'],
+                                          if (isPurchased) {
+                                            WidgetsBinding.instance
+                                                .addPostFrameCallback((_) {
+                                              Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute<dynamic>(
+                                                  maintainState: true,
+                                                  builder: (context) =>
+                                                      ViewChapterScreen(
+                                                    chapterId:
+                                                        chapter.id.toString(),
+                                                    // Convert ID to string if needed
+                                                    courseId: course['id'],
+                                                  ),
                                                 ),
-                                              ),
-                                            );
-                                          });
+                                              );
+                                            });
+                                          }
                                         },
                                       );
                                     }).toList()
@@ -251,162 +254,202 @@ class CourseDetailScreen extends StatelessWidget {
                       ),
 
                       // Price Section
-                      provider.isLoadingCourses
-                          ? Container()
-                          : isPurchased
-                              ? Container(
-                                  // No SafeArea if course is purchased
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 12),
-                                  decoration: BoxDecoration(
-                                    color: AppColor.cardColor,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColor.shadowColor
-                                            .withValues(alpha: 0.1),
-                                        offset: const Offset(0, -4),
-                                        blurRadius: 10,
-                                      ),
-                                    ],
+                      !isVerified
+                          ? Container(
+                              padding: const EdgeInsets.all(16.0),
+                              decoration: BoxDecoration(
+                                color: AppColor.cardColor,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColor.shadowColor
+                                        .withValues(alpha: 0.1),
+                                    offset: const Offset(0, -4),
+                                    blurRadius: 10,
                                   ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            AppLocalizations.of(context)!
-                                                .already_purchased, // Purchased text
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                              color: AppColor.darker,
-                                            ),
+                                ],
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.warning,
+                                    color: Colors.yellow,
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                  Expanded(
+                                    child: Text(
+                                      AppLocalizations.of(context)!
+                                          .account_not_verified,
+                                      style: TextStyle(
+                                        color: AppColor.mainColor,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : provider.isLoadingCourses
+                              ? Container()
+                              : isPurchased
+                                  ? Container(
+                                      // No SafeArea if course is purchased
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16, vertical: 12),
+                                      decoration: BoxDecoration(
+                                        color: AppColor.cardColor,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: AppColor.shadowColor
+                                                .withValues(alpha: 0.1),
+                                            offset: const Offset(0, -4),
+                                            blurRadius: 10,
                                           ),
                                         ],
                                       ),
-                                      GradientButton(
-                                        text:
-                                            AppLocalizations.of(context)!.watch,
-                                        // Add your localization key or hardcoded text
-                                        variant: 'primary',
-                                        // Variant setting (e.g., primary style)
-                                        color: Colors.white,
-                                        // Text or icon color
-                                        onTap: () {
-                                          WidgetsBinding.instance
-                                              .addPostFrameCallback((_) {
-                                            Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute<dynamic>(
-                                                maintainState: true,
-                                                builder: (context) =>
-                                                    ViewChapterScreen(
-                                                  chapterId: provider
-                                                      .courseChapters[0]['id'],
-                                                  courseId: course['id'],
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                AppLocalizations.of(context)!
+                                                    .already_purchased, // Purchased text
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: AppColor.darker,
                                                 ),
                                               ),
-                                            );
-                                          });
-                                        },
+                                            ],
+                                          ),
+                                          GradientButton(
+                                            text: AppLocalizations.of(context)!
+                                                .watch,
+                                            // Add your localization key or hardcoded text
+                                            variant: 'primary',
+                                            // Variant setting (e.g., primary style)
+                                            color: Colors.white,
+                                            // Text or icon color
+                                            onTap: () {
+                                              WidgetsBinding.instance
+                                                  .addPostFrameCallback((_) {
+                                                Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute<dynamic>(
+                                                    maintainState: true,
+                                                    builder: (context) =>
+                                                        ViewChapterScreen(
+                                                      chapterId: provider
+                                                          .courseChapters[0].id,
+                                                      courseId: course['id'],
+                                                    ),
+                                                  ),
+                                                );
+                                              });
+                                            },
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                )
-                              : SafeArea(
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 12),
-                                    decoration: BoxDecoration(
-                                      color: AppColor.cardColor,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: AppColor.shadowColor
-                                              .withValues(alpha: 0.1),
-                                          offset: Offset(0, -4),
-                                          blurRadius: 10,
-                                        ),
-                                      ],
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              AppLocalizations.of(context)!
-                                                  .price_label,
-                                              style: TextStyle(
-                                                  color: AppColor.mainColor),
-                                            ),
-                                            Text(
-                                              'DZD ${course['price']}',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                                color: AppColor.darker,
-                                              ),
+                                    )
+                                  : SafeArea(
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 16, vertical: 12),
+                                        decoration: BoxDecoration(
+                                          color: AppColor.cardColor,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColor.shadowColor
+                                                  .withValues(alpha: 0.1),
+                                              offset: Offset(0, -4),
+                                              blurRadius: 10,
                                             ),
                                           ],
                                         ),
-                                        GradientButton(
-                                          text: context
-                                                  .watch<CourseProvider>()
-                                                  .isLoading
-                                              ? AppLocalizations.of(context)!
-                                                  .loading // Show "Loading..." when in progress
-                                              : context
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  AppLocalizations.of(context)!
+                                                      .price_label,
+                                                  style: TextStyle(
+                                                      color:
+                                                          AppColor.mainColor),
+                                                ),
+                                                Text(
+                                                  'DZD ${course['price']}',
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: AppColor.darker,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            GradientButton(
+                                              text: context
                                                       .watch<CourseProvider>()
-                                                      .isSuccess
+                                                      .isLoading
                                                   ? AppLocalizations.of(
                                                           context)!
-                                                      .loading // Show "Enrolled" when successful
-                                                  : AppLocalizations.of(
-                                                          context)!
-                                                      .buy_now, // Default "Buy Now" text
-                                          variant: 'primary',
-                                          color: Colors.white,
-                                          onTap: context
-                                                      .watch<CourseProvider>()
-                                                      .isLoading ||
-                                                  context
-                                                      .watch<CourseProvider>()
-                                                      .isSuccess
-                                              ? () {} // Disable button if loading or enrollment is already successful
-                                              : () async {
-                                                  final courseProvider = context
-                                                      .read<CourseProvider>();
-                                                  final courseId =
-                                                      courseProvider
-                                                              .courseData?[
-                                                          'course']['id'];
+                                                      .loading // Show "Loading..." when in progress
+                                                  : context
+                                                          .watch<
+                                                              CourseProvider>()
+                                                          .isSuccess
+                                                      ? AppLocalizations.of(
+                                                              context)!
+                                                          .loading // Show "Enrolled" when successful
+                                                      : AppLocalizations.of(
+                                                              context)!
+                                                          .buy_now, // Default "Buy Now" text
+                                              variant: 'primary',
+                                              color: Colors.white,
+                                              onTap: context
+                                                          .watch<
+                                                              CourseProvider>()
+                                                          .isLoading ||
+                                                      context
+                                                          .watch<
+                                                              CourseProvider>()
+                                                          .isSuccess
+                                                  ? () {} // Disable button if loading or enrollment is already successful
+                                                  : () async {
+                                                      final courseProvider =
+                                                          context.read<
+                                                              CourseProvider>();
+                                                      final courseId =
+                                                          courseProvider
+                                                                  .courseData?[
+                                                              'course']['id'];
 
-                                                  // Trigger enrollment and redirection
-                                                  final response =
-                                                      await courseProvider
-                                                          .enrollAndRedirect(
-                                                              context,
-                                                              courseId);
+                                                      // Trigger enrollment and redirection
+                                                      final response =
+                                                          await courseProvider
+                                                              .enrollAndRedirect(
+                                                                  context,
+                                                                  courseId);
 
-                                                  if (response) {
-                                                    courseProvider
-                                                        .resetSuccess();
-                                                  }
-                                                },
-                                        )
-                                      ],
+                                                      if (response == true) {
+                                                        courseProvider
+                                                            .resetSuccess();
+                                                      }
+                                                    },
+                                            )
+                                          ],
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
                     ],
                   ),
           );

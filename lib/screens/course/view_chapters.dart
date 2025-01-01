@@ -48,8 +48,8 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final courseProvider =
           Provider.of<CourseProvider>(context, listen: false);
-      courseProvider
-          .fetchCourse(widget.courseId); // Or any other provider updates
+      courseProvider.fetchCourse(
+          widget.courseId, context); // Or any other provider updates
       _fetchChapterData(widget.chapterId.toString());
     });
 
@@ -74,7 +74,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
       WidgetsBinding.instance.addPostFrameCallback((_) {
         final courseProvider =
             Provider.of<CourseProvider>(context, listen: false);
-        courseProvider.fetchCourse(widget.courseId);
+        courseProvider.fetchCourse(widget.courseId, context);
         _fetchChapterData(widget.chapterId.toString());
       });
       _isDataFetched = true;

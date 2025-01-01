@@ -31,9 +31,10 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<CourseProvider>().fetchCourses(
-        refresh: true,
-        filters: {'subject': null}, // Start with all courses
-      );
+            refresh: true,
+            filters: {'subject': null},
+            context: context, // Start with all courses
+          );
       context.read<TeacherProvider>().fetchTeachers();
     });
   }
@@ -249,7 +250,7 @@ class _HomePageState extends State<HomePage> {
             final firstChapter =
                 course.chapters.isNotEmpty ? course.chapters.first : null;
             final totalDuration = course.chapters
-                .fold<int>(0, (sum, chapter) => sum + (chapter.duration ?? 0));
+                .fold<int>(0, (sum, chapter) => sum + (chapter.duration));
             final finalPrice = course.discount != null
                 ? course.price - course.discount!
                 : course.price;

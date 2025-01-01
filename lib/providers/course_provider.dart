@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
+import 'package:online_course/models/chapter.dart' as Chapter;
 import 'package:url_launcher/url_launcher.dart';
 import '../models/course.dart' as Course;
-import '../models/mycourses.dart';
+import '../models/mycourses.dart' as MyCourse;
 import '../services/course_service.dart';
 import '../services/student_service.dart';
 import '../widgets/snackbar.dart';
 
 class CourseProvider with ChangeNotifier {
   List<Course.Course> _courses = [];
+  List<Chapter.Chapter> _courseChapters = [];
   Map<String, dynamic>? _currentChapter;
-  Map<String, dynamic>?
-      _currentVideo; // Holds the video information (including URL)// Add currentChapter
+  Map<String, dynamic>? _currentVideo;
   bool _isLoading = false;
   bool _isLoadingCourses = false;
+  bool _isLoadingChapter = false;
   Map<String, dynamic>? _courseData;
   String? _error;
   int _currentPage = 1;
@@ -22,7 +25,7 @@ class CourseProvider with ChangeNotifier {
   String? _selectedClass;
   String? _selectedBranch;
   bool _isSuccess = false;
-  List<MyCourse> _myCourses = []; // To store the list of MyCourse objects
+  List<MyCourse.MyCourse> _myCourses = [];
 
   Map<String, dynamic>? get courseData => _courseData;
 
@@ -32,13 +35,16 @@ class CourseProvider with ChangeNotifier {
 
   bool get isLoadingCourses => _isLoadingCourses;
 
+  bool get isLoadingChapter => _isLoadingChapter;
+
   bool get isSuccess => _isSuccess;
 
   String? get error => _error;
 
   List<Course.Course> get courses => _courses;
 
-  // Getters
+  List<Chapter.Chapter> get courseChapters => _courseChapters;
+
   bool get hasMore => _currentPage < _totalPages;
 
   String? get searchQuery => _searchQuery;
@@ -51,38 +57,56 @@ class CourseProvider with ChangeNotifier {
 
   Map<String, dynamic>? get currentChapter => _currentChapter;
 
-  List<MyCourse> get myCourses => _myCourses; // Getter for "myCourses"
+  List<MyCourse.MyCourse> get myCourses => _myCourses;
 
   bool hasPurchasedCourse(String courseId) {
-    // Check if the course exists in the user's purchased courses
     return _myCourses.any((course) => course.course.id == courseId);
   }
 
-  // Setter for currentChapter
   void setCurrentChapter(Map<String, dynamic> chapter) {
     _currentChapter = chapter;
-    notifyListeners(); // Notify listeners that the current chapter has changed
+    notifyListeners();
   }
 
   void setCurrentVideo(Map<String, dynamic>? video) {
     _currentVideo = video;
-    notifyListeners(); // Notify the listeners that the video has changed
+    notifyListeners();
   }
 
   void resetSuccess() {
     _isSuccess = false;
-    notifyListeners(); // Notify listeners to update the UI
+    notifyListeners();
   }
 
-  List<dynamic> get courseChapters =>
-      (_courseData?['course'] as Map<String, dynamic>?)?['chapters']
-          as List<dynamic>? ??
-      [];
+  void clearCourseChapters() {
+    _courseChapters = [];
+    notifyListeners();
+  }
+
+  Future<void> fetchChaptersForCourse(
+      String courseId, BuildContext context) async {
+    final localizations = AppLocalizations.of(context)!; // Get localizations
+    _isLoadingChapter = true;
+    notifyListeners();
+
+    try {
+      final chapters = await CourseService.getChaptersForCourse(courseId);
+      _courseChapters = chapters;
+      _error = null;
+    } catch (e) {
+      _error = localizations.error_fetching_chapters; // Use translation key
+    } finally {
+      _isLoadingChapter = false;
+      notifyListeners();
+    }
+  }
 
   Future<void> fetchCourses({
     bool refresh = false,
     Map<String, dynamic>? filters,
+    required BuildContext context,
   }) async {
+    final localizations = AppLocalizations.of(context)!;
     if (refresh) {
       _currentPage = 1;
       _courses = [];
@@ -111,7 +135,6 @@ class CourseProvider with ChangeNotifier {
         _courses.addAll(newCourses);
       }
 
-      // Handle null values with defaults
       final total = (result['total'] as num?)?.toInt() ?? 0;
       final limit = (result['limit'] as num?)?.toInt() ?? 10;
 
@@ -119,15 +142,15 @@ class CourseProvider with ChangeNotifier {
       _currentPage++;
       _error = null;
     } catch (e) {
-      _error = e.toString();
-      print('❌ Error fetching courses: $e');
+      _error = localizations.fetch_courses_error; // Use translation key
     } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
 
-  Future<void> fetchCourse(String courseId) async {
+  Future<void> fetchCourse(String courseId, BuildContext context) async {
+    final localizations = AppLocalizations.of(context)!;
     try {
       _isLoading = true;
       _error = null;
@@ -140,16 +163,13 @@ class CourseProvider with ChangeNotifier {
           'teacher': Map<String, dynamic>.from(data['teacher'] as Map? ?? {}),
         };
 
-        fetchMyCourses();
-        print('✅ Course data fetched successfully');
-        print('📝 Course chapters: ${courseChapters.length}');
+        fetchMyCourses(context);
+        print(localizations.course_fetch_success); // Log success message
       } else {
-        _error = 'Failed to fetch course data';
+        _error = localizations.course_fetch_error; // Use translation key
       }
-    } catch (e, stack) {
-      print('❌ Error fetching course: $e');
-      print('📍 Stack trace: $stack');
-      _error = e.toString();
+    } catch (e) {
+      _error = e.toString(); // Log technical error alongside translations
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -157,57 +177,45 @@ class CourseProvider with ChangeNotifier {
   }
 
   Future enrollAndRedirect(BuildContext context, String courseId) async {
-    try {
-      _isLoading = true; // Set loading to true
-      _isSuccess = false; // Reset success state
-      notifyListeners(); // Notify listeners to update the UI
+    final localizations = AppLocalizations.of(context)!;
 
-      // Make API call to enroll the course and get the payment URL
+    try {
+      _isLoading = true;
+      _isSuccess = false;
+      notifyListeners();
+
       final paymentUrl = await CourseService.enrollCourse(courseId);
 
       if (paymentUrl != null) {
-        // 🎉 Payment URL is returned - Try redirecting to the payment page
         if (await canLaunchUrl(Uri.parse(paymentUrl))) {
-          await launchUrl(
-            Uri.parse(paymentUrl),
-          );
-
-          // Set success state to true after successful redirection
+          await launchUrl(Uri.parse(paymentUrl));
           _isSuccess = true;
-
           return true;
         } else {
-          throw Exception('Cannot launch payment URL: $paymentUrl');
+          throw Exception(localizations.payment_redirect_failed);
         }
       } else {
-        // ❌ Enrollment failed - Payment URL is null
-        throw Exception('Enrollment failed, payment URL not provided.');
+        throw Exception(localizations.enrollment_payment_error);
       }
     } catch (e) {
-      // Show error message in a SnackBar
-      SnackBarHelper.showErrorSnackBar(
-        context,
-        e.toString(),
-      );
-
-      // Debugging: Log the error details for developers
-      debugPrint(
-          '❌ Exception during course enrollment and payment redirection: $e');
+      SnackBarHelper.showErrorSnackBar(context, e.toString());
     } finally {
-      _isLoading = false; // Set loading to false regardless of success/failure
-      notifyListeners(); // Notify listeners to update the UI
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
-  Future<void> fetchMyCourses() async {
+  Future<void> fetchMyCourses(BuildContext context) async {
+    final localizations = AppLocalizations.of(context)!;
+
     try {
       _isLoadingCourses = true;
-      _isLoading = true; // Use the existing loading state
+      _isLoading = true;
       notifyListeners();
 
       _myCourses = await StudentService.getStudentCourses();
     } catch (e) {
-      print('❌ Error fetching my courses: $e');
+      print(localizations.fetch_my_courses_error); // Log error message
     } finally {
       _isLoadingCourses = false;
       _isLoading = false;
@@ -215,25 +223,28 @@ class CourseProvider with ChangeNotifier {
     }
   }
 
-  void setFilters({
-    String? subject,
-    String? teacherClass,
-    String? educationalBranch,
-    String? searchQuery,
-    refresh = false,
-  }) {
+  void setFilters(
+      {String? subject,
+      String? teacherClass,
+      String? educationalBranch,
+      String? searchQuery,
+      refresh = false,
+      context}) {
     _selectedSubject = subject;
     _selectedClass = teacherClass;
     _selectedBranch = educationalBranch;
     _searchQuery = searchQuery;
-    fetchCourses(refresh: true);
+    fetchCourses(refresh: true, context: context);
   }
 
-  void clearFilters() {
+  void clearFilters(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     _selectedSubject = null;
     _selectedClass = null;
     _selectedBranch = null;
     _searchQuery = null;
-    fetchCourses(refresh: true);
+    fetchCourses(refresh: true, context: context);
+    print(localizations.clear_filters); // Log success message
   }
 }

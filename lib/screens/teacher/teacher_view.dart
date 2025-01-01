@@ -32,6 +32,7 @@ class TeacherView extends StatelessWidget {
             );
           }
 
+          final description = teacher['description'];
           final user = teacher['user'];
           final courses = user['Teacher']['Course'] as List;
 
@@ -52,12 +53,11 @@ class TeacherView extends StatelessWidget {
                   // Subject & Institution
                   _buildTeacherInfo(context, user['Teacher']),
 
+                  // About Teacher Section
+                  _buildAboutTeacherSection(context, description),
+
                   // Course Grid
                   _buildCourseGrid(context, courses),
-
-                  // About Section
-                  if (teacher['description'] != null)
-                    _buildAboutSection(context, teacher['description']),
 
                   SizedBox(height: 16),
                 ],
@@ -160,6 +160,47 @@ class TeacherView extends StatelessWidget {
     );
   }
 
+  /// Displays the "About Teacher" Section
+  Widget _buildAboutTeacherSection(BuildContext context, String? description) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Section Title
+          Text(
+            AppLocalizations.of(context)!.about_teacher, // Localized title
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: AppColor.darker,
+            ),
+          ),
+          const SizedBox(height: 8),
+
+          // Description Content
+          if (description != null && description.isNotEmpty)
+            Text(
+              description,
+              style: const TextStyle(
+                color: AppColor.mainColor,
+                height: 1.5,
+              ),
+            )
+          else
+            Text(
+              AppLocalizations.of(context)!.no_description_available,
+              // Fallback text
+              style: const TextStyle(
+                color: AppColor.mainColor,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildTeacherInfo(
     BuildContext context,
     Map<String, dynamic> teacher,
@@ -251,33 +292,6 @@ class TeacherView extends StatelessWidget {
                 ),
               ),
             ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAboutSection(BuildContext context, String description) {
-    return Container(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            AppLocalizations.of(context)!.about_teacher,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: AppColor.darker,
-            ),
-          ),
-          SizedBox(height: 8),
-          Text(
-            description,
-            style: TextStyle(
-              color: AppColor.mainColor,
-              height: 1.5,
-            ),
-          ),
         ],
       ),
     );
