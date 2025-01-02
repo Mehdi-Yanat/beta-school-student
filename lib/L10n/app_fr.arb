@@ -362,5 +362,6 @@
   "fetch_courses_error": "Une erreur s'est produite lors de la récupération des cours",
   "fetch_my_courses_error": "Une erreur s'est produite lors de la récupération de mes cours",
   "clear_filters": "Filtres effacés avec succès",
-  "no_description_available": "Pas de description disponible"
+  "no_description_available": "Pas de description disponible",
+  "hours": "Heures"
 }

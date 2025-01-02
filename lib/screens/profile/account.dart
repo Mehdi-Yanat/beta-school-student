@@ -126,16 +126,6 @@ class _AccountPageState extends State<AccountPage> {
             icon: "assets/icons/time.svg",
           ),
         ),
-        const SizedBox(
-          width: 10,
-        ),
-        Expanded(
-          child: SettingBox(
-            title: AppLocalizations.of(context)!.account_rating,
-            // Localized text
-            icon: "assets/icons/star.svg",
-          ),
-        ),
       ],
     );
   }

@@ -8,6 +8,7 @@ import 'package:online_course/screens/course/course_detail.dart';
 import 'package:online_course/screens/teacher/teacher_view.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:online_course/utils/data.dart';
+import 'package:online_course/utils/helper.dart';
 import 'package:online_course/widgets/category_box.dart';
 import 'package:online_course/widgets/feature_item.dart';
 import 'package:online_course/widgets/notification_box.dart';
@@ -156,13 +157,6 @@ class _HomePageState extends State<HomePage> {
                     color: AppColor.mainColor,
                   ),
                 ),
-                Text(
-                  localizations.see_all, // Localized "See all" text
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: AppColor.darker,
-                  ),
-                ),
               ],
             ),
           ),
@@ -189,9 +183,9 @@ class _HomePageState extends State<HomePage> {
                 setState(() => _selectedCategory = category['id']);
                 // Filter courses based on selected category
                 context.read<CourseProvider>().setFilters(
-                      subject: category['id'] == '' ? null : category['id'],
-                      refresh: true,
-                    );
+                    subject: category['id'] == '' ? null : category['id'],
+                    refresh: true,
+                    context: context);
               },
             ),
           );
@@ -251,6 +245,9 @@ class _HomePageState extends State<HomePage> {
                 course.chapters.isNotEmpty ? course.chapters.first : null;
             final totalDuration = course.chapters
                 .fold<int>(0, (sum, chapter) => sum + (chapter.duration));
+
+            final formatedDuration = Helpers.formatTime(totalDuration);
+
             final finalPrice = course.discount != null
                 ? course.price - course.discount!
                 : course.price;
@@ -265,7 +262,7 @@ class _HomePageState extends State<HomePage> {
                 "session":
                     "${course.chapters.length} ${AppLocalizations.of(context)!.courses}",
                 "duration":
-                    "$totalDuration ${AppLocalizations.of(context)!.minutes}",
+                    "$formatedDuration ${AppLocalizations.of(context)!.hours}",
                 "teacherName":
                     "${course.teacher.user.firstName} ${course.teacher.user.lastName}"
                         .trim(),

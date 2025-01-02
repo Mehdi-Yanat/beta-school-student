@@ -54,7 +54,7 @@ class _FilterModalState extends State<FilterModal> {
             ],
           ),
           SizedBox(height: 16),
-          
+
           // Subject Dropdown
           DropdownButtonFormField<String>(
             value: _selectedSubject,
@@ -165,10 +165,10 @@ class _FilterModalState extends State<FilterModal> {
                   child: Text(AppLocalizations.of(context)!.apply_filters),
                   onPressed: () {
                     context.read<CourseProvider>().setFilters(
-                      subject: _selectedSubject,
-                      teacherClass: _selectedClass,
-                      educationalBranch: _selectedBranch,
-                    );
+                        subject: _selectedSubject,
+                        teacherClass: _selectedClass,
+                        educationalBranch: _selectedBranch,
+                        context: context);
                     Navigator.pop(context);
                   },
                 ),

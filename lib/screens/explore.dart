@@ -8,6 +8,8 @@ import 'package:online_course/widgets/filter_modal.dart';
 import 'package:provider/provider.dart';
 import 'package:online_course/widgets/appbar.dart';
 
+import '../utils/helper.dart';
+
 class ExploreScreen extends StatefulWidget {
   @override
   _ExploreScreenState createState() => _ExploreScreenState();
@@ -109,6 +111,11 @@ class _ExploreScreenState extends State<ExploreScreen> {
                         ? course.chapters.first
                         : null;
 
+                    final totalDuration = course.chapters.fold<int>(
+                        0, (sum, chapter) => sum + (chapter.duration));
+
+                    final formatedDuration = Helpers.formatTime(totalDuration);
+
                     return GestureDetector(
                       onTap: () => Navigator.push(
                         context,
@@ -181,12 +188,11 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                         Icon(Icons.schedule,
                                             color: AppColor.darker, size: 18),
                                         Text(
-                                          AppLocalizations.of(context)!
-                                              .course_duration(
-                                                  course.duration.toString()),
+                                          "$formatedDuration ${AppLocalizations.of(context)!.hours}",
                                           style:
                                               TextStyle(color: AppColor.darker),
                                         ),
+                                        /*
                                         Spacer(),
                                         Row(
                                           children: [
@@ -198,6 +204,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                                     color: AppColor.darker)),
                                           ],
                                         ),
+                                        */
                                       ],
                                     )
                                   ],
@@ -238,8 +245,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
           controller: _searchController,
           onChanged: (value) {
             context.read<CourseProvider>().setFilters(
-                  searchQuery: value.isEmpty ? null : value,
-                );
+                searchQuery: value.isEmpty ? null : value, context: context);
           },
           decoration: InputDecoration(
             hintText: AppLocalizations.of(context)!.search_hint,
@@ -269,8 +275,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
               onSelected: (selected) {
                 setState(() => _selectedCategory = category);
                 context.read<CourseProvider>().setFilters(
-                      subject: category == 'ALL' ? null : category,
-                    );
+                    subject: category == 'ALL' ? null : category,
+                    context: context);
               },
               label: Text(
                 AppLocalizations.of(context)!.getCategoryName(category),
