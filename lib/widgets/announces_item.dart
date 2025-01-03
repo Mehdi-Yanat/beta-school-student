@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:online_course/theme/color.dart';
-import 'chat_notify.dart';
 import 'custom_image.dart';
 
-class ChatItem extends StatelessWidget {
-  const ChatItem(
-    this.chatData, {
+class AnnouncesItem extends StatelessWidget {
+  const AnnouncesItem(
+    this.data, {
     Key? key,
     this.onTap,
-    this.isNotified = true,
     this.profileSize = 50,
   }) : super(key: key);
 
-  final chatData;
-  final bool isNotified;
+  final Map<String, dynamic> data;
   final GestureTapCallback? onTap;
   final double profileSize;
+
 
   @override
   Widget build(BuildContext context) {
@@ -63,28 +60,29 @@ class ChatItem extends StatelessWidget {
       children: <Widget>[
         Expanded(
           child: Text(
-            chatData['last_text'],
+            data['message'],
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 13),
           ),
         ),
+        /*
         if (isNotified)
           Padding(
             padding: const EdgeInsets.only(right: 5),
             child: ChatNotify(
-              number: chatData['notify'],
+              number: 5,
               boxSize: 17,
               color: AppColor.red,
             ),
-          )
+          )*/
       ],
     );
   }
 
   Widget _buildPhoto() {
     return CustomImage(
-      chatData['image'],
+      data['image'],
       width: profileSize,
       height: profileSize,
     );
@@ -96,7 +94,7 @@ class ChatItem extends StatelessWidget {
       children: <Widget>[
         Expanded(
           child: Text(
-            chatData['name'],
+            data['name'] ?? '',
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
@@ -104,14 +102,14 @@ class ChatItem extends StatelessWidget {
         ),
         const SizedBox(width: 5),
         Text(
-          chatData['date'],
+          data['timeAgo'],
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontSize: 11,
             color: Colors.grey,
           ),
-        )
+        ),
       ],
     );
   }

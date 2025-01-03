@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  timeago: ^3.7.0
   http_interceptor: ^2.0.0
   app_links: ^6.3.3
   provider: ^6.1.2

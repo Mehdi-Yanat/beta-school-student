@@ -362,5 +362,6 @@
   "fetch_my_courses_error": "حدث خطأ أثناء جلب كورساتي",
   "clear_filters": "تم مسح المرشحات بنجاح",
   "no_description_available": "لا يوجد وصف متاح",
-  "hours": "ساعات"
+  "hours": "ساعات",
+  "no_announcements":"لا توجد إعلانات"
 }
