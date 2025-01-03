@@ -14,6 +14,7 @@ import 'package:online_course/widgets/notification_box.dart';
 import 'package:online_course/widgets/teacher_item.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/custom_image.dart';
 import '../widgets/sliver_app_bar.dart';
 
 class HomePage extends StatefulWidget {
@@ -50,7 +51,7 @@ class _HomePageState extends State<HomePage> {
             pinned: true,
             snap: true,
             floating: true,
-            toolbarHeight: 70,
+            toolbarHeight: 100,
             title: _buildAppBar(localizations),
           ),
           SliverList(
@@ -89,31 +90,43 @@ class _HomePageState extends State<HomePage> {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          Container(
+            margin: const EdgeInsets.fromLTRB(20.0, 0,0,0), // Adjust margin values as needed
+            child: CustomImage(
+              authProvider.student?.profilePic ?? "",
+              width: 55,
+              height: 55,
+              radius: 17,
+            ),
+          ),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  getFormattedName(),
+      localizations.greeting,
                   style: TextStyle(
                     color: AppColor.labelColor,
                     fontSize: 14,
+                    fontFamily: 'Rubik'
                   ),
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  localizations.greeting,
+                  getFormattedName(),
                   style: TextStyle(
-                    color: AppColor.mainColor,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 18,
+                    color: AppColor.labelColor,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 22,
+                      fontFamily: 'Rubik'
+
                   ),
                 ),
               ],
             ),
           ),
-          NotificationBox(notifiedNumber: 1),
+          NotificationBox(notifiedNumber: 1, size: 10,),
         ],
       );
     });
@@ -135,8 +148,8 @@ class _HomePageState extends State<HomePage> {
               localizations.featured, // Localized "Featured" title
               style: TextStyle(
                 color: AppColor.mainColor,
-                fontWeight: FontWeight.w600,
-                fontSize: 24,
+                fontWeight: FontWeight.w800,
+                fontSize: 30,
               ),
             ),
           ),
@@ -222,17 +235,7 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.school_outlined,
-                    size: 64, color: AppColor.mainColor),
-                const SizedBox(height: 50),
-                Text(
-                  AppLocalizations.of(context)!.no_courses_found,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: AppColor.mainColor,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                Image.asset("assets/images/empty-folder.png", width: 200,),
               ],
             ),
           );
@@ -240,12 +243,19 @@ class _HomePageState extends State<HomePage> {
 
         return CarouselSlider(
           options: CarouselOptions(
-            height: 320,
+            height: 400,
+            enableInfiniteScroll: false,
+            animateToClosest: true,
             enlargeCenterPage: true,
             disableCenter: true,
             viewportFraction: .75,
           ),
           items: courseProvider.courses.map((course) {
+            final isArabic =
+                Localizations.localeOf(context).languageCode == 'ar';
+            final fullName = isArabic
+                ? "${course.teacher.user.firstNameAr ?? course.teacher.user.firstName} ${course.teacher.user.lastNameAr ?? course.teacher.user.lastName}"
+                : "${course.teacher.user.firstName} ${course.teacher.user.lastName}";
             final firstChapter =
                 course.chapters.isNotEmpty ? course.chapters.first : null;
             final totalDuration = course.chapters
@@ -266,8 +276,9 @@ class _HomePageState extends State<HomePage> {
                 "duration":
                     "$totalDuration ${AppLocalizations.of(context)!.minutes}",
                 "teacherName":
-                    "${course.teacher.user.firstName} ${course.teacher.user.lastName}"
-                        .trim(),
+                    "${fullName}",
+                "teacherProfilePic": course.teacher.user.profilePic?.url,
+                "enrollments": course.currentEnrollment.toString()
               },
               onTap: () => Navigator.push(
                 context,

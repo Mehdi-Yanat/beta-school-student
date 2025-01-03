@@ -22,11 +22,11 @@ class NotificationBox extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(size),
         decoration: BoxDecoration(
-          shape: BoxShape.circle,
+          borderRadius: const BorderRadius.all(Radius.circular(15)),
           color: Colors.white,
-          border: Border.all(
-            color: Colors.grey.withValues(alpha: 0.3),
-          ),
+          // border: Border.all(
+          //   color: Colors.grey.withValues(alpha: 0.3),
+          // ),
         ),
         child: notifiedNumber > 0 ? _buildIconNotified() : _buildIcon(),
       ),
@@ -36,15 +36,19 @@ class NotificationBox extends StatelessWidget {
   Widget _buildIconNotified() {
     return badge_lib.Badge(
       badgeContent: Text('5'),
-      child: Icon(Icons.notifications, color: AppColor.mainColor),
+      child: SvgPicture.asset(
+        "assets/icons/bell.svg",
+        width: 30,
+        height: 30,
+      ),
     );
   }
 
   Widget _buildIcon() {
     return SvgPicture.asset(
       "assets/icons/bell.svg",
-      width: 20,
-      height: 20,
+      width: 30,
+      height: 30,
     );
   }
 }
