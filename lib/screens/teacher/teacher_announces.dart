@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:online_course/models/announcements.dart';
-import 'package:online_course/screens/teacher/teacher_announces.dart';
+import 'package:online_course/models/teacher_announcements.dart';
 import 'package:online_course/services/student_service.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:online_course/utils/helper.dart';
 import 'package:online_course/widgets/announces_item.dart';
 
-class AnnouncesPage extends StatefulWidget {
-  const AnnouncesPage({Key? key}) : super(key: key);
+class TeacherAnnouncesPage extends StatefulWidget {
+  final teacherId;
+  const TeacherAnnouncesPage({Key? key, required this.teacherId})
+      : super(key: key);
 
   @override
-  _AnnouncesPageState createState() => _AnnouncesPageState();
+  _TeacherAnnouncesPageState createState() => _TeacherAnnouncesPageState();
 }
 
-class _AnnouncesPageState extends State<AnnouncesPage> {
-  List<Announcement> _announcements = [];
+class _TeacherAnnouncesPageState extends State<TeacherAnnouncesPage> {
+  List<TeacherAnnouncement> _announcements = [];
   bool _isLoading = false;
 
   @override
@@ -24,13 +25,22 @@ class _AnnouncesPageState extends State<AnnouncesPage> {
     _fetchAnnouncements();
   }
 
+  @override
+  void didUpdateWidget(TeacherAnnouncesPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Check if teacherId changed
+    if (oldWidget.teacherId != widget.teacherId) {
+      _fetchAnnouncements(); // Fetch new data if teacherId changed
+    }
+  }
+
   Future<void> _fetchAnnouncements() async {
     if (!mounted) return;
-
     setState(() => _isLoading = true);
 
     try {
-      final response = await StudentService.getAnnouncementsList();
+      final response =
+          await StudentService.getTeacherAnnouncementsList(widget.teacherId);
       if (!mounted) return;
 
       setState(() {
@@ -40,10 +50,7 @@ class _AnnouncesPageState extends State<AnnouncesPage> {
     } catch (e) {
       print('Error fetching announcements: $e');
       if (!mounted) return;
-
-      setState(() {
-        _isLoading = false;
-      });
+      setState(() => _isLoading = false);
     }
   }
 
@@ -72,7 +79,7 @@ class _AnnouncesPageState extends State<AnnouncesPage> {
                   child: Padding(
                     padding: EdgeInsets.only(top: 20),
                     child: Text(
-                      AppLocalizations.of(context)!.no_announcements,
+                      "${AppLocalizations.of(context)!.no_announcements}",
                       style: TextStyle(
                         fontSize: 16,
                         color: AppColor.darker,
@@ -90,14 +97,9 @@ class _AnnouncesPageState extends State<AnnouncesPage> {
                   itemBuilder: (context, index) {
                     final announcement = _announcements[index];
                     return AnnouncesItem(
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => TeacherAnnouncesPage(
-                                  teacherId: announcement.teacher.id))),
                       {
                         'name': announcement.teacher.fullName,
-                        'image': announcement.teacher.profilePic?.url,
+                        'image': announcement.teacher.user.profilePic?.url,
                         'message': announcement.message,
                         'createdAt': announcement.createdAt,
                         'timeAgo': Helpers.getTimeAgo(
@@ -120,7 +122,9 @@ class _AnnouncesPageState extends State<AnnouncesPage> {
       child: Column(
         children: [
           Text(
-            AppLocalizations.of(context)!.announces_title,
+            _announcements.isNotEmpty
+                ? "${AppLocalizations.of(context)!.announces_title} ${_announcements[0].teacher.fullName}"
+                : AppLocalizations.of(context)!.announces_title,
             style: TextStyle(
               color: AppColor.mainColor,
               fontSize: 24,

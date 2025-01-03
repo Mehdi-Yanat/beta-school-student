@@ -3,8 +3,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:online_course/models/mycourses.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
+import 'package:timeago/timeago.dart' as timeago;
 
 class Helpers {
+  static void initTimeAgoLocales() {
+    timeago.setLocaleMessages('fr', timeago.FrMessages());
+    timeago.setLocaleMessages('ar', timeago.ArMessages());
+  }
+
   static String formatDuration(BuildContext context, int seconds) {
     if (seconds < 0) {
       return '0 ${AppLocalizations.of(context)!.minutes} 0 ${AppLocalizations.of(context)!.second}'; // Handle negative values
@@ -14,6 +20,24 @@ class Helpers {
     final remainingSeconds = seconds % 60;
 
     return '${minutes} ${AppLocalizations.of(context)!.minutes} ${remainingSeconds} ${AppLocalizations.of(context)!.second}';
+  }
+
+  static String getTimeAgo(DateTime dateTime, String locale) {
+    try {
+      return timeago.format(
+        dateTime,
+        locale: locale,
+        allowFromNow: true,
+      );
+    } catch (e) {
+      // Fallback to English if locale isn't initialized
+      print('Error formatting time with locale $locale: $e');
+      return timeago.format(
+        dateTime,
+        locale: 'en',
+        allowFromNow: true,
+      );
+    }
   }
 
   static String formatTime(int seconds) {
