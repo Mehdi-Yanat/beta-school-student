@@ -32,37 +32,50 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      _refreshData();
+    });
+  }
+
+  Future<void> _refreshData() async {
+    // Refresh all data concurrently
+    await Future.wait([
       context.read<CourseProvider>().fetchCourses(
             refresh: true,
-            filters: {'subject': null},
-            context: context, // Start with all courses
-          );
-      context.read<TeacherProvider>().fetchTeachers();
-    });
+            filters: {
+              'subject': _selectedCategory.isEmpty ? null : _selectedCategory
+            },
+            context: context,
+          ),
+      context.read<TeacherProvider>().fetchTeachers(),
+    ]);
   }
 
   @override
   Widget build(BuildContext context) {
-    final localizations =
-        AppLocalizations.of(context); // Localizations instance
+    final localizations = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: AppColor.appBgColor,
-      body: CustomScrollView(
-        slivers: [
-          CustomSliverAppBar(
-            pinned: true,
-            snap: true,
-            floating: true,
-            toolbarHeight: 100,
-            title: _buildAppBar(localizations),
-          ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) => _buildBody(localizations),
-              childCount: 1,
+      body: RefreshIndicator(
+        onRefresh: _refreshData,
+        child: CustomScrollView(
+          physics:
+              AlwaysScrollableScrollPhysics(), // Important for RefreshIndicator
+          slivers: [
+            CustomSliverAppBar(
+              pinned: true,
+              snap: true,
+              floating: true,
+              toolbarHeight: 100,
+              title: _buildAppBar(localizations),
             ),
-          )
-        ],
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) => _buildBody(localizations),
+                childCount: 1,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -93,7 +106,8 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            margin: const EdgeInsets.fromLTRB(20.0, 0,0,0), // Adjust margin values as needed
+            margin: const EdgeInsets.fromLTRB(
+                20.0, 0, 0, 0), // Adjust margin values as needed
             child: CustomImage(
               authProvider.student?.profilePic ?? "",
               width: 55,
@@ -107,28 +121,28 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-      localizations.greeting,
+                  localizations.greeting,
                   style: TextStyle(
-                    color: AppColor.labelColor,
-                    fontSize: 14,
-                    fontFamily: 'Rubik'
-                  ),
+                      color: AppColor.labelColor,
+                      fontSize: 14,
+                      fontFamily: 'Rubik'),
                 ),
                 const SizedBox(height: 5),
                 Text(
                   getFormattedName(),
                   style: TextStyle(
-                    color: AppColor.labelColor,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 22,
-                      fontFamily: 'Rubik'
-
-                  ),
+                      color: AppColor.labelColor,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 22,
+                      fontFamily: 'Rubik'),
                 ),
               ],
             ),
           ),
-          NotificationBox(notifiedNumber: 1, size: 10,),
+          NotificationBox(
+            notifiedNumber: 1,
+            size: 10,
+          ),
         ],
       );
     });
@@ -230,7 +244,10 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset("assets/images/empty-folder.png", width: 200,),
+                Image.asset(
+                  "assets/images/empty-folder.png",
+                  width: 200,
+                ),
               ],
             ),
           );
@@ -273,8 +290,7 @@ class _HomePageState extends State<HomePage> {
                     "${course.chapters.length} ${AppLocalizations.of(context)!.courses}",
                 "duration":
                     "$formatedDuration ${AppLocalizations.of(context)!.hours}",
-                "teacherName":
-                    "${fullName}",
+                "teacherName": "${fullName}",
                 "teacherProfilePic": course.teacher.user.profilePic?.url,
                 "enrollments": course.currentEnrollment.toString()
               },

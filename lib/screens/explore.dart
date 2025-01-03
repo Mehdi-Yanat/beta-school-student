@@ -38,11 +38,20 @@ class _ExploreScreenState extends State<ExploreScreen> {
     super.initState();
     _scrollController.addListener(_onScroll);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<CourseProvider>().fetchCourses(
-            refresh: true,
-            context: context,
-          );
+      _refreshData();
     });
+  }
+
+  Future<void> _refreshData() async {
+    await context.read<CourseProvider>().fetchCourses(
+      refresh: true,
+      context: context,
+      filters: {
+        'subject': _selectedCategory == 'ALL' ? null : _selectedCategory,
+        'searchQuery':
+            _searchController.text.isEmpty ? null : _searchController.text,
+      },
+    );
   }
 
   void _onScroll() {
@@ -50,7 +59,14 @@ class _ExploreScreenState extends State<ExploreScreen> {
         _scrollController.position.maxScrollExtent) {
       final provider = context.read<CourseProvider>();
       if (!provider.isLoading && provider.hasMore) {
-        provider.fetchCourses(context: context);
+        provider.fetchCourses(
+          context: context,
+          filters: {
+            'subject': _selectedCategory == 'ALL' ? null : _selectedCategory,
+            'searchQuery':
+                _searchController.text.isEmpty ? null : _searchController.text,
+          },
+        );
       }
     }
   }
@@ -66,133 +82,139 @@ class _ExploreScreenState extends State<ExploreScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.appBgColor,
-      appBar: CustomAppBar(
-        title: AppLocalizations.of(context)!.explore_title,
-      ),
-      body: Column(
-        children: [
-          // Search Bar
-          _buildSearchBar(),
+        backgroundColor: AppColor.appBgColor,
+        appBar: CustomAppBar(
+          title: AppLocalizations.of(context)!.explore_title,
+        ),
+        body: RefreshIndicator(
+            child: Column(
+              children: [
+                // Search Bar
+                _buildSearchBar(),
 
-          // Categories
-          _buildCategories(),
+                // Categories
+                _buildCategories(),
 
-          // Course Grid
-          // Replace Expanded section with:
-          // Replace Expanded section with:
-          Expanded(
-            child: Consumer<CourseProvider>(
-              builder: (context, provider, _) {
-                if (provider.isLoading && provider.courses.isEmpty) {
-                  return Center(child: CircularProgressIndicator());
-                }
+                // Course Grid
+                // Replace Expanded section with:
+                // Replace Expanded section with:
+                Expanded(
+                  child: Consumer<CourseProvider>(
+                    builder: (context, provider, _) {
+                      if (provider.isLoading && provider.courses.isEmpty) {
+                        return Center(child: CircularProgressIndicator());
+                      }
 
-                if (provider.courses.isEmpty) {
-                  return _buildEmptyState();
-                }
+                      if (provider.courses.isEmpty) {
+                        return _buildEmptyState();
+                      }
 
-                return ListView.builder(
-                  controller: _scrollController,
-                  itemCount:
-                      provider.courses.length + (provider.hasMore ? 1 : 0),
-                  itemBuilder: (context, index) {
-                    if (index == provider.courses.length) {
-                      return Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(16),
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-                    }
-
-                    final course = provider.courses[index];
-                    final firstChapter = course.chapters.isNotEmpty
-                        ? course.chapters.first
-                        : null;
-
-                    final totalDuration = course.chapters.fold<int>(
-                        0, (sum, chapter) => sum + (chapter.duration));
-
-                    final formatedDuration = Helpers.formatTime(totalDuration);
-
-                    return GestureDetector(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              CourseDetailScreen(courseId: course.id),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: AppColor.cardColor,
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color:
-                                    AppColor.shadowColor.withValues(alpha: 0.1),
-                                blurRadius: 8,
-                                offset: Offset(0, 3),
+                      return ListView.builder(
+                        controller: _scrollController,
+                        itemCount: provider.courses.length +
+                            (provider.hasMore ? 1 : 0),
+                        itemBuilder: (context, index) {
+                          if (index == provider.courses.length) {
+                            return Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(16),
+                                child: CircularProgressIndicator(),
                               ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(12)),
-                                child: CourseImage(
-                                  thumbnailUrl: firstChapter?.thumbnail?.url,
-                                  iconUrl: course.icon?.url,
-                                  width: double.infinity,
-                                  height: 190,
+                            );
+                          }
+
+                          final course = provider.courses[index];
+                          final firstChapter = course.chapters.isNotEmpty
+                              ? course.chapters.first
+                              : null;
+
+                          final totalDuration = course.chapters.fold<int>(
+                              0, (sum, chapter) => sum + (chapter.duration));
+
+                          final formatedDuration =
+                              Helpers.formatTime(totalDuration);
+
+                          return GestureDetector(
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    CourseDetailScreen(courseId: course.id),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: AppColor.cardColor,
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: AppColor.shadowColor
+                                          .withValues(alpha: 0.1),
+                                      blurRadius: 8,
+                                      offset: Offset(0, 3),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(12.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      course.title,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColor.mainColor,
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(12)),
+                                      child: CourseImage(
+                                        thumbnailUrl:
+                                            firstChapter?.thumbnail?.url,
+                                        iconUrl: course.icon?.url,
+                                        width: double.infinity,
+                                        height: 190,
                                       ),
                                     ),
-                                    SizedBox(height: 8),
-                                    Row(
-                                      children: [
-                                        Text(
-                                            course.price.toString() +
-                                                " ${AppLocalizations.of(context)?.dzd}",
+                                    Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            course.title,
                                             style: TextStyle(
-                                                color: AppColor.darker)),
-                                        SizedBox(width: 12),
-                                        Icon(Icons.play_circle_fill,
-                                            color: AppColor.darker, size: 18),
-                                        Text(
-                                          AppLocalizations.of(context)!
-                                              .course_lessons(
-                                                  course.chapters.length),
-                                          style:
-                                              TextStyle(color: AppColor.darker),
-                                        ),
-                                        SizedBox(width: 12),
-                                        Icon(Icons.schedule,
-                                            color: AppColor.darker, size: 18),
-                                        Text(
-                                          "$formatedDuration ${AppLocalizations.of(context)!.hours}",
-                                          style:
-                                              TextStyle(color: AppColor.darker),
-                                        ),
-                                        /*
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: AppColor.mainColor,
+                                            ),
+                                          ),
+                                          SizedBox(height: 8),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                  course.price.toString() +
+                                                      " ${AppLocalizations.of(context)?.dzd}",
+                                                  style: TextStyle(
+                                                      color: AppColor.darker)),
+                                              SizedBox(width: 12),
+                                              Icon(Icons.play_circle_fill,
+                                                  color: AppColor.darker,
+                                                  size: 18),
+                                              Text(
+                                                AppLocalizations.of(context)!
+                                                    .course_lessons(
+                                                        course.chapters.length),
+                                                style: TextStyle(
+                                                    color: AppColor.darker),
+                                              ),
+                                              SizedBox(width: 12),
+                                              Icon(Icons.schedule,
+                                                  color: AppColor.darker,
+                                                  size: 18),
+                                              Text(
+                                                "$formatedDuration ${AppLocalizations.of(context)!.hours}",
+                                                style: TextStyle(
+                                                    color: AppColor.darker),
+                                              ),
+                                              /*
                                         Spacer(),
                                         Row(
                                           children: [
@@ -205,24 +227,24 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                           ],
                                         ),
                                         */
-                                      ],
+                                            ],
+                                          )
+                                        ],
+                                      ),
                                     )
                                   ],
                                 ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                )
+              ],
             ),
-          )
-        ],
-      ),
-    );
+            onRefresh: _refreshData));
   }
 
   Widget _buildSearchBar() {

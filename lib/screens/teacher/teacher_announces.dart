@@ -5,6 +5,7 @@ import 'package:online_course/services/student_service.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:online_course/utils/helper.dart';
 import 'package:online_course/widgets/announces_item.dart';
+import 'package:online_course/widgets/custom_image.dart';
 
 class TeacherAnnouncesPage extends StatefulWidget {
   final teacherId;
@@ -97,6 +98,8 @@ class _TeacherAnnouncesPageState extends State<TeacherAnnouncesPage> {
                   itemBuilder: (context, index) {
                     final announcement = _announcements[index];
                     return AnnouncesItem(
+                      onTap: () =>
+                          _showAnnouncementDetails(announcement, context),
                       {
                         'name': announcement.teacher.fullName,
                         'image': announcement.teacher.user.profilePic?.url,
@@ -141,4 +144,71 @@ class _TeacherAnnouncesPageState extends State<TeacherAnnouncesPage> {
   void dispose() {
     super.dispose();
   }
+}
+
+void _showAnnouncementDetails(
+    TeacherAnnouncement announcement, BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) => Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      child: Container(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                CustomImage(
+                  announcement.teacher.user.profilePic?.url ??
+                      'assets/images/default_avatar.png',
+                  width: 60,
+                  height: 60,
+                  radius: 30,
+                ),
+                SizedBox(width: 15),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        announcement.teacher.fullName,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: AppColor.textColor,
+                        ),
+                      ),
+                      Text(
+                        Helpers.getTimeAgo(
+                            announcement.createdAt ?? DateTime.now(),
+                            Localizations.localeOf(context).languageCode),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: AppColor.labelColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Divider(height: 20),
+            SelectableText.rich(
+              Helpers.buildTextSpanWithLinks(announcement.message),
+              style: TextStyle(
+                fontSize: 16,
+                color: AppColor.textColor,
+              ),
+            ),
+            SizedBox(height: 20),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(AppLocalizations.of(context)!.close_button),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }
