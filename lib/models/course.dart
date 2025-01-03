@@ -19,12 +19,16 @@ class ImageData {
 class TeacherUser {
   final String? firstName; //Make these nullable for more safety
   final String? lastName;
+  final String? firstNameAr; //Make these nullable for more safety
+  final String? lastNameAr;
   final String? email;
   final ImageData? profilePic; // Use ImageData
 
   TeacherUser({
     required this.firstName,
     required this.lastName,
+    required this.firstNameAr,
+    required this.lastNameAr,
     required this.email,
     this.profilePic,
   });
@@ -34,12 +38,16 @@ class TeacherUser {
       return TeacherUser(
           firstName: null,
           lastName: null,
+          firstNameAr: null,
+          lastNameAr: null,
           email: null,
           profilePic: null); // Handle null json
 
     return TeacherUser(
       firstName: json['firstName'],
       lastName: json['lastName'],
+      firstNameAr: json['firstNameAr'],
+      lastNameAr: json['lastNameAr'],
       email: json['email'],
       profilePic:
           ImageData.fromJson(json['profilePic']), // Correctly create ImageData
@@ -238,6 +246,8 @@ class Course {
           user: TeacherUser(
             firstName: '',
             lastName: '',
+            firstNameAr: '',
+            lastNameAr: '',
             email: '',
             profilePic: ImageData(),
           ),

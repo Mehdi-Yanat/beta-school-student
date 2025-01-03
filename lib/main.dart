@@ -17,15 +17,15 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:online_course/screens/verify_email.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:online_course/utils/helper.dart';
 import 'package:online_course/utils/logger.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
   // Ensure the environment file is loaded correctly
   await dotenv.load(fileName: ".env.development");
-
   Logger.enable();
-
+  Helpers.initTimeAgoLocales();
   // Initialize the provider before running the app
   runApp(
     MultiProvider(
@@ -147,6 +147,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               supportedLocales: AppLocalizations.supportedLocales,
               locale: locale,
               theme: ThemeData(
+                fontFamily: 'Rubik',
                 scaffoldBackgroundColor: AppColor.appBgColor,
                 appBarTheme: const AppBarTheme(
                   toolbarHeight: 70,

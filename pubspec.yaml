@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  timeago: ^3.7.0
   http_interceptor: ^2.0.0
   app_links: ^6.3.3
   provider: ^6.1.2
@@ -52,3 +53,9 @@ flutter:
     - assets/images/
     - .env.development
     - .env.production
+  fonts:
+    - family: Rubik
+      fonts:
+        - asset: fonts/Rubik-VariableFont_wght.ttf
+        - asset: fonts/Rubik-Italic-VariableFont_wght.ttf
+          style: italic

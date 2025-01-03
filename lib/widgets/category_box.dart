@@ -41,7 +41,7 @@ class CategoryBox extends StatelessWidget {
             ),
             child: SvgPicture.asset(
               data["icon"],
-              color: isSelected ? Colors.white : AppColor.mainColor,
+              // color: isSelected ? Colors.white : AppColor.mainColor,
               width: 30,
               height: 30,
             ),
