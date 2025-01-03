@@ -147,6 +147,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               supportedLocales: AppLocalizations.supportedLocales,
               locale: locale,
               theme: ThemeData(
+                fontFamily: 'Rubik',
                 scaffoldBackgroundColor: AppColor.appBgColor,
                 appBarTheme: const AppBarTheme(
                   toolbarHeight: 70,

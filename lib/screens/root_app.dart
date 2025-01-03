@@ -188,6 +188,7 @@ class _RootAppState extends State<RootApp> with WidgetsBindingObserver {
         (index) => BottomBarItem(
           _barItems[index]["icon"],
           isActive: _activeTab == index,
+          isMiddle: index == 2,
           activeColor: AppColor.primary,
           color: AppColor.mainColor,
           onTap: () {

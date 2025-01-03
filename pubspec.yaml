@@ -53,3 +53,9 @@ flutter:
     - assets/images/
     - .env.development
     - .env.production
+  fonts:
+    - family: Rubik
+      fonts:
+        - asset: fonts/Rubik-VariableFont_wght.ttf
+        - asset: fonts/Rubik-Italic-VariableFont_wght.ttf
+          style: italic

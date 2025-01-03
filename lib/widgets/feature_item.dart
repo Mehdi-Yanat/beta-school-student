@@ -9,7 +9,7 @@ class FeatureItem extends StatelessWidget {
     Key? key,
     required this.data,
     this.width = 300,
-    this.height = 300,
+    this.height = 500,
     this.onTap,
   }) : super(key: key);
 
@@ -28,14 +28,21 @@ class FeatureItem extends StatelessWidget {
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.symmetric(vertical: 5),
         decoration: BoxDecoration(
-          color: Colors.white,
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFF00BBFF), // main
+              Color(0xFF21D4FD), // state
+            ],
+            begin: Alignment(0.838, 0.546), // Start point shifted for 127 degrees
+            end: Alignment(-0.838, -0.546), // End point aligned for 127 degrees
+          ),
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: AppColor.shadowColor.withValues(alpha: 0.1),
-              spreadRadius: 1,
-              blurRadius: 1,
-              offset: Offset(1, 1), // changes position of shadow
+              color: AppColor.shadowColor.withValues(alpha: 0.2),
+              spreadRadius: 3,
+              blurRadius: 10,
+              offset: Offset(1, 3), // changes position of shadow
             ),
           ],
         ),
@@ -72,13 +79,13 @@ class FeatureItem extends StatelessWidget {
             ),
             // Centered course icon
             Positioned(
-              top: 60,
+              top: 10,
               left: 0,
               right: 0,
               child: Center(
                 child: Container(
-                  width: 70,
-                  height: 70,
+                  width: 150,
+                  height: 150,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.white,
@@ -99,6 +106,46 @@ class FeatureItem extends StatelessWidget {
                       isNetwork: data["icon"].toString().startsWith('https')
                           ? true
                           : false,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 0,
+              left: 150,
+              right: 0,
+              child: Center(
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color(0xFF21D4FD), // main
+                        Color(0xFF00BBFF), // state
+                      ],
+                      begin: Alignment(-0.13743, 0.99051), // Start point for 97.89 degrees
+                      end: Alignment(0.13743, -0.99051),   // End point for 97.89 degrees
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColor.shadowColor.withValues(alpha: 0.05),
+                        spreadRadius: 1,
+                        blurRadius: 1,
+                        offset: Offset(0, 0),
+                      ),
+                    ],
+                  ),
+                  child: Text(
+                    "recomended",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: AppColor.labelColor,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Rubik'
                     ),
                   ),
                 ),
@@ -131,11 +178,16 @@ class FeatureItem extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              fontSize: 17,
-              color: AppColor.mainColor,
-              fontWeight: FontWeight.w600,
+              fontSize: 20,
+              color: AppColor.labelColor,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Rubik'
             ),
           ),
+          const SizedBox(
+            height: 10,
+          ),
+          _buildTeacherDetails(),
           const SizedBox(
             height: 10,
           ),
@@ -178,8 +230,8 @@ class FeatureItem extends StatelessWidget {
           Expanded(
             flex: 2,
             child: _getAttribute(
-              Icons.play_circle_outlined,
-              AppColor.darker,
+              Icons.play_circle_fill,
+              AppColor.labelColor,
               data["session"] ?? "0 Sessions",
             ),
           ),
@@ -187,18 +239,18 @@ class FeatureItem extends StatelessWidget {
           Expanded(
             flex: 2,
             child: _getAttribute(
-              Icons.schedule_rounded,
-              AppColor.darker,
+              Icons.timelapse_rounded,
+              AppColor.labelColor,
               data["duration"] ?? "0 min",
             ),
           ),
           const SizedBox(width: 8),
           Expanded(
-            flex: 3,
+            flex: 2,
             child: _getAttribute(
-              Icons.person_outline,
-              AppColor.darker,
-              data["teacherName"] ?? "Unknown",
+              Icons.people_alt_rounded,
+              AppColor.labelColor,
+              data["enrollments"] ?? "Unknown",
             ),
           ),
         ],
@@ -211,7 +263,7 @@ class FeatureItem extends StatelessWidget {
       children: [
         Icon(
           icon,
-          size: 16,
+          size: 22,
           color: color,
         ),
         const SizedBox(width: 3),
@@ -221,7 +273,7 @@ class FeatureItem extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              color: AppColor.darker,
+              color: AppColor.labelColor,
               fontSize: 12,
             ),
           ),
@@ -229,4 +281,31 @@ class FeatureItem extends StatelessWidget {
       ],
     );
   }
+
+ Widget _buildTeacherDetails() {
+    return Row(
+      children: [
+        CustomImage(
+          data["teacherProfilePic"] ?? "assets/images/profile.png",
+          fit: BoxFit.cover,
+          width: 60,
+          height: 60,
+          isNetwork: data["teacherProfilePic"].toString().startsWith('https')
+              ? true
+              : false,
+        ),
+        Container(
+          margin: EdgeInsets.all(10),
+            child: Text(data["teacherName"],
+              style: TextStyle(
+                  color: AppColor.labelColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 19
+              ),
+            ))
+
+      ],
+    );
+
+ }
 }
