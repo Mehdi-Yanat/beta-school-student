@@ -11,7 +11,8 @@ class Student {
   final String wilaya;
   final String studentClass;
   final String? profilePic;
-  final String? isEmailVerified;
+  final isEmailVerified;
+  final String? status; // Maps to 'data.Student.status'
 
   Student({
     this.id,
@@ -27,6 +28,7 @@ class Student {
     required this.studentClass,
     this.profilePic,
     this.isEmailVerified,
+    this.status,
   });
 
   factory Student.fromJson(Map<String, dynamic> json) {
@@ -42,7 +44,9 @@ class Student {
       wilaya: json['Student']?['wilaya']?.toString() ?? '',
       studentClass: json['Student']?['class']?.toString() ?? '',
       profilePic: json['profilePic']?['url']?.toString(),
-      isEmailVerified: json['isEmailVerified']?.toString(),
+      isEmailVerified: json['isEmailVerified'],
+      status: json['Student']?['status']?.toString() ??
+          '', // Maps to 'Student.status'
     );
   }
 }

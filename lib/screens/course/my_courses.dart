@@ -39,7 +39,7 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                         child: Text(
                           localizations.no_courses_message,
                           // Add a localization for "No courses available"
-                          style: TextStyle(color: AppColor.textColor),
+                          style: TextStyle(color: AppColor.mainColor),
                         ),
                       )
                     : buildCourseList(localizations, courseProvider.myCourses),

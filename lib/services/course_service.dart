@@ -4,12 +4,14 @@ import 'package:online_course/utils/auth_interceptor.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 
+import '../models/chapter.dart';
+
 class CourseService {
   static final String baseUrl = dotenv.env['API_URL'] ?? '';
 
   static final _client = InterceptedClient.build(
     interceptors: [AuthInterceptor()],
-    requestTimeout: Duration(seconds: 10),
+    requestTimeout: Duration(seconds: 60),
   );
 
   static String getCurrentLocale() {
@@ -98,6 +100,27 @@ class CourseService {
     } catch (e) {
       print('Error getting chapter: $e');
       return null;
+    }
+  }
+
+  static Future<List<Chapter>> getChaptersForCourse(String courseId) async {
+    try {
+      final response = await _client.get(
+        Uri.parse('$baseUrl/chapter/course/$courseId'),
+        headers: _headers(),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        // Convert JSON into a list of Chapter objects
+        return (data['chapters'] as List)
+            .map((json) => Chapter.fromJson(json))
+            .toList();
+      }
+      return [];
+    } catch (e) {
+      print('Error getting chapters for course: $e');
+      return [];
     }
   }
 

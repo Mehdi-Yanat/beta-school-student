@@ -83,7 +83,7 @@ class AuthService {
       {String lang = 'ar'}) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/auth/login?lng=${getCurrentLocale()}'),
+        Uri.parse('$baseUrl/auth/student/login?lng=${getCurrentLocale()}'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'email': email,

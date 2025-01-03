@@ -347,5 +347,21 @@
   "already_purchased": "Déjà acheté",
   "watch": "Regarder",
   "total_watch_time": "Temps total de visionnage",
-  "second": "seconde"
+  "second": "seconde",
+  "email_verification_required": "Veuillez vérifier votre adresse e-mail pour accéder à toutes les fonctionnalités, y compris les achats de cours.",
+  "account_not_verified": "Compte non vérifié",
+  "error_fetching_chapters": "Erreur lors de la récupération des chapitres pour ce cours",
+  "chapter_fetch_successfully": "Chapitres récupérés avec succès",
+  "course_fetch_error": "Une erreur s'est produite lors de la récupération des données du cours",
+  "course_fetch_success": "Données du cours récupérées avec succès",
+  "chapters_count": "Nombre de chapitres : ",
+  "payment_redirect_success": "Redirection réussie vers la page de paiement",
+  "payment_redirect_failed": "Impossible d'ouvrir l'URL de paiement",
+  "enrollment_error": "Une erreur s'est produite lors de l'inscription au cours",
+  "enrollment_payment_error": "Échec de l'inscription, URL de paiement non fournie",
+  "fetch_courses_error": "Une erreur s'est produite lors de la récupération des cours",
+  "fetch_my_courses_error": "Une erreur s'est produite lors de la récupération de mes cours",
+  "clear_filters": "Filtres effacés avec succès",
+  "no_description_available": "Pas de description disponible",
+  "hours": "Heures"
 }

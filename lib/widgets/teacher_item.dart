@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:online_course/widgets/custom_image.dart';
 
+import '../utils/translation.dart';
+
 class TeacherItem extends StatelessWidget {
   const TeacherItem({
     Key? key,
@@ -46,14 +48,14 @@ class TeacherItem extends StatelessWidget {
             const SizedBox(
               width: 10,
             ),
-            _buildInfo()
+            _buildInfo(context)
           ],
         ),
       ),
     );
   }
 
-  Widget _buildInfo() {
+  Widget _buildInfo(context) {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,7 +72,10 @@ class TeacherItem extends StatelessWidget {
           ),
           const SizedBox(height: 5),
           Text(
-            data["subject"],
+            TranslationHelper.getTranslatedSubject(
+              context,
+              data['subject'],
+            ),
             style: TextStyle(fontSize: 14, color: AppColor.darker),
           ),
           Text(
@@ -93,6 +98,7 @@ class TeacherItem extends StatelessWidget {
           data["experience"],
           style: TextStyle(fontSize: 12, color: AppColor.darker),
         ),
+        /*
         const SizedBox(width: 15),
         Icon(Icons.star, color: AppColor.yellow, size: 14),
         const SizedBox(width: 5),
@@ -100,6 +106,7 @@ class TeacherItem extends StatelessWidget {
           data["review"],
           style: TextStyle(fontSize: 12, color: AppColor.darker),
         )
+        */
       ],
     );
   }
