@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:online_course/widgets/course_image.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
 
 import 'custom_image.dart';
 
@@ -127,7 +128,7 @@ class FeatureItem extends StatelessWidget {
                       begin: Alignment(-0.13743, 0.99051), // Start point for 97.89 degrees
                       end: Alignment(0.13743, -0.99051),   // End point for 97.89 degrees
                     ),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
                         color: AppColor.shadowColor.withValues(alpha: 0.05),
@@ -138,7 +139,7 @@ class FeatureItem extends StatelessWidget {
                     ],
                   ),
                   child: Text(
-                    "recomended",
+                    AppLocalizations.of(context)!.courses,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -173,6 +174,13 @@ class FeatureItem extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+        const SizedBox(
+          height: 10,
+        ),
+          _buildTeacherDetails(),
+          const SizedBox(
+            height: 10,
+          ),
           Text(
             data["name"],
             maxLines: 1,
@@ -184,10 +192,6 @@ class FeatureItem extends StatelessWidget {
               fontFamily: 'Rubik'
             ),
           ),
-          const SizedBox(
-            height: 10,
-          ),
-          _buildTeacherDetails(),
           const SizedBox(
             height: 10,
           ),
@@ -288,8 +292,8 @@ class FeatureItem extends StatelessWidget {
         CustomImage(
           data["teacherProfilePic"] ?? "assets/images/profile.png",
           fit: BoxFit.cover,
-          width: 60,
-          height: 60,
+          width: 50,
+          height: 50,
           isNetwork: data["teacherProfilePic"].toString().startsWith('https')
               ? true
               : false,
@@ -299,7 +303,7 @@ class FeatureItem extends StatelessWidget {
             child: Text(data["teacherName"],
               style: TextStyle(
                   color: AppColor.labelColor,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.normal,
                 fontSize: 19
               ),
             ))

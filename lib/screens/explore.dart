@@ -114,7 +114,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     final totalDuration = course.chapters.fold<int>(
                         0, (sum, chapter) => sum + (chapter.duration));
 
-                    final formatedDuration = Helpers.formatTime(totalDuration);
+                    final formatedDuration = Helpers.formatTimeHours(totalDuration);
 
                     return GestureDetector(
                       onTap: () => Navigator.push(
@@ -300,7 +300,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.school_outlined, size: 64, color: AppColor.mainColor),
+          Image.asset("assets/images/empty-folder.png", width: 200,),
           SizedBox(height: 16),
           Text(
             AppLocalizations.of(context)!.no_courses_found,

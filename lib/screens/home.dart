@@ -140,21 +140,6 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildCategories(localizations),
-          const SizedBox(
-            height: 15,
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
-            child: Text(
-              localizations.featured, // Localized "Featured" title
-              style: TextStyle(
-                color: AppColor.mainColor,
-                fontWeight: FontWeight.w800,
-                fontSize: 30,
-              ),
-            ),
-          ),
           _buildCoursesAccepted(),
           const SizedBox(height: 1),
           Padding(
@@ -238,7 +223,7 @@ class _HomePageState extends State<HomePage> {
 
         return CarouselSlider(
           options: CarouselOptions(
-            height: 400,
+            height: 380,
             enableInfiniteScroll: false,
             animateToClosest: true,
             enlargeCenterPage: true,
@@ -253,10 +238,9 @@ class _HomePageState extends State<HomePage> {
                 : "${course.teacher.user.firstName} ${course.teacher.user.lastName}";
             final firstChapter =
                 course.chapters.isNotEmpty ? course.chapters.first : null;
-            final totalDuration = course.chapters
-                .fold<int>(0, (sum, chapter) => sum + (chapter.duration));
+            final totalDuration = course.totalWatchTime;
 
-            final formatedDuration = Helpers.formatTime(totalDuration);
+            final formatedDurationMinutes = Helpers.formatHoursAndMinutes(context, totalDuration!);
 
             final finalPrice = course.discount != null
                 ? course.price - course.discount!
@@ -272,7 +256,7 @@ class _HomePageState extends State<HomePage> {
                 "session":
                     "${course.chapters.length} ${AppLocalizations.of(context)!.courses}",
                 "duration":
-                    "$formatedDuration ${AppLocalizations.of(context)!.hours}",
+                    "${formatedDurationMinutes}",
                 "teacherName":
                     "${fullName}",
                 "teacherProfilePic": course.teacher.user.profilePic?.url,
@@ -314,7 +298,7 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.person_off, size: 64, color: AppColor.mainColor),
+                Image.asset("assets/images/empty-box.png", width: 200,),
                 const SizedBox(height: 50),
                 Text(
                   AppLocalizations.of(context)!.no_teachers_found,

@@ -477,7 +477,7 @@ class CourseDetailScreen extends StatelessWidget {
         SizedBox(width: 4),
         Text(
           AppLocalizations.of(context)!
-              .course_duration(Helpers.formatTime(course['totalWatchTime'])),
+              .course_duration(Helpers.formatTimeHours(course['totalWatchTime'])),
           style: TextStyle(color: AppColor.mainColor),
         ),
         SizedBox(width: 16),
