@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:online_course/theme/color.dart'; // Import localization
 
 class PaymentFailedPage extends StatelessWidget {
   final String checkoutId; // Accepts the checkout ID as a parameter
@@ -13,7 +14,7 @@ class PaymentFailedPage extends StatelessWidget {
           AppLocalizations.of(context)!.payment_failed_title,
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.red,
+        backgroundColor: AppColor.warning,
         centerTitle: true,
       ),
       body: Center(
@@ -23,11 +24,7 @@ class PaymentFailedPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(
-                Icons.error,
-                color: Colors.red,
-                size: 100,
-              ),
+              Image.asset("assets/images/fail.png", width: 200,),
               SizedBox(height: 20),
               Text(
                 AppLocalizations.of(context)!.payment_failed_title,
@@ -51,7 +48,7 @@ class PaymentFailedPage extends StatelessWidget {
                   Navigator.pop(context); // Navigate back
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
+                  backgroundColor: AppColor.primary,
                   padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                 ),
                 child: Text(

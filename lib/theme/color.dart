@@ -88,4 +88,6 @@ class AppColor {
     pink,
     yellow,
   ];
+
+  static const warning = Color(0xFFF53939);
 }

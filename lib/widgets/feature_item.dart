@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:online_course/widgets/course_image.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
+// Import localization
 
 import 'custom_image.dart';
 
@@ -113,46 +114,6 @@ class FeatureItem extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: 0,
-              left: 150,
-              right: 0,
-              child: Center(
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color(0xFF21D4FD), // main
-                        Color(0xFF00BBFF), // state
-                      ],
-                      begin: Alignment(-0.13743, 0.99051), // Start point for 97.89 degrees
-                      end: Alignment(0.13743, -0.99051),   // End point for 97.89 degrees
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColor.shadowColor.withValues(alpha: 0.05),
-                        spreadRadius: 1,
-                        blurRadius: 1,
-                        offset: Offset(0, 0),
-                      ),
-                    ],
-                  ),
-                  child: Text(
-                    AppLocalizations.of(context)!.courses,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: AppColor.labelColor,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Rubik'
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
               top: 170,
               right: 15,
               child: _buildPrice(),
@@ -179,14 +140,14 @@ class FeatureItem extends StatelessWidget {
         ),
           _buildTeacherDetails(),
           const SizedBox(
-            height: 10,
+            height: 2,
           ),
           Text(
             data["name"],
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 22,
               color: AppColor.labelColor,
               fontWeight: FontWeight.bold,
               fontFamily: 'Rubik'
@@ -205,22 +166,22 @@ class FeatureItem extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: AppColor.primary,
-        borderRadius: BorderRadius.circular(20),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(25),
         boxShadow: [
           BoxShadow(
-            color: AppColor.shadowColor.withValues(alpha: 0.05),
+            color: AppColor.shadowColor.withValues(alpha: 0.5),
             spreadRadius: 1,
-            blurRadius: 1,
-            offset: Offset(0, 0),
+            blurRadius: 2,
+            offset: Offset(0, 1),
           ),
         ],
       ),
       child: Text(
         data["price"],
         style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.w500,
+          color: AppColor.darker,
+          fontWeight: FontWeight.w800,
         ),
       ),
     );
@@ -289,15 +250,16 @@ class FeatureItem extends StatelessWidget {
  Widget _buildTeacherDetails() {
     return Row(
       children: [
+        data["teacherProfilePic"] != null ?
         CustomImage(
-          data["teacherProfilePic"] ?? "assets/images/profile.png",
+          data["teacherProfilePic"],
           fit: BoxFit.cover,
-          width: 50,
-          height: 50,
+          width: 40,
+          height: 40,
           isNetwork: data["teacherProfilePic"].toString().startsWith('https')
               ? true
               : false,
-        ),
+        ) : SvgPicture.asset("assets/icons/profile.svg", color: Colors.white,),
         Container(
           margin: EdgeInsets.all(10),
             child: Text(data["teacherName"],
