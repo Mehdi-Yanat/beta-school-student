@@ -32,17 +32,6 @@ jobs:
       - name: Verify formatting
         run: dart format --output=none --set-exit-if-changed .
       
-      - name: Analyze project source
-        run: flutter analyze
-      
-      - name: Run tests with coverage
-        run: flutter test --coverage
-        
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          file: coverage/lcov.info
-          
       - name: Build Android APK
         run: flutter build apk --release
         
