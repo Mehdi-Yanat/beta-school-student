@@ -152,6 +152,9 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
       // Load the video and wait for initialization
       await _videoController!.initialize();
 
+      if (!mounted || _currentUrl != url)
+        return; // Exit early if unmounted or changed
+
       _videoController!.addListener(_videoListener);
 
       // Dispose of the ChewieController if it already exists
@@ -174,14 +177,16 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
             bufferedColor: Colors.white38,
           ),
         );
+
+        if (!mounted) return; // Check again if widget is still active
         setState(() {}); // Update the UI
       }
     } catch (e) {
-      if (_currentUrl == url) {
-        print('Error initializing video: $e');
-        SnackBarHelper.showErrorSnackBar(
-            context, AppLocalizations.of(context)!.failed_to_play_video);
-      }
+      if (!mounted) return;
+      SnackBarHelper.showErrorSnackBar(
+        context,
+        AppLocalizations.of(context)!.failed_to_play_video,
+      );
     }
   }
 
@@ -204,6 +209,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
         _chewieController = null;
       }
 
+      if (!mounted) return;
       // Initialize the new video
       await _initializeVideo(url);
     } finally {
@@ -226,9 +232,17 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
   void deactivate() {
     super.deactivate();
 
-    // Pause the video playback safely without triggering build
-    if (_videoController != null && _videoController!.value.isInitialized) {
-      _videoController!.pause();
+    // Remove the listener BEFORE pausing the video
+    if (_videoController != null) {
+      _videoController!.removeListener(_videoListener);
+
+      if (_videoController!.value.isInitialized) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (_videoController != null && mounted) {
+            _videoController!.pause();
+          }
+        });
+      }
     }
   }
 
@@ -238,7 +252,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
 
     // Defer state updates until the next frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
+      if (!mounted || !_isScreenActive) return;
       setState(() {
         // Any necessary state updates
       });

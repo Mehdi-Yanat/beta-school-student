@@ -214,7 +214,7 @@
   "confirm_password": "تأكيد كلمة المرور",
   "please_fill_all_fields": "يرجى ملء جميع فارغ",
   "passwords_do_not_match": "كلمات المرور غير متطابقة",
-  "email_not_verified_message": "بريدك الإلكتروني غير مُفعَّل. يرجى تفعيله للمتابعة.",
+  "email_not_verified_message": "بريدك الإلكتروني غير مُفعَّل.",
   "send_verification_button": "إرسال التفعيل",
   "verification_email_sent_success": "تم إرسال رسالة التفعيل بنجاح.",
   "verification_email_sent_failure": "فشل إرسال رسالة التفعيل. حاول مرة أخرى لاحقًا.",
