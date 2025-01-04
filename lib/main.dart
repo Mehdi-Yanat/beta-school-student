@@ -140,6 +140,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         return Consumer<AuthProvider>(
           builder: (context, auth, _) {
             return MaterialApp(
+              // showPerformanceOverlay: true,
               navigatorKey: navigatorKey,
               debugShowCheckedModeBanner: false,
               title: 'Beta Prime School',

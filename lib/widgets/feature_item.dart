@@ -40,20 +40,22 @@ class FeatureItem extends StatelessWidget {
             end: Alignment(-0.838, -0.546), // End point aligned for 127 degrees
           ),
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: AppColor.shadowColor.withValues(alpha: 0.2),
-              spreadRadius: 3,
-              blurRadius: 10,
-              offset: Offset(1, 3), // changes position of shadow
-            ),
-          ],
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: AppColor.shadowColor.withValues(alpha: 0.2),
+          //     spreadRadius: 3,
+          //     blurRadius: 10,
+          //     offset: Offset(1, 3), // changes position of shadow
+          //   ),
+          // ],
         ),
         child: Stack(
           children: [
             // Background thumbnail with blur
-            ClipRRect(
-              borderRadius: BorderRadius.circular(15),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+              ),
               child: Stack(
                 children: [
                   CourseImage(

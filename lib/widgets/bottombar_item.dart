@@ -35,8 +35,8 @@ class BottomBarItem extends StatelessWidget {
             boxShadow: isMiddle
                 ? [
                     BoxShadow(
-                      color: Colors.grey
-                          .withOpacity(0.8), // Shadow color with transparency
+                      color: AppColor.primary
+                          .withOpacity(0.3), // Shadow color with transparency
                       blurRadius: 20, // Blurry edges of the shadow
                       spreadRadius: 0, // Spread the shadow slightly
                       offset: Offset(0, 12), // Shadow offset (upward

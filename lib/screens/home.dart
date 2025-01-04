@@ -154,8 +154,7 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            margin: const EdgeInsets.fromLTRB(
-                20.0, 0, 0, 0), // Adjust margin values as needed
+            margin: EdgeInsetsDirectional.only(end: 20),
             child: CustomImage(
               authProvider.student?.profilePic ?? "",
               width: 55,
@@ -169,7 +168,7 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  localizations.greeting,
+                  localizations.greeting + ' 👋',
                   style: TextStyle(
                       color: AppColor.labelColor,
                       fontSize: 14,
@@ -188,7 +187,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           NotificationBox(
-            notifiedNumber: 1,
+            notifiedNumber: 0,
             size: 10,
           ),
         ],
@@ -208,22 +207,43 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // _buildCategories(localizations),
               const SizedBox(height: 5),
               Padding(
-                padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
-                child: Text(
-                  localizations.featured, // Localized "Featured" title
-                  style: TextStyle(
-                    color: AppColor.mainColor,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 30,
-                  ),
-                ),
+                padding: EdgeInsetsDirectional.only(start: 25),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      textAlign: TextAlign.start,
+                      '✨ ' + localizations.featured,
+                      // Localized "Featured" title with shining emoji
+                      style: TextStyle(
+                        color: AppColor.mainColor,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 23,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsetsDirectional.only(start: 35),
+                      child:
+                        Text(
+                          textAlign: TextAlign.start,
+                          localizations.recommended_courses_description,
+                          style: TextStyle(
+                            color: AppColor.textColor,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16,
+                          ),
+                        )
+                      ,)                  ],
+                )
               ),
+              const SizedBox(height: 15,),
+              _buildCategories(localizations),
               const SizedBox(height: 15),
               _buildCoursesAccepted(),
-              const SizedBox(height: 1),
+              const SizedBox(height: 35),
               Padding(
                 padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
                 child: Row(
@@ -427,6 +447,14 @@ class _HomePageState extends State<HomePage> {
                   "assets/images/empty-folder.png",
                   width: 200,
                 ),
+                SizedBox(height: 16),
+                Text(
+                  AppLocalizations.of(context)!.no_courses_found,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: AppColor.mainColor,
+                  ),
+                ),
               ],
             ),
           );
@@ -440,6 +468,7 @@ class _HomePageState extends State<HomePage> {
             enlargeCenterPage: true,
             disableCenter: true,
             viewportFraction: .75,
+            pageSnapping: true,
           ),
           items: courseProvider.courses.map((course) {
             final isArabic =
