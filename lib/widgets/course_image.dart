@@ -1,7 +1,12 @@
-import 'dart:ui';
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:online_course/theme/color.dart';
 
 class CourseImage extends StatelessWidget {
@@ -11,7 +16,8 @@ class CourseImage extends StatelessWidget {
     this.width = 280,
     this.height = 190,
     this.borderRadius = 15,
-  });
+    Key? key,
+  }) : super(key: key);
 
   final String? thumbnailUrl;
   final String? iconUrl;
@@ -23,53 +29,104 @@ class CourseImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        _buildThumbnail(),
+        FutureBuilder<File?>(
+          future: _getOrCreateBlurredImage(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return _buildPlaceholder(); // Loading placeholder
+            }
+            if (snapshot.hasError || snapshot.data == null) {
+              return _buildErrorWidget(); // Error widget if image processing fails
+            }
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(borderRadius),
+              child: Stack(
+                children: [
+                  Image.file(
+                    snapshot.data!,
+                    width: width,
+                    height: height,
+                    fit: BoxFit.cover,
+                  ),
+                  _buildGradientOverlay(),
+                ],
+              ),
+            );
+          },
+        ),
         _buildIconOverlay(),
       ],
     );
   }
 
-  Widget _buildThumbnail() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(borderRadius),
-      child: Stack(
-        children: [
-          _buildBlurredImage(),
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
-            child: Container(
-              width: width,
-              height: height,
-              color: Colors.white.withValues(alpha: 0.0),
-            ),
-          ),
-          _buildGradientOverlay(),
-        ],
-      ),
-    );
+  /// Builds or retrieves the blurred image file.
+  Future<File?> _getOrCreateBlurredImage() async {
+    try {
+      final imageUrl = thumbnailUrl ?? "assets/images/course_icon.png";
+      final fileName = Uri.parse(imageUrl).pathSegments.last;
+      final blurredFileName = "blurred_$fileName";
+      final tempDir = await getTemporaryDirectory();
+      final blurredFile = File('${tempDir.path}/$blurredFileName');
+
+      // If the blurred file already exists, return it.
+      if (await blurredFile.exists()) {
+        return blurredFile;
+      }
+
+      // Otherwise, create the blurred image file from the original image.
+      final Uint8List? blurredBytes = await _generateBlurredImage(imageUrl);
+      if (blurredBytes != null) {
+        await blurredFile.writeAsBytes(blurredBytes);
+        return blurredFile;
+      }
+    } catch (e) {
+      debugPrint("Error creating blurred image: $e");
+    }
+    return null; // Return null in case of an error
   }
 
-  Widget _buildBlurredImage() {
-    final imageUrl = thumbnailUrl ?? "assets/images/course_icon.png";
-    final isNetwork = thumbnailUrl?.startsWith('http') ?? false;
+  /// Generates a blurred image from the given URL.
+  Future<Uint8List?> _generateBlurredImage(String imageUrl) async {
+    try {
+      // Determine if the image is a network or asset image.
+      final Uint8List imageBytes = imageUrl.startsWith('http')
+          ? await _downloadImageBytes(imageUrl)
+          : await _loadAssetImageBytes(imageUrl);
 
-    if (!isNetwork) {
-      return Image.asset(
-        imageUrl,
-        width: width,
-        height: height,
-        fit: BoxFit.cover,
-      );
+      // Decode the image
+      final ui.Codec codec = await ui.instantiateImageCodec(imageBytes);
+      final ui.FrameInfo frame = await codec.getNextFrame();
+      final ui.Image image = frame.image;
+
+      // Apply the blur effect
+      final ui.PictureRecorder recorder = ui.PictureRecorder();
+      final Canvas canvas = Canvas(recorder);
+      final Paint paint = Paint()..imageFilter = ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10);
+      canvas.drawImage(image, Offset.zero, paint);
+
+      // Finalize the blurred image and convert to byte data
+      final ui.Image blurredImage = await recorder.endRecording().toImage(image.width, image.height);
+      final ByteData? byteData = await blurredImage.toByteData(format: ui.ImageByteFormat.png);
+
+      return byteData?.buffer.asUint8List();
+    } catch (e) {
+      debugPrint("Error blurring image: $e");
+      return null;
     }
+  }
 
-    return CachedNetworkImage(
-      imageUrl: imageUrl,
-      width: width,
-      height: height,
-      fit: BoxFit.cover,
-      placeholder: (context, url) => _buildPlaceholder(),
-      errorWidget: (context, url, error) => _buildErrorWidget(),
-    );
+  /// Downloads image bytes from a network URL.
+  Future<Uint8List> _downloadImageBytes(String url) async {
+    final HttpClient client = HttpClient();
+    final HttpClientRequest request = await client.getUrl(Uri.parse(url));
+    final HttpClientResponse response = await request.close();
+    return await consolidateHttpClientResponseBytes(response);
+  }
+
+  /// Loads image bytes from an asset.
+  Future<Uint8List> _loadAssetImageBytes(String assetPath) async {
+    final ByteData data = await rootBundle.load(assetPath);
+    return data.buffer.asUint8List();
   }
 
   Widget _buildIconOverlay() {
@@ -86,10 +143,10 @@ class CourseImage extends StatelessWidget {
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.2),
+                color: Colors.black.withOpacity(0.2),
                 spreadRadius: 2,
                 blurRadius: 5,
-                offset: Offset(0, 2),
+                offset: const Offset(0, 2),
               ),
             ],
           ),
@@ -103,49 +160,45 @@ class CourseImage extends StatelessWidget {
   }
 
   Widget _buildIconImage() {
-    final imageUrl =
-        iconUrl != null && iconUrl!.isNotEmpty // Check for both null and empty
-            ? iconUrl! // Use iconUrl if it's valid
-            : "assets/images/course_icon.png"; // Fallback if iconUrl is invalid
-    final isNetwork = imageUrl.startsWith('http');
+    final imageUrl = iconUrl != null && iconUrl!.isNotEmpty
+        ? iconUrl!
+        : "assets/images/course_icon.png";
 
-    if (!isNetwork) {
-      return Image.asset(imageUrl, fit: BoxFit.cover);
-    }
-
-    return CachedNetworkImage(
+    return imageUrl.startsWith('http')
+        ? CachedNetworkImage(
       imageUrl: imageUrl,
       fit: BoxFit.cover,
       placeholder: (context, url) => _buildPlaceholder(),
       errorWidget: (context, url, error) => _buildErrorWidget(),
-    );
+    )
+        : Image.asset(imageUrl, fit: BoxFit.cover);
   }
 
-  Widget _buildPlaceholder() => Center(
-        child: CircularProgressIndicator(
-          color: AppColor.mainColor,
-          strokeWidth: 2,
-        ),
-      );
+  Widget _buildPlaceholder() => const Center(
+    child: CircularProgressIndicator(
+      color: AppColor.mainColor,
+      strokeWidth: 2,
+    ),
+  );
 
   Widget _buildErrorWidget() => Icon(
-        Icons.image_not_supported_outlined,
-        color: Colors.grey[400],
-        size: 24,
-      );
+    Icons.image_not_supported_outlined,
+    color: Colors.grey[400],
+    size: 24,
+  );
 
   Widget _buildGradientOverlay() => Container(
-        width: width,
-        height: height,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.black.withValues(alpha: 0.1),
-              Colors.black.withValues(alpha: 0.5),
-            ],
-          ),
-        ),
-      );
+    width: width,
+    height: height,
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          Colors.black.withOpacity(0.1),
+          Colors.black.withOpacity(0.5),
+        ],
+      ),
+    ),
+  );
 }
