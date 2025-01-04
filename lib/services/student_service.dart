@@ -81,16 +81,34 @@ class StudentService {
         Uri.parse('$baseUrl/student/mycourses?lng=${getCurrentLocale()}'),
         headers: _headers(),
       );
-
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        return (data['courses'] as List<dynamic>)
-            .map((json) => MyCourse.fromJson(json))
+        final courses = data['courses'] as List<dynamic>?;
+
+        if (courses == null) {
+          return [];
+        }
+
+        return courses
+            .where((json) => json != null)
+            .map((json) {
+              try {
+                return MyCourse.fromJson(json);
+              } catch (e) {
+                print('❌ Error parsing course: $e');
+                print('🔍 Problem data: $json');
+                return null;
+              }
+            })
+            .whereType<MyCourse>()
             .toList();
       }
+
+      print('❌ Failed to get courses: ${response.statusCode}');
       return [];
-    } catch (e) {
+    } catch (e, stack) {
       print('❌ Error getting student courses: $e');
+      print('📍 Stack trace: $stack');
       return [];
     }
   }
@@ -121,20 +139,23 @@ class StudentService {
     }
   }
 
-  static Future<List<TeacherAnnouncement>> getTeacherAnnouncementsList(teacherId) async {
+  static Future<List<TeacherAnnouncement>> getTeacherAnnouncementsList(
+      teacherId) async {
     try {
       final response = await _client.get(
-        Uri.parse('$baseUrl/announcement/teacher/$teacherId?lng=${getCurrentLocale()}'),
+        Uri.parse(
+            '$baseUrl/announcement/teacher/$teacherId?lng=${getCurrentLocale()}'),
         headers: _headers(),
       );
-  
+
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        final announcements = TeacherAnnouncementResponse.fromJson(data).Teacherannouncements;
+        final announcements =
+            TeacherAnnouncementResponse.fromJson(data).Teacherannouncements;
         print('✅ Parsed ${announcements.length} teacher announcements');
         return announcements;
       }
-  
+
       print('❌ Failed to get announcements: ${response.statusCode}');
       return [];
     } catch (e, stack) {

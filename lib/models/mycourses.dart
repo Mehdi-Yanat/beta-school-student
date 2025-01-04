@@ -9,22 +9,14 @@ class MyCourse {
     required this.course,
   });
 
-  // Factory constructor for JSON deserialization
   factory MyCourse.fromJson(Map<String, dynamic> json) {
     return MyCourse(
-      id: json['id'],
-      enrolledAt: DateTime.parse(json['enrolledAt']),
-      course: Course.fromJson(json['course']),
+      id: json['id'] ?? 0,
+      enrolledAt: json['enrolledAt'] != null
+          ? DateTime.parse(json['enrolledAt'])
+          : DateTime.now(),
+      course: Course.fromJson(json['course'] ?? {}),
     );
-  }
-
-  // Method to serialize the model back to JSON
-  Map<String, dynamic> toJson() {
-    return {
-      "id": id,
-      "enrolledAt": enrolledAt.toIso8601String(),
-      "course": course.toJson(),
-    };
   }
 }
 
@@ -32,11 +24,10 @@ class Course {
   final String id;
   final String title;
   final String description;
-  final int price;
+  final double price;
   final int totalWatchTime;
-  final Icon icon;
+  final CourseIcon? icon;
   final List<Chapter> chapters;
-  final Teacher teacher;
 
   Course({
     required this.id,
@@ -44,57 +35,35 @@ class Course {
     required this.description,
     required this.price,
     required this.totalWatchTime,
-    required this.icon,
+    this.icon,
     required this.chapters,
-    required this.teacher,
   });
 
-  // Factory constructor for JSON deserialization
   factory Course.fromJson(Map<String, dynamic> json) {
     return Course(
-      id: json['id'],
-      title: json['title'],
-      description: json['description'],
-      price: json['price'],
-      totalWatchTime: json['totalWatchTime'],
-      icon: Icon.fromJson(json['icon']),
-      chapters: (json['chapters'] as List)
-          .map((chapter) => Chapter.fromJson(chapter))
-          .toList(),
-      teacher: Teacher.fromJson(json['teacher']),
+      id: json['id'] ?? '',
+      title: json['title'] ?? '',
+      description: json['description'] ?? '',
+      price: (json['price'] ?? 0).toDouble(),
+      totalWatchTime: json['totalWatchTime'] ?? 0,
+      icon: json['icon'] != null ? CourseIcon.fromJson(json['icon']) : null,
+      chapters: (json['chapters'] as List?)
+              ?.map((x) => Chapter.fromJson(x))
+              .toList() ??
+          [],
     );
-  }
-
-  // Method to serialize the model back to JSON
-  Map<String, dynamic> toJson() {
-    return {
-      "id": id,
-      "title": title,
-      "description": description,
-      "price": price,
-      "totalWatchTime": totalWatchTime,
-      "icon": icon.toJson(),
-      "chapters": chapters.map((c) => c.toJson()).toList(),
-      "teacher": teacher.toJson(),
-    };
   }
 }
 
-class Icon {
+class CourseIcon {
   final String url;
 
-  Icon({required this.url});
+  CourseIcon({required this.url});
 
-  factory Icon.fromJson(Map<String, dynamic> json) {
-    return Icon(
-      url: json['url'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      "url": url,
-    };
+  factory CourseIcon.fromJson(Map<String, dynamic> json) {
+    final url = json['url'] ?? '';
+    return CourseIcon(
+        url: url.isNotEmpty ? url : 'assets/images/default_course.png');
   }
 }
 
@@ -102,31 +71,19 @@ class Chapter {
   final int id;
   final String title;
   final String description;
-  final Icon thumbnail;
 
   Chapter({
     required this.id,
     required this.title,
     required this.description,
-    required this.thumbnail,
   });
 
   factory Chapter.fromJson(Map<String, dynamic> json) {
     return Chapter(
-      id: json['id'],
-      title: json['title'],
-      description: json['description'],
-      thumbnail: Icon.fromJson(json['thumbnail']),
+      id: json['id'] ?? 0,
+      title: json['title'] ?? '',
+      description: json['description'] ?? '',
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      "id": id,
-      "title": title,
-      "description": description,
-      "thumbnail": thumbnail.toJson(),
-    };
   }
 }
 
