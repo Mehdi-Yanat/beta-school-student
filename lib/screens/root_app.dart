@@ -13,7 +13,6 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
 import '../providers/course_provider.dart';
 import '../providers/teacher_provider.dart';
-import '../widgets/banner.dart';
 import '../widgets/bottombar_box.dart';
 import '../widgets/bottombar_item.dart';
 import '../widgets/snackbar.dart';
@@ -147,20 +146,6 @@ class _RootAppState extends State<RootApp> with WidgetsBindingObserver {
         return Scaffold(
           body: Column(
             children: [
-              if (!authProvider.student?.isEmailVerified)
-                VerificationBanner(
-                  message:
-                      AppLocalizations.of(context)!.email_not_verified_message,
-                  buttonText: isOnCooldown
-                      ? "${AppLocalizations.of(context)!.wait} ${remainingCooldownTime}s" // Cooldown button text
-                      : AppLocalizations.of(context)!.send_verification_button,
-                  onButtonPressed: () {
-                    if (!isOnCooldown) {
-                      _handleVerificationButtonPressed();
-                    }
-                  },
-                ),
-
               // Main app content
               Expanded(child: _buildMainApp()),
             ],

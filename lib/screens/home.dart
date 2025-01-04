@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
@@ -6,6 +8,7 @@ import 'package:online_course/providers/course_provider.dart';
 import 'package:online_course/providers/teacher_provider.dart';
 import 'package:online_course/screens/course/course_detail.dart';
 import 'package:online_course/screens/teacher/teacher_view.dart';
+import 'package:online_course/services/auth_service.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:online_course/utils/data.dart';
 import 'package:online_course/utils/helper.dart';
@@ -17,6 +20,7 @@ import 'package:provider/provider.dart';
 
 import '../widgets/custom_image.dart';
 import '../widgets/sliver_app_bar.dart';
+import '../widgets/snackbar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -26,7 +30,52 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   String _selectedCategory = '';
+  int? remainingCooldownTime;
+  Timer? cooldownTimer;
+  bool isOnCooldown = false;
+
+  void startCooldown(int duration) {
+    setState(() {
+      remainingCooldownTime = duration;
+      isOnCooldown = true;
+    });
+
+    // Start the timer
+    cooldownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (remainingCooldownTime == null || remainingCooldownTime! <= 0) {
+        timer.cancel(); // Stop the timer when cooldown ends
+        setState(() {
+          isOnCooldown = false;
+          remainingCooldownTime = null;
+        });
+      } else {
+        setState(() {
+          remainingCooldownTime = remainingCooldownTime! - 1; // Decrease time
+        });
+      }
+    });
+  }
+
+
+  Future<void> _handleVerificationButtonPressed() async {
+    final success = await AuthService.sendEmailVerification();
+
+    // Use the reusable snackbar to display the result
+    if (success) {
+      SnackBarHelper.showSuccessSnackBar(
+        context,
+        AppLocalizations.of(context)!.verification_email_sent_success,
+      );
+      startCooldown(30); // Start cooldown only if the request is successful
+    } else {
+      SnackBarHelper.showErrorSnackBar(
+        context,
+        AppLocalizations.of(context)!.verification_email_sent_failure,
+      );
+    }
+  }
 
   @override
   void initState() {
@@ -147,51 +196,172 @@ class _HomePageState extends State<HomePage> {
       );
     });
   }
-
   Widget _buildBody(localizations) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildCategories(localizations),
-          const SizedBox(
-            height: 15,
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
-            child: Text(
-              localizations.featured, // Localized "Featured" title
-              style: TextStyle(
-                color: AppColor.mainColor,
-                fontWeight: FontWeight.w800,
-                fontSize: 30,
+    return Consumer<AuthProvider>(builder: (context, authProvider, _) {
+      final student = authProvider.student;
+
+      // Check if the student's status is ACCEPTED
+      if (student != null && student.status == 'ACCEPTED') {
+        // Render the original body
+        return SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // _buildCategories(localizations),
+              const SizedBox(height: 5),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
+                child: Text(
+                  localizations.featured, // Localized "Featured" title
+                  style: TextStyle(
+                    color: AppColor.mainColor,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 30,
+                  ),
+                ),
               ),
+              const SizedBox(height: 15),
+              _buildCoursesAccepted(),
+              const SizedBox(height: 1),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      localizations.teachers,
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                        color: AppColor.mainColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              _buildAcceptedTeachers(),
+            ],
+          ),
+        );
+      } else if (!student?.isEmailVerified) {
+        // Render the validation message
+        return Center(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset("assets/images/no-email.png", width: 200,),
+                const SizedBox(height: 20),
+                Text(
+                  AppLocalizations.of(context)!.email_not_verified_message ??
+                      'Please validate your email to access this feature.', // Your localized message here
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: AppColor.mainColor,
+                  ),
+                ),
+                const SizedBox(height: 30),
+                ElevatedButton(
+                  onPressed: () {
+                    // Resend email logic
+                    if (!isOnCooldown) {
+                      _handleVerificationButtonPressed();
+                    }
+                  },
+                  child: Text(
+                    isOnCooldown
+                        ? "${AppLocalizations.of(context)!.wait} ${remainingCooldownTime}s" // Cooldown button text
+                        : AppLocalizations.of(context)!.send_verification_button, // Button text from localization
+                    style: const TextStyle(fontSize: 16, color: AppColor.labelColor),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColor.primary,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 24,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          _buildCoursesAccepted(),
-          const SizedBox(height: 1),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        );
+      }else {
+        return Center(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const SizedBox(height: 60),
+                Image.asset("assets/images/wait-verification.png", width: 200,),
+                const SizedBox(height: 20),
                 Text(
-                  localizations.teachers,
+                  AppLocalizations.of(context)!.please_wait_verification ??
+                      'Please wait until we verify you.', // Your localized message here
+                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
                     color: AppColor.mainColor,
                   ),
                 ),
               ],
             ),
           ),
-          _buildAcceptedTeachers(),
-        ],
-      ),
-    );
+        );
+
+      }
+    });
   }
+
+
+  // Widget _buildBody(localizations) {
+  //   return SingleChildScrollView(
+  //     padding: const EdgeInsets.symmetric(vertical: 10),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         _buildCategories(localizations),
+  //         const SizedBox(
+  //           height: 15,
+  //         ),
+  //         Padding(
+  //           padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
+  //           child: Text(
+  //             localizations.featured, // Localized "Featured" title
+  //             style: TextStyle(
+  //               color: AppColor.mainColor,
+  //               fontWeight: FontWeight.w800,
+  //               fontSize: 30,
+  //             ),
+  //           ),
+  //         ),
+  //         _buildCoursesAccepted(),
+  //         const SizedBox(height: 1),
+  //         Padding(
+  //           padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
+  //           child: Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //             children: [
+  //               Text(
+  //                 localizations.teachers,
+  //                 style: TextStyle(
+  //                   fontSize: 22,
+  //                   fontWeight: FontWeight.w600,
+  //                   color: AppColor.mainColor,
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //         _buildAcceptedTeachers(),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildCategories(AppLocalizations localizations) {
     return SingleChildScrollView(
@@ -255,7 +425,7 @@ class _HomePageState extends State<HomePage> {
 
         return CarouselSlider(
           options: CarouselOptions(
-            height: 400,
+            height: 380,
             enableInfiniteScroll: false,
             animateToClosest: true,
             enlargeCenterPage: true,
@@ -270,10 +440,9 @@ class _HomePageState extends State<HomePage> {
                 : "${course.teacher.user.firstName} ${course.teacher.user.lastName}";
             final firstChapter =
                 course.chapters.isNotEmpty ? course.chapters.first : null;
-            final totalDuration = course.chapters
-                .fold<int>(0, (sum, chapter) => sum + (chapter.duration));
+            final totalDuration = course.totalWatchTime;
 
-            final formatedDuration = Helpers.formatTime(totalDuration);
+            final formatedDurationMinutes = Helpers.formatHoursAndMinutes(context, totalDuration!);
 
             final finalPrice = course.discount != null
                 ? course.price - course.discount!
@@ -289,8 +458,9 @@ class _HomePageState extends State<HomePage> {
                 "session":
                     "${course.chapters.length} ${AppLocalizations.of(context)!.courses}",
                 "duration":
-                    "$formatedDuration ${AppLocalizations.of(context)!.hours}",
-                "teacherName": "${fullName}",
+                    "${formatedDurationMinutes}",
+                "teacherName":
+                    "${fullName}",
                 "teacherProfilePic": course.teacher.user.profilePic?.url,
                 "enrollments": course.currentEnrollment.toString()
               },
@@ -330,7 +500,7 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.person_off, size: 64, color: AppColor.mainColor),
+                Image.asset("assets/images/empty-box.png", width: 200,),
                 const SizedBox(height: 50),
                 Text(
                   AppLocalizations.of(context)!.no_teachers_found,

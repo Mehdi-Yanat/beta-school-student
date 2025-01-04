@@ -363,5 +363,8 @@
   "clear_filters": "تم مسح المرشحات بنجاح",
   "no_description_available": "لا يوجد وصف متاح",
   "hours": "ساعات",
-  "no_announcements":"لا توجد إعلانات"
+  "no_announcements":"لا توجد إعلانات",
+  "please_wait_verification": "يرجى الانتظار حتى يتم التحقق من حسابك",
+  "enrolled_students": "مسجلين",
+  "number_of_chapters": "الفصول"
 }

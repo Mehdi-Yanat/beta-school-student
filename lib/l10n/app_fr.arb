@@ -364,5 +364,7 @@
   "clear_filters": "Filtres effacés avec succès",
   "no_description_available": "Pas de description disponible",
   "hours": "Heures",
-  "no_announcements": "Aucune annonce trouvée"
+  "no_announcements": "Aucune annonce trouvée",
+  "please_wait_verification": "Veuillez attendre pendant la vérification de votre compte.",
+  "enrolled_students": "Inscrits"
 }
