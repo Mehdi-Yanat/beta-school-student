@@ -10,14 +10,16 @@ import 'package:screen_protector/screen_protector.dart';
 import '../../providers/course_provider.dart';
 import '../../services/course_service.dart';
 import '../../theme/color.dart';
+import '../../widgets/TanbBar.dart';
 import '../../widgets/appbar.dart';
 import '../../widgets/chapter_card.dart';
 
 class ViewChapterScreen extends StatefulWidget {
   final chapterId;
   final courseId;
+  final chapter;
 
-  const ViewChapterScreen({Key? key, required this.chapterId, this.courseId})
+  const ViewChapterScreen({Key? key, required this.chapterId, this.courseId, this.chapter})
       : super(key: key);
 
   @override
@@ -42,7 +44,6 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
   @override
   void initState() {
     super.initState();
-
     _isScreenActive = true;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -51,6 +52,12 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
       courseProvider.fetchCourse(
           widget.courseId, context); // Or any other provider updates
       _fetchChapterData(widget.chapterId.toString());
+      courseProvider
+          .setCurrentVideo({
+        'url': widget.chapter['url'],
+        'chapterId': widget.chapter['id'],
+        'title': widget.chapter.title
+      });
     });
 
     // Print chapter ID for debugging purposes
@@ -103,7 +110,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
           provider.setCurrentVideo({
             'url': videoUrl,
             'chapterId': chapterId,
-            'title': provider.courseData?['title']
+            'title': provider.currentChapter?['title']
           });
         }
 
@@ -326,7 +333,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                             ],
                           ),
                         ),
-
+                        Text("test"),
                         // TabBar Section
                         TabBar(
                           controller: _tabController,

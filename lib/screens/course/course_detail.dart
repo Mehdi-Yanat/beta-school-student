@@ -268,6 +268,7 @@ class CourseDetailScreen extends StatelessWidget {
                                                 chapter.id.toString(),
                                                 // Convert ID to string if needed
                                                 courseId: course['id'],
+                                                chapter: chapter,
                                               ),
                                         ),
                                       );
