@@ -5,12 +5,12 @@ import 'package:online_course/theme/color.dart';
 class BottomBarItem extends StatelessWidget {
   const BottomBarItem(
     this.icon, {
-      this.onTap,
-      this.color = Colors.grey,
-      this.activeColor = AppColor.primary,
-      this.isActive = false,
-      this.isNotified = false,
-        this.isMiddle=false,
+    this.onTap,
+    this.color = Colors.grey,
+    this.activeColor = AppColor.primary,
+    this.isActive = false,
+    this.isNotified = false,
+    this.isMiddle = false,
   });
 
   final String icon;
@@ -24,7 +24,7 @@ class BottomBarItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Transform.translate(
-      offset: isMiddle ? Offset(0, -40) : Offset(0, 0) ,
+      offset: isMiddle ? Offset(0, -40) : Offset(0, 0),
       child: GestureDetector(
         onTap: onTap,
         child: AnimatedContainer(
@@ -32,22 +32,31 @@ class BottomBarItem extends StatelessWidget {
           curve: Curves.fastOutSlowIn,
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
-            boxShadow: isMiddle ? [BoxShadow(
-              color: Colors.grey.withOpacity(0.8), // Shadow color with transparency
-              blurRadius: 20, // Blurry edges of the shadow
-              spreadRadius: 0, // Spread the shadow slightly
-              offset: Offset(0, 12), // Shadow offset (upward
-            )] : null,
+            boxShadow: isMiddle
+                ? [
+                    BoxShadow(
+                      color: Colors.grey
+                          .withOpacity(0.8), // Shadow color with transparency
+                      blurRadius: 20, // Blurry edges of the shadow
+                      spreadRadius: 0, // Spread the shadow slightly
+                      offset: Offset(0, 12), // Shadow offset (upward
+                    )
+                  ]
+                : null,
             borderRadius: BorderRadius.circular(12),
-            gradient: isMiddle ? LinearGradient(
-              colors: [
-                Color(0xFF0075FF), // main
-                Color(0xFF21D4FD), // state
-              ],
-              begin: Alignment(0.838, 0.546), // Start point shifted for 127 degrees
-              end: Alignment(-0.838, -0.546), // End point aligned for 127 degrees
-            ) : null,
-            color: isActive ?  AppColor.labelColor: Colors.white,
+            gradient: isMiddle
+                ? LinearGradient(
+                    colors: [
+                      Color(0xFF0075FF), // main
+                      Color(0xFF21D4FD), // state
+                    ],
+                    begin: Alignment(
+                        0.838, 0.546), // Start point shifted for 127 degrees
+                    end: Alignment(
+                        -0.838, -0.546), // End point aligned for 127 degrees
+                  )
+                : null,
+            color: isActive ? AppColor.labelColor : Colors.white,
             // boxShadow: [
             //   if (isActive)
             //     BoxShadow(
@@ -61,8 +70,8 @@ class BottomBarItem extends StatelessWidget {
           child: SvgPicture.asset(
             icon,
             color: isMiddle ? Colors.white : null,
-            width: isMiddle? 40 :35,
-            height: isMiddle? 40 :35,
+            width: isMiddle ? 40 : 35,
+            height: isMiddle ? 40 : 35,
           ),
         ),
       ),

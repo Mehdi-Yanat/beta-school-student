@@ -96,7 +96,7 @@ class _TeacherAnnouncesPageState extends State<TeacherAnnouncesPage> {
                   physics: NeverScrollableScrollPhysics(),
                   itemCount: _announcements.length,
                   itemBuilder: (context, index) {
-                    final announcement = _announcements[index];             
+                    final announcement = _announcements[index];
                     return AnnouncesItem(
                       onTap: () =>
                           _showAnnouncementDetails(announcement, context),

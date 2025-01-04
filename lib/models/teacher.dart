@@ -10,7 +10,6 @@ class TeacherInfo {
   final String status;
   final String? description;
   final List<Course> courses;
-  
 
   TeacherInfo({
     required this.id,
@@ -43,17 +42,18 @@ class TeacherInfo {
 
       final coursesList = json['Course'] as List<dynamic>?;
       final parsedCourses = coursesList
-          ?.map((courseJson) {
-            try {
-              return Course.fromJson(courseJson as Map<String, dynamic>);
-            } catch (e) {
-              print('❌ Error parsing course: $e');
-              return null;
-            }
-          })
-          .where((course) => course != null)
-          .cast<Course>()
-          .toList() ?? <Course>[] ;
+              ?.map((courseJson) {
+                try {
+                  return Course.fromJson(courseJson as Map<String, dynamic>);
+                } catch (e) {
+                  print('❌ Error parsing course: $e');
+                  return null;
+                }
+              })
+              .where((course) => course != null)
+              .cast<Course>()
+              .toList() ??
+          <Course>[];
 
       return TeacherInfo(
         id: json['id'] ?? 0,

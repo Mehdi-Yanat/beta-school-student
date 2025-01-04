@@ -1,7 +1,6 @@
 import 'dart:ui'; // For BackdropFilter
 import 'package:flutter/material.dart';
 
-
 class CustomSliverAppBar extends StatelessWidget {
   final Widget title;
   final double toolbarHeight;
@@ -26,7 +25,7 @@ class CustomSliverAppBar extends StatelessWidget {
       floating: floating,
       toolbarHeight: toolbarHeight,
       elevation: 8,
-      backgroundColor: Colors.white.withOpacity(0.9),
+      backgroundColor: Colors.white.withValues(alpha: 0.9),
       // Transparent to show blur and gradient
       flexibleSpace: ClipRRect(
         borderRadius: const BorderRadius.only(
@@ -51,14 +50,17 @@ class CustomSliverAppBar extends StatelessWidget {
                   Color(0xFF0075FF), // main
                   Color(0xFF21D4FD), // state
                 ],
-                begin: Alignment(0.838, 0.546), // Start point shifted for 127 degrees
-                end: Alignment(-0.838, -0.546), // End point aligned for 127 degrees
+                begin: Alignment(
+                    0.838, 0.546), // Start point shifted for 127 degrees
+                end: Alignment(
+                    -0.838, -0.546), // End point aligned for 127 degrees
               ),
             ),
             child: AppBar(
               title: title,
               elevation: 0,
               backgroundColor: Colors.transparent, // Fully transparent
+              automaticallyImplyLeading: false, // Remove the back arrow
             ),
           ),
         ),

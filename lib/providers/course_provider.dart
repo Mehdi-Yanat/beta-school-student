@@ -11,7 +11,7 @@ import '../widgets/snackbar.dart';
 class CourseProvider with ChangeNotifier {
   List<Course.Course> _courses = [];
   List<Chapter.Chapter> _courseChapters = [];
-  Map<String, dynamic>? _currentChapter;
+  Chapter.Chapter? _currentChapter;
   Map<String, dynamic>? _currentVideo;
   bool _isLoading = false;
   bool _isLoadingCourses = false;
@@ -55,7 +55,7 @@ class CourseProvider with ChangeNotifier {
 
   String? get selectedBranch => _selectedBranch;
 
-  Map<String, dynamic>? get currentChapter => _currentChapter;
+  Chapter.Chapter? get currentChapter => _currentChapter;
 
   List<MyCourse.MyCourse> get myCourses => _myCourses;
 
@@ -63,7 +63,7 @@ class CourseProvider with ChangeNotifier {
     return _myCourses.any((course) => course.course.id == courseId);
   }
 
-  void setCurrentChapter(Map<String, dynamic> chapter) {
+  void setCurrentChapter(Chapter.Chapter chapter) {
     _currentChapter = chapter;
     notifyListeners();
   }

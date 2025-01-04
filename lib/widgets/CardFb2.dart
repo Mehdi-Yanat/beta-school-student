@@ -1,5 +1,3 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CardFb2 extends StatelessWidget {
@@ -10,10 +8,10 @@ class CardFb2 extends StatelessWidget {
 
   const CardFb2(
       {required this.text,
-        required this.imageUrl,
-        required this.subtitle,
-        required this.onPressed,
-        Key? key})
+      required this.imageUrl,
+      required this.subtitle,
+      required this.onPressed,
+      Key? key})
       : super(key: key);
 
   @override
@@ -42,17 +40,15 @@ class CardFb2 extends StatelessWidget {
               width: 15,
             ),
             Flexible(
-              flex: 5,
-                child:
-            Text(text,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-                overflow: TextOverflow.ellipsis
-            )),
+                flex: 5,
+                child: Text(text,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                    overflow: TextOverflow.ellipsis)),
             const Spacer(),
             Text(
               subtitle,

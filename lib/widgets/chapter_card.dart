@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:online_course/models/chapter.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:online_course/utils/helper.dart';
 
 class ChapterCard extends StatelessWidget {
-  final Map<String, dynamic> chapter; // Contains chapter information
+  final Chapter chapter; // Contains chapter information
   final VoidCallback? onTap;
 
   const ChapterCard({
@@ -54,9 +55,9 @@ class ChapterCard extends StatelessWidget {
                       // Display thumbnail or fallback
                       Container(
                         width: double.infinity,
-                        child: chapter['thumbnail'] != null
+                        child: chapter.thumbnail != null
                             ? Image.network(
-                                chapter['thumbnail'], // Chapter thumbnail
+                                chapter.thumbnail.url, // Chapter thumbnail
                                 fit: BoxFit.cover,
                                 loadingBuilder: (context, child, progress) =>
                                     progress == null
@@ -124,7 +125,7 @@ class ChapterCard extends StatelessWidget {
                               SizedBox(width: 4),
                               Text(
                                 Helpers.formatDuration(
-                                    context, chapter['duration']),
+                                    context, chapter.duration),
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 12,
@@ -147,7 +148,7 @@ class ChapterCard extends StatelessWidget {
                   children: [
                     // Title
                     Text(
-                      chapter['title'] ?? 'Untitled Chapter',
+                      chapter.title ?? 'Untitled Chapter',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -159,9 +160,9 @@ class ChapterCard extends StatelessWidget {
                     SizedBox(height: 8),
 
                     // Description
-                    if (chapter['description'] != null)
+                    if (chapter.description != null)
                       Text(
-                        chapter['description'] ?? '',
+                        chapter.description ?? '',
                         style: TextStyle(
                           fontSize: 14,
                           color: AppColor.textColor.withValues(alpha: 0.8),
@@ -179,8 +180,8 @@ class ChapterCard extends StatelessWidget {
                             color: Colors.amber, size: 18), // Rating icon
                         SizedBox(width: 4),
                         Text(
-                          chapter['rating'] != null
-                              ? chapter['rating'].toString()
+                          chapter.rating != null
+                              ? chapter.rating.toString()
                               : 'N/A',
                           style: TextStyle(
                             fontSize: 14,
@@ -195,7 +196,7 @@ class ChapterCard extends StatelessWidget {
                             color: AppColor.darker, size: 18), // Views icon
                         SizedBox(width: 4),
                         Text(
-                          '${chapter['views'] ?? 0} views',
+                          '${chapter.views ?? 0} views',
                           style: TextStyle(
                             fontSize: 14,
                             color: AppColor.mainColor,
