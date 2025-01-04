@@ -1,4 +1,4 @@
-name: Flutter
+name: Flutter CI
 
 on:
   push:
@@ -15,17 +15,63 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
+          flutter-version: '3.27.0'
           channel: 'stable'
+          cache: true
           
+      - name: Cache pub dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.PUB_CACHE }}
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: ${{ runner.os }}-pub-
+
       - name: Install dependencies
         run: flutter pub get
       
-      # Uncomment to enable formatting check
-      # - name: Verify formatting
-      #   run: dart format --output=none --set-exit-if-changed .
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed .
       
       - name: Analyze project source
         run: flutter analyze
       
-      - name: Run tests
-        run: flutter test
+      - name: Run tests with coverage
+        run: flutter test --coverage
+        
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: coverage/lcov.info
+          
+      - name: Build Android APK
+        run: flutter build apk --release
+        
+      - name: Build iOS (debug, for verification only)
+        run: |
+          flutter build ios --release --no-codesign
+          
+      - name: Build Web
+        run: flutter build web
+        
+      - name: Upload Android Build
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-release
+          path: build/app/outputs/flutter-apk/app-release.apk
+          
+      - name: Upload Web Build
+        uses: actions/upload-artifact@v3
+        with:
+          name: web-release
+          path: build/web
+
+      - name: Upload Build Status
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-logs
+          path: |
+            build/logs/
+            .dart_tool/
+            .flutter-plugins
+            .flutter-plugins-dependencies
