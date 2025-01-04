@@ -35,7 +35,8 @@ class FeatureItem extends StatelessWidget {
               Color(0xFF00BBFF), // main
               Color(0xFF21D4FD), // state
             ],
-            begin: Alignment(0.838, 0.546), // Start point shifted for 127 degrees
+            begin:
+                Alignment(0.838, 0.546), // Start point shifted for 127 degrees
             end: Alignment(-0.838, -0.546), // End point aligned for 127 degrees
           ),
           borderRadius: BorderRadius.circular(20),
@@ -135,9 +136,9 @@ class FeatureItem extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-        const SizedBox(
-          height: 10,
-        ),
+          const SizedBox(
+            height: 10,
+          ),
           _buildTeacherDetails(),
           const SizedBox(
             height: 2,
@@ -147,11 +148,10 @@ class FeatureItem extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              fontSize: 22,
-              color: AppColor.labelColor,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Rubik'
-            ),
+                fontSize: 22,
+                color: AppColor.labelColor,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Rubik'),
           ),
           const SizedBox(
             height: 10,
@@ -247,31 +247,34 @@ class FeatureItem extends StatelessWidget {
     );
   }
 
- Widget _buildTeacherDetails() {
+  Widget _buildTeacherDetails() {
     return Row(
       children: [
-        data["teacherProfilePic"] != null ?
-        CustomImage(
-          data["teacherProfilePic"],
-          fit: BoxFit.cover,
-          width: 40,
-          height: 40,
-          isNetwork: data["teacherProfilePic"].toString().startsWith('https')
-              ? true
-              : false,
-        ) : SvgPicture.asset("assets/icons/profile.svg", color: Colors.white,),
+        data["teacherProfilePic"] != null
+            ? CustomImage(
+                data["teacherProfilePic"],
+                fit: BoxFit.cover,
+                width: 40,
+                height: 40,
+                isNetwork:
+                    data["teacherProfilePic"].toString().startsWith('https')
+                        ? true
+                        : false,
+              )
+            : SvgPicture.asset(
+                "assets/icons/profile.svg",
+                color: Colors.white,
+              ),
         Container(
-          margin: EdgeInsets.all(10),
-            child: Text(data["teacherName"],
+            margin: EdgeInsets.all(10),
+            child: Text(
+              data["teacherName"],
               style: TextStyle(
                   color: AppColor.labelColor,
-                fontWeight: FontWeight.normal,
-                fontSize: 19
-              ),
+                  fontWeight: FontWeight.normal,
+                  fontSize: 19),
             ))
-
       ],
     );
-
- }
+  }
 }

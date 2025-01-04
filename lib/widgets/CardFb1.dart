@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../theme/color.dart';
@@ -9,7 +8,12 @@ class CardFb1 extends StatelessWidget {
   final String subtitle;
   final Function() onPressed;
 
-  const CardFb1({required this.text, required this.imageUrl, required this.subtitle, required this.onPressed, Key? key})
+  const CardFb1(
+      {required this.text,
+      required this.imageUrl,
+      required this.subtitle,
+      required this.onPressed,
+      Key? key})
       : super(key: key);
 
   @override
@@ -22,9 +26,7 @@ class CardFb1 extends StatelessWidget {
         padding: const EdgeInsets.all(15.0),
         decoration: BoxDecoration(
           color: Colors.white,
-          border: Border.all(
-            color: AppColor.primary
-          ),
+          border: Border.all(color: AppColor.primary),
           borderRadius: BorderRadius.circular(12.5),
           boxShadow: [
             BoxShadow(

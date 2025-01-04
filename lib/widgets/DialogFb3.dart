@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class DialogFb3 extends StatelessWidget {
   const DialogFb3({
     Key? key,
-required this.imgUrl,
+    required this.imgUrl,
     required this.title,
     required this.text,
   }) : super(key: key);
@@ -31,7 +31,7 @@ required this.imgUrl,
         ),
         padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
-            gradient: LinearGradient(colors:[primaryColor, secondaryColor]),
+            gradient: LinearGradient(colors: [primaryColor, secondaryColor]),
             borderRadius: BorderRadius.circular(15.0),
             boxShadow: [
               BoxShadow(

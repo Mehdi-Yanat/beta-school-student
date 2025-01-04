@@ -2,7 +2,6 @@ import 'dart:ui'; // For BackdropFilter
 import 'package:flutter/material.dart';
 import 'package:online_course/theme/color.dart';
 
-
 class CustomBottomBar extends StatelessWidget {
   final List<Widget> children;
 
@@ -18,7 +17,8 @@ class CustomBottomBar extends StatelessWidget {
         // Add shadow to the entire Stack
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2), // Shadow color with transparency
+            color:
+                Colors.grey.withOpacity(0.2), // Shadow color with transparency
             blurRadius: 20, // Blurry edges of the shadow
             spreadRadius: 5, // Spread the shadow slightly
             offset: Offset(0, -4), // Shadow offset (upward)
@@ -34,8 +34,8 @@ class CustomBottomBar extends StatelessWidget {
               topRight: Radius.circular(40),
             ),
             child: BackdropFilter(
-              filter:
-              ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0), // Apply blur effect
+              filter: ImageFilter.blur(
+                  sigmaX: 10.0, sigmaY: 10.0), // Apply blur effect
               child: Container(
                 height: 90,
                 width: double.infinity,
@@ -51,16 +51,16 @@ class CustomBottomBar extends StatelessWidget {
           ),
           Positioned.fill(
               child: Padding(
-                padding: const EdgeInsets.only(
-                  left: 25,
-                  right: 25,
-                  bottom: 0,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: children,
-                ),
-              ))
+            padding: const EdgeInsets.only(
+              left: 25,
+              right: 25,
+              bottom: 0,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: children,
+            ),
+          ))
         ],
       ),
     );

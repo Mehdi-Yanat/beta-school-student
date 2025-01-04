@@ -24,7 +24,10 @@ class PaymentFailedPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset("assets/images/fail.png", width: 200,),
+              Image.asset(
+                "assets/images/fail.png",
+                width: 200,
+              ),
               SizedBox(height: 20),
               Text(
                 AppLocalizations.of(context)!.payment_failed_title,
