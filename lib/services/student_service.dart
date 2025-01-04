@@ -38,16 +38,24 @@ class StudentService {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        // Parse JSON into Transaction objects
         if (data['transactions'] != null) {
           return (data['transactions'] as List)
-              .map((json) => Transaction.fromJson(json))
+              .where((json) => json != null)
+              .map((json) {
+                try {
+                  return Transaction.fromJson(json);
+                } catch (e) {
+                  return null;
+                }
+              })
+              .whereType<Transaction>()
               .toList();
         }
       }
       return [];
-    } catch (e) {
+    } catch (e, stack) {
       print('❌ Error getting student transactions: $e');
+      print('📍 Stack trace: $stack');
       return [];
     }
   }

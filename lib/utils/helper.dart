@@ -1,6 +1,5 @@
 // Helper method for formatting duration from seconds to human-readable format
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:online_course/models/mycourses.dart';

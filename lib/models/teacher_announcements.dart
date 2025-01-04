@@ -50,7 +50,7 @@ class TeacherAnnouncement {
         'id': id,
         'teacherId': teacherId,
         'message': message,
-        'createdAt': createdAt?.toIso8601String(),
+        'createdAt': createdAt.toIso8601String(),
         'teacher': teacher.toJson(),
       };
 }

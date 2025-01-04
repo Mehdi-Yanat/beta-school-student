@@ -101,9 +101,9 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: course.course.icon?.url != null &&
-                          course.course.icon!.url!.startsWith('http')
+                          course.course.icon!.url.startsWith('http')
                       ? Image.network(
-                          course.course.icon!.url!,
+                          course.course.icon!.url,
                           width: 60,
                           height: 60,
                           fit: BoxFit.cover,
