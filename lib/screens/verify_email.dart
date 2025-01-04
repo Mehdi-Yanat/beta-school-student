@@ -26,6 +26,9 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
   }
 
   Future<void> _verifyEmail() async {
+    if (!mounted)
+      return; // Ensure the widget is still in the tree before proceeding
+
     setState(() {
       _isLoading = true;
       _errorMessage = '';
@@ -37,6 +40,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
       print("result  ${result}");
       if (result) {
         if (mounted) {
+          // Check if widget is still mounted
           print("Email verification successful");
           SnackBarHelper.showSuccessSnackBar(
             context,
@@ -51,18 +55,27 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
         }
       } else {
         print("Email verification failed");
-        setState(() => _errorMessage =
-            AppLocalizations.of(context)!.email_verification_failed);
-        SnackBarHelper.showErrorSnackBar(
-            context, AppLocalizations.of(context)!.email_verification_failed);
+        if (mounted) {
+          // Check if widget is still mounted
+          setState(() => _errorMessage =
+              AppLocalizations.of(context)!.email_verification_failed);
+          SnackBarHelper.showErrorSnackBar(
+              context, AppLocalizations.of(context)!.email_verification_failed);
+        }
       }
     } catch (e) {
       print("Error during email verification: $e");
-      setState(() => _errorMessage = e.toString());
-      SnackBarHelper.showErrorSnackBar(context, e.toString());
+      if (mounted) {
+        // Check if widget is still mounted
+        setState(() => _errorMessage = e.toString());
+        SnackBarHelper.showErrorSnackBar(context, e.toString());
+      }
     } finally {
-      print("Email verification process completed");
-      setState(() => _isLoading = false);
+      if (mounted) {
+        // Check if widget is still mounted
+        print("Email verification process completed");
+        setState(() => _isLoading = false);
+      }
     }
   }
 

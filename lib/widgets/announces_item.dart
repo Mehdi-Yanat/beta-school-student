@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:online_course/theme/color.dart';
 import 'custom_image.dart';
 
 class AnnouncesItem extends StatelessWidget {
@@ -12,7 +13,6 @@ class AnnouncesItem extends StatelessWidget {
   final Map<String, dynamic> data;
   final GestureTapCallback? onTap;
   final double profileSize;
-
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class AnnouncesItem extends StatelessWidget {
       children: <Widget>[
         Expanded(
           child: Text(
-            data['message'],
+            data['message'] ?? "",
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(fontSize: 13),
@@ -81,11 +81,19 @@ class AnnouncesItem extends StatelessWidget {
   }
 
   Widget _buildPhoto() {
-    return CustomImage(
-      data['image'],
-      width: profileSize,
-      height: profileSize,
-    );
+    final isNetwork = data['image'].toString().startsWith('http');
+    return isNetwork
+        ? CustomImage(
+            data['image'],
+            width: profileSize,
+            height: profileSize,
+            isNetwork: isNetwork,
+          )
+        : Icon(
+            Icons.person_2_rounded,
+            color: AppColor.primary,
+            size: profileSize,
+          );
   }
 
   Widget buildNameAndTime() {
@@ -102,7 +110,7 @@ class AnnouncesItem extends StatelessWidget {
         ),
         const SizedBox(width: 5),
         Text(
-          data['timeAgo'],
+          data['timeAgo'] ?? "",
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(

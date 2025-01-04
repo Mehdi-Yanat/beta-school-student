@@ -120,8 +120,20 @@ class TransactionsPage extends StatelessWidget {
             children: [
               // Course Icon (assuming you have a placeholder if no icon available)
               CircleAvatar(
-                backgroundImage: NetworkImage(transaction.course.icon.url),
                 radius: 20.0,
+                backgroundImage: transaction.course.icon.url.startsWith('http')
+                    ? NetworkImage(transaction.course.icon.url)
+                    : AssetImage('assets/images/default_avatar.png')
+                        as ImageProvider,
+                onBackgroundImageError: (_, __) {
+                  // Optional: Log or handle the image loading error.
+                },
+                child: !transaction.course.icon.url.startsWith('http')
+                    ? Icon(
+                        Icons.person_rounded,
+                        color: Colors.white,
+                      )
+                    : null, // No child needed if the image is valid.
               ),
               const SizedBox(width: 12),
               // Course Title

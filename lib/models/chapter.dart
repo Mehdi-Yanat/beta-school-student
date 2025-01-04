@@ -8,6 +8,7 @@ class Chapter {
   final Thumbnail thumbnail;
   final int views;
   final double? rating;
+  final List<Attachment> attachments; // Add attachments field
 
   Chapter({
     required this.id,
@@ -19,9 +20,9 @@ class Chapter {
     required this.thumbnail,
     required this.views,
     this.rating,
+    this.attachments = const [], // Default to empty list
   });
 
-  // Factory method to create a Chapter from JSON
   factory Chapter.fromJson(Map<String, dynamic> json) {
     return Chapter(
       id: json['id'],
@@ -33,22 +34,48 @@ class Chapter {
       thumbnail: Thumbnail.fromJson(json['thumbnail']),
       views: json['views'],
       rating: json['rating']?.toDouble(),
+      attachments: (json['attachments'] as List?)
+              ?.map((x) => Attachment.fromJson(x))
+              .toList() ??
+          [],
     );
   }
+}
 
-  // Method to convert a Chapter to JSON
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'title': title,
-      'description': description,
-      'duration': duration,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
-      'thumbnail': thumbnail.toJson(),
-      'views': views,
-      'rating': rating,
-    };
+class Attachment {
+  final int id;
+  final FileData file;
+
+  Attachment({
+    required this.id,
+    required this.file,
+  });
+
+  factory Attachment.fromJson(Map<String, dynamic> json) {
+    return Attachment(
+      id: json['id'],
+      file: FileData.fromJson(json['file']),
+    );
+  }
+}
+
+class FileData {
+  final int id;
+  final String fileName;
+  final String url;
+
+  FileData({
+    required this.id,
+    required this.fileName,
+    required this.url,
+  });
+
+  factory FileData.fromJson(Map<String, dynamic> json) {
+    return FileData(
+      id: json['id'],
+      fileName: json['fileName'],
+      url: json['url'],
+    );
   }
 }
 

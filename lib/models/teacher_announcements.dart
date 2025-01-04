@@ -23,14 +23,14 @@ class TeacherAnnouncement {
   final int id;
   final int teacherId;
   final String message;
-  final DateTime? createdAt;
+  final DateTime createdAt;
   final Teacher teacher;
 
   TeacherAnnouncement({
     required this.id,
     required this.teacherId,
     required this.message,
-    this.createdAt,
+    required this.createdAt,
     required this.teacher,
   });
 
@@ -39,8 +39,9 @@ class TeacherAnnouncement {
       id: json['id'],
       teacherId: json['teacherId'],
       message: json['message'],
-      createdAt:
-          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : DateTime.now(),
       teacher: Teacher.fromJson(json['teacher']),
     );
   }
@@ -49,7 +50,7 @@ class TeacherAnnouncement {
         'id': id,
         'teacherId': teacherId,
         'message': message,
-        'createdAt': createdAt?.toIso8601String(),
+        'createdAt': createdAt.toIso8601String(),
         'teacher': teacher.toJson(),
       };
 }

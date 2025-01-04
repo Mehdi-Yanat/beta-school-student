@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   'assets/logo.png',
                   // height: 80,
                   width: 1000,
-                  color: AppColor.darker,
+                  color: AppColor.primary,
                 ),
               ),
               const SizedBox(height: 20),
@@ -79,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
-                  color: AppColor.darker,
+                  color: AppColor.primary,
                 ),
               ),
               const SizedBox(height: 10),

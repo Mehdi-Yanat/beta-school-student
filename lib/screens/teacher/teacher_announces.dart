@@ -96,18 +96,18 @@ class _TeacherAnnouncesPageState extends State<TeacherAnnouncesPage> {
                   physics: NeverScrollableScrollPhysics(),
                   itemCount: _announcements.length,
                   itemBuilder: (context, index) {
-                    final announcement = _announcements[index];
+                    final announcement = _announcements[index];             
                     return AnnouncesItem(
                       onTap: () =>
                           _showAnnouncementDetails(announcement, context),
                       {
                         'name': announcement.teacher.fullName,
-                        'image': announcement.teacher.user.profilePic?.url,
+                        'image': announcement.teacher.user.profilePic?.url ??
+                            'assets/images/profile.png',
                         'message': announcement.message,
                         'createdAt': announcement.createdAt,
                         'timeAgo': Helpers.getTimeAgo(
-                            announcement.createdAt ?? DateTime.now(),
-                            currentLocale),
+                            announcement.createdAt, currentLocale),
                       },
                     );
                   },
@@ -148,6 +148,9 @@ class _TeacherAnnouncesPageState extends State<TeacherAnnouncesPage> {
 
 void _showAnnouncementDetails(
     TeacherAnnouncement announcement, BuildContext context) {
+  final isNetwork =
+      announcement.teacher.user.profilePic?.url.startsWith('http') ?? false;
+
   showDialog(
     context: context,
     builder: (context) => Dialog(
@@ -161,10 +164,11 @@ void _showAnnouncementDetails(
               children: [
                 CustomImage(
                   announcement.teacher.user.profilePic?.url ??
-                      'assets/images/default_avatar.png',
+                      '/assets/images/profile.png',
                   width: 60,
                   height: 60,
                   radius: 30,
+                  isNetwork: isNetwork,
                 ),
                 SizedBox(width: 15),
                 Expanded(

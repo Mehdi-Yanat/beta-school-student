@@ -1,6 +1,5 @@
 // Helper method for formatting duration from seconds to human-readable format
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:online_course/models/mycourses.dart';
@@ -43,7 +42,7 @@ class Helpers {
     }
   }
 
-  static String formatTime(int seconds) {
+  static String formatTimeHours(int seconds) {
     int minutes = seconds ~/ 60;
 
     int hours = 0;
@@ -54,6 +53,27 @@ class Helpers {
 
     // Format the result as a string
     return '$hours';
+  }
+
+  static String formatHoursAndMinutes(BuildContext context, int seconds) {
+    if (seconds < 0) {
+      // Handle negative values
+      return '0 ${AppLocalizations.of(context)!.minutes}';
+    }
+
+    final minutes = seconds ~/ 60;
+    final hours = minutes ~/ 60;
+    final remainingMinutes = minutes % 60;
+
+    if (hours > 0) {
+      final hoursText = "$hours ${AppLocalizations.of(context)!.hours}";
+      final minutesText = remainingMinutes > 0
+          ? " $remainingMinutes ${AppLocalizations.of(context)!.minutes}"
+          : "";
+      return hoursText + minutesText;
+    } else {
+      return "$remainingMinutes ${AppLocalizations.of(context)!.minutes}";
+    }
   }
 
   static String getTotalWatchTimeFormatted(List<MyCourse> courses) {

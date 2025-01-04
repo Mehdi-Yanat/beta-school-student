@@ -14,6 +14,12 @@ class MyCourseScreen extends StatefulWidget {
 }
 
 class _MyCourseScreenState extends State<MyCourseScreen> {
+  Future<void> _refreshCourses() async {
+    final courseProvider = Provider.of<CourseProvider>(context, listen: false);
+    await courseProvider.fetchMyCourses(
+        context); // Ensure this method is implemented in your provider
+  }
+
   @override
   Widget build(BuildContext context) {
     final localizations =
@@ -22,31 +28,34 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
         Provider.of<CourseProvider>(context); // Access CourseProvider
 
     return Scaffold(
-      backgroundColor: AppColor.appBgColor,
-      appBar: CustomAppBar(title: localizations!.my_courses_title),
-      body: Column(
-        children: [
-          // For now, simply display all courses (Disable tabs)
-          Expanded(
-            child: courseProvider.isLoading
-                ? Center(
-                    child: CircularProgressIndicator(
-                      color: AppColor.primary,
-                    ),
-                  )
-                : courseProvider.myCourses.isEmpty
+        backgroundColor: AppColor.appBgColor,
+        appBar: CustomAppBar(title: localizations!.my_courses_title),
+        body: RefreshIndicator(
+          onRefresh: _refreshCourses,
+          child: Column(
+            children: [
+              // For now, simply display all courses (Disable tabs)
+              Expanded(
+                child: courseProvider.isLoading
                     ? Center(
-                        child: Text(
-                          localizations.no_courses_message,
-                          // Add a localization for "No courses available"
-                          style: TextStyle(color: AppColor.mainColor),
+                        child: CircularProgressIndicator(
+                          color: AppColor.primary,
                         ),
                       )
-                    : buildCourseList(localizations, courseProvider.myCourses),
+                    : courseProvider.myCourses.isEmpty
+                        ? Center(
+                            child: Text(
+                              localizations.no_courses_message,
+                              // Add a localization for "No courses available"
+                              style: TextStyle(color: AppColor.mainColor),
+                            ),
+                          )
+                        : buildCourseList(
+                            localizations, courseProvider.myCourses),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 
   // Render the list of courses
@@ -66,6 +75,7 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                 builder: (context) => ViewChapterScreen(
                   chapterId: course.course.chapters[0].id,
                   courseId: course.course.id,
+                  chapter: course.course.chapters[0],
                 ),
               ),
             );
@@ -91,12 +101,29 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                 // Course Image
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    course.course.icon.url,
-                    width: 60,
-                    height: 60,
-                    fit: BoxFit.cover,
-                  ),
+                  child: course.course.icon?.url != null &&
+                          course.course.icon!.url.startsWith('http')
+                      ? Image.network(
+                          course.course.icon!.url,
+                          width: 60,
+                          height: 60,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            // Fallback if the network image fails to load
+                            return Image.asset(
+                              "assets/images/course_icon.png",
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.cover,
+                            );
+                          },
+                        )
+                      : Image.asset(
+                          "assets/images/course_icon.png",
+                          width: 60,
+                          height: 60,
+                          fit: BoxFit.cover,
+                        ),
                 ),
                 const SizedBox(width: 12),
                 // Course Details

@@ -153,6 +153,7 @@ class Course {
   final CourseLevel level;
   final int? maxParticipants;
   final int? currentEnrollment;
+  final int? totalWatchTime;
   final DateTime? enrollmentDeadline;
   final List<String> classes;
   final List<String> branches;
@@ -177,6 +178,7 @@ class Course {
     required this.level,
     this.maxParticipants,
     this.currentEnrollment,
+    this.totalWatchTime,
     this.enrollmentDeadline,
     required this.classes,
     required this.branches,
@@ -207,6 +209,7 @@ class Course {
         ),
         maxParticipants: json['maxParticipants'],
         currentEnrollment: json['currentEnrollment'],
+        totalWatchTime: json['totalWatchTime'],
         enrollmentDeadline: json['enrollmentDeadline'] != null
             ? DateTime.parse(json['enrollmentDeadline'])
             : null,
@@ -230,6 +233,7 @@ class Course {
         description: '',
         price: 0,
         teacherId: 0,
+        totalWatchTime: 0,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
         classes: [],
