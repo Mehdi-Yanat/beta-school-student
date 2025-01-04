@@ -365,5 +365,7 @@
   "hours": "Heures",
   "no_announcements": "Aucune annonce trouvée",
   "please_wait_verification": "Veuillez attendre pendant la vérification de votre compte.",
-  "enrolled_students": "Inscrits"
+  "enrolled_students": "Inscrits",
+  "recommended_courses_description": "Cours recommandés pour enrichir vos connaissances."
+  
 }

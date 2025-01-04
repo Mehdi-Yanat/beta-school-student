@@ -366,5 +366,6 @@
   "no_announcements":"لا توجد إعلانات",
   "please_wait_verification": "يرجى الانتظار حتى يتم التحقق من حسابك",
   "enrolled_students": "مسجلين",
-  "number_of_chapters": "الفصول"
+  "number_of_chapters": "الفصول",
+  "recommended_courses_description": "هذه هي الدورات التي نوصي بها"
 }
