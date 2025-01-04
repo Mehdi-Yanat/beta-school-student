@@ -75,438 +75,496 @@ class CourseDetailScreen extends StatelessWidget {
           return Scaffold(
             backgroundColor: AppColor.appBgColor,
             appBar: CustomAppBar(
-              title: AppLocalizations.of(context)!.course_detail_title, // Null check here
+              title: AppLocalizations.of(context)!
+                  .course_detail_title, // Null check here
             ),
-            body: RefreshIndicator(child: course == null || teacher == {}
-                ? Center(child: Text('No course data'))
-                : Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Course Image
-                        Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            // Course Image
-                            Container(
-                              height: 200,
-                              width: double.infinity,
-                              child: CourseImage(
-                                thumbnailUrl: course['chapters'] !=
-                                    null &&
-                                    course['chapters'].isNotEmpty &&
-                                    course['chapters'][0]
-                                    ['thumbnail'] !=
-                                        null
-                                    ? course['chapters'][0]['thumbnail']
-                                ['url']
-                                    : null,
-                                iconUrl: course['icon'] != null
-                                    ? course['icon']['url']
-                                    : null,
-                                width: MediaQuery.of(context).size.width,
-                                height: 200,
-                                borderRadius: 0,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 16),
-
-                        // Course Info Section
-                        Padding(
-                          padding:
-                          const EdgeInsets.symmetric(horizontal: 16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                course['title'],
-                                style: TextStyle(
-                                  fontSize: 26,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColor.darker,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              GestureDetector(
-                                onTap: () {Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => TeacherView(teacherId: teacher['id']),
-                                  ),
-                                );},
-                                child: Row(
-                                    children: [
-                                      Container(
-                                        width: 60,
-                                        height: 60,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.white,
-                                          border: Border.all(
-                                            color: Colors.white,
-                                            width: 2,
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black
-                                                  .withValues(alpha: 0.1),
-                                              spreadRadius: 1,
-                                              blurRadius: 5,
-                                              offset: Offset(0, 2),
-                                            ),
-                                          ],
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(30),
-                                          child: teacher != null &&
-                                              teacher.isNotEmpty &&
-                                              teacher['user'] != null &&
-                                              teacher['user']['profilePic'] !=
-                                                  null
-                                              ? Image.network(
-                                            teacher['user']['profilePic']
-                                            ['url'],
-                                            fit: BoxFit.cover,
-                                          )
-                                              : Icon(
-                                            Icons.person_2_rounded, color: AppColor.primary,), // Icon when null
-                                        ),
-                                      ),
-                                      SizedBox(width: 10,),
-                                      Text(
-                                        (teacher != null &&
-                                            teacher.isNotEmpty &&
-                                            teacher['user'] != null &&
-                                            teacher['user']['firstName'] !=
-                                                null &&
-                                            teacher['user']['lastName'] !=
-                                                null // VERY IMPORTANT: Check for null AND empty map, then for inner keys
-                                            ? '${teacher['user']['firstName']} ${teacher['user']['lastName']}'
-                                            : 'Teacher Name Not Available') + ' | ',
-                                        // Default text
-                                        style:
-                                        TextStyle(color: AppColor.textColor,
-                                            fontSize: 18, fontWeight: FontWeight.w600),
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.all(8.0),
-                                        decoration: BoxDecoration(
-                                            color: AppColor.secondary.withOpacity(0.3),
-                                            borderRadius: BorderRadius.all(Radius.circular(12))
-                                        ),
-                                        child: Text(
-                                          TranslationHelper.getTranslatedSubject(context, teacher['subject']),
-                                          style: TextStyle(color: Colors.purple),
-                                        ),
-                                      )
-                                    ]),
-                              ),
-                              SizedBox(height: 12),
-                              _buildCourseStats(context, course),
-                              SizedBox(height: 25),
-                              Row(
-                                  children: [
-                                    Spacer(),
-                                    CardFb1(
-                                      text: AppLocalizations.of(context)!.enrolled_students,
-                                      imageUrl: "assets/images/students.png",
-                                      subtitle: course["currentEnrollment"].toString(),
-                                      onPressed: () {},),
-                                    Spacer(),
-                                    CardFb1(
-                                      text: AppLocalizations.of(context)!.number_of_chapters,
-                                      imageUrl: "assets/images/video.png",
-                                      subtitle: provider.courseChapters.length.toString(),
-                                      onPressed: () {},),
-                                    Spacer(),
-
-                                  ]
-                              ),
-                              SizedBox(height: 20),
-                              _buildAboutSection(context, course),
-                              SizedBox(height: 12),
-                              _buildCourseDetails(context, course),
-                              SizedBox(height: 16),
-                              Text(AppLocalizations.of(context)!.chapters,
-                                style: TextStyle(color: AppColor.mainColor,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w600),),
-                            ],
-                          ),
-                        ),
-                        // Chapters List
-                        ...(provider.courseChapters.isNotEmpty
-                            ? provider.courseChapters.map((chapter) {
-                          final title = chapter
-                              .title; // Access via the field, no ['title']
-                          final thumbnail = chapter
-                              .thumbnail; // Thumbnail is an object
-                          final imageUrl = thumbnail
-                              .url; // Access url from Thumbnail// Convert duration to a string
-
-                          return
-                            Container(
-                              color: Colors.white70,
-                              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                              child: GestureDetector(
-                                onTap: () {
-                                  if (isPurchased) {
-                                    WidgetsBinding.instance
-                                        .addPostFrameCallback((_) {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute<dynamic>(
-                                          maintainState: true,
-                                          builder: (context) =>
-                                              ViewChapterScreen(
-                                                chapterId:
-                                                chapter.id.toString(),
-                                                // Convert ID to string if needed
-                                                courseId: course['id'],
-                                              ),
-                                        ),
-                                      );
-                                    });
-                                  } else {
-                                    showDialog(context: context, builder: (context) {
-                                      return DialogFb3(imgUrl: imageUrl, title: title, text: chapter.description,);
-                                    },);
-                                  }
-
-                                },
-                                child:
-                                LikeListTile(
-                                  imgUrl: imageUrl,
-                                  title: title,
-                                  likes: chapter.views.toString(),
-                                  color: AppColor.primary,
-                                  subtitle: Helpers.formatHoursAndMinutes(context, chapter.duration),
-                                ),
-                              ),
-                            );
-                        }).toList()
-                            : [
-                          // If no chapters exist
-                          Center(
-                            child: Text(
-                              AppLocalizations.of(context)!
-                                  .no_chapters_available,
-                              style: TextStyle(
-                                color: AppColor.darker,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                        ]),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Price Section
-                !isVerified
-                    ? Container(
-                  padding: const EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
-                    color: AppColor.cardColor,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColor.shadowColor
-                            .withValues(alpha: 0.1),
-                        offset: const Offset(0, -4),
-                        blurRadius: 10,
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.warning,
-                        color: Colors.yellow,
-                      ),
-                      const SizedBox(width: 8.0),
-                      Expanded(
-                        child: Text(
-                          AppLocalizations.of(context)!
-                              .account_not_verified,
-                          style: TextStyle(
-                            color: AppColor.mainColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-                    : provider.isLoadingCourses
-                    ? Container()
-                    : isPurchased
-                    ? Container(
-                  // No SafeArea if course is purchased
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 12),
-                  decoration: BoxDecoration(
-                    color: AppColor.cardColor,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColor.shadowColor
-                            .withValues(alpha: 0.1),
-                        offset: const Offset(0, -4),
-                        blurRadius: 10,
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment:
-                        CrossAxisAlignment.start,
+            body: RefreshIndicator(
+                child: course == null || teacher == {}
+                    ? Center(child: Text('No course data'))
+                    : Column(
                         children: [
-                          Text(
-                            AppLocalizations.of(context)!
-                                .already_purchased, // Purchased text
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: AppColor.darker,
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Course Image
+                                  Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      // Course Image
+                                      Container(
+                                        height: 200,
+                                        width: double.infinity,
+                                        child: CourseImage(
+                                          thumbnailUrl:
+                                              course['chapters'] != null &&
+                                                      course['chapters']
+                                                          .isNotEmpty &&
+                                                      course['chapters'][0]
+                                                              ['thumbnail'] !=
+                                                          null
+                                                  ? course['chapters'][0]
+                                                      ['thumbnail']['url']
+                                                  : null,
+                                          iconUrl: course['icon'] != null
+                                              ? course['icon']['url']
+                                              : null,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          height: 200,
+                                          borderRadius: 0,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 16),
+
+                                  // Course Info Section
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          course['title'],
+                                          style: TextStyle(
+                                            fontSize: 26,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColor.darker,
+                                          ),
+                                        ),
+                                        SizedBox(height: 8),
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TeacherView(
+                                                        teacherId:
+                                                            teacher['id']),
+                                              ),
+                                            );
+                                          },
+                                          child: Row(children: [
+                                            Container(
+                                              width: 60,
+                                              height: 60,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.white,
+                                                border: Border.all(
+                                                  color: Colors.white,
+                                                  width: 2,
+                                                ),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black
+                                                        .withValues(alpha: 0.1),
+                                                    spreadRadius: 1,
+                                                    blurRadius: 5,
+                                                    offset: Offset(0, 2),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                                child: teacher != null &&
+                                                        teacher.isNotEmpty &&
+                                                        teacher['user'] !=
+                                                            null &&
+                                                        teacher['user'][
+                                                                'profilePic'] !=
+                                                            null
+                                                    ? Image.network(
+                                                        teacher['user']
+                                                                ['profilePic']
+                                                            ['url'],
+                                                        fit: BoxFit.cover,
+                                                      )
+                                                    : Icon(
+                                                        Icons.person_2_rounded,
+                                                        color: AppColor.primary,
+                                                      ), // Icon when null
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              (teacher != null &&
+                                                          teacher.isNotEmpty &&
+                                                          teacher['user'] !=
+                                                              null &&
+                                                          teacher['user'][
+                                                                  'firstName'] !=
+                                                              null &&
+                                                          teacher['user'][
+                                                                  'lastName'] !=
+                                                              null // VERY IMPORTANT: Check for null AND empty map, then for inner keys
+                                                      ? '${teacher['user']['firstName']} ${teacher['user']['lastName']}'
+                                                      : 'Teacher Name Not Available') +
+                                                  ' | ',
+                                              // Default text
+                                              style: TextStyle(
+                                                  color: AppColor.textColor,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              decoration: BoxDecoration(
+                                                  color: AppColor.secondary
+                                                      .withValues(alpha: 0.3),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(12))),
+                                              child: Text(
+                                                TranslationHelper
+                                                    .getTranslatedSubject(
+                                                        context,
+                                                        teacher['subject']),
+                                                style: TextStyle(
+                                                    color: Colors.purple),
+                                              ),
+                                            )
+                                          ]),
+                                        ),
+                                        SizedBox(height: 12),
+                                        _buildCourseStats(context, course),
+                                        SizedBox(height: 25),
+                                        Row(children: [
+                                          Spacer(),
+                                          CardFb1(
+                                            text: AppLocalizations.of(context)!
+                                                .enrolled_students,
+                                            imageUrl:
+                                                "assets/images/students.png",
+                                            subtitle:
+                                                course["currentEnrollment"]
+                                                    .toString(),
+                                            onPressed: () {},
+                                          ),
+                                          Spacer(),
+                                          CardFb1(
+                                            text: AppLocalizations.of(context)!
+                                                .number_of_chapters,
+                                            imageUrl: "assets/images/video.png",
+                                            subtitle: provider
+                                                .courseChapters.length
+                                                .toString(),
+                                            onPressed: () {},
+                                          ),
+                                          Spacer(),
+                                        ]),
+                                        SizedBox(height: 20),
+                                        _buildAboutSection(context, course),
+                                        SizedBox(height: 12),
+                                        _buildCourseDetails(context, course),
+                                        SizedBox(height: 16),
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .chapters,
+                                          style: TextStyle(
+                                              color: AppColor.mainColor,
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  // Chapters List
+                                  ...(provider.courseChapters.isNotEmpty
+                                      ? provider.courseChapters.map((chapter) {
+                                          final title = chapter
+                                              .title; // Access via the field, no ['title']
+                                          final thumbnail = chapter
+                                              .thumbnail; // Thumbnail is an object
+                                          final imageUrl = thumbnail
+                                              .url; // Access url from Thumbnail// Convert duration to a string
+
+                                          return Container(
+                                            color: Colors.white70,
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 12, horizontal: 12),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                if (isPurchased) {
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute<dynamic>(
+                                                      maintainState: true,
+                                                      builder: (context) =>
+                                                          ViewChapterScreen(
+                                                              chapterId: chapter
+                                                                  .id
+                                                                  .toString(),
+                                                              // Convert ID to string if needed
+                                                              courseId:
+                                                                  course['id'],
+                                                              chapter: chapter),
+                                                    ),
+                                                  );
+                                                } else {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return DialogFb3(
+                                                        imgUrl: imageUrl,
+                                                        title: title,
+                                                        text:
+                                                            chapter.description,
+                                                      );
+                                                    },
+                                                  );
+                                                }
+                                              },
+                                              child: LikeListTile(
+                                                imgUrl: imageUrl,
+                                                title: title,
+                                                likes: chapter.views.toString(),
+                                                color: AppColor.primary,
+                                                subtitle: Helpers
+                                                    .formatHoursAndMinutes(
+                                                        context,
+                                                        chapter.duration),
+                                              ),
+                                            ),
+                                          );
+                                        }).toList()
+                                      : [
+                                          // If no chapters exist
+                                          Center(
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .no_chapters_available,
+                                              style: TextStyle(
+                                                color: AppColor.darker,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                        ]),
+                                ],
+                              ),
                             ),
                           ),
+
+                          // Price Section
+                          !isVerified
+                              ? Container(
+                                  padding: const EdgeInsets.all(16.0),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.cardColor,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AppColor.shadowColor
+                                            .withValues(alpha: 0.1),
+                                        offset: const Offset(0, -4),
+                                        blurRadius: 10,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.warning,
+                                        color: Colors.yellow,
+                                      ),
+                                      const SizedBox(width: 8.0),
+                                      Expanded(
+                                        child: Text(
+                                          AppLocalizations.of(context)!
+                                              .account_not_verified,
+                                          style: TextStyle(
+                                            color: AppColor.mainColor,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : provider.isLoadingCourses
+                                  ? Container()
+                                  : isPurchased
+                                      ? Container(
+                                          // No SafeArea if course is purchased
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16, vertical: 12),
+                                          decoration: BoxDecoration(
+                                            color: AppColor.cardColor,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: AppColor.shadowColor
+                                                    .withValues(alpha: 0.1),
+                                                offset: const Offset(0, -4),
+                                                blurRadius: 10,
+                                              ),
+                                            ],
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .already_purchased, // Purchased text
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: AppColor.darker,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              GradientButton(
+                                                text: AppLocalizations.of(
+                                                        context)!
+                                                    .watch,
+                                                // Add your localization key or hardcoded text
+                                                variant: 'primary',
+                                                // Variant setting (e.g., primary style)
+                                                color: Colors.white,
+                                                // Text or icon color
+                                                onTap: () {
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute<dynamic>(
+                                                      maintainState: true,
+                                                      builder: (context) =>
+                                                          ViewChapterScreen(
+                                                              chapterId: provider
+                                                                  .courseChapters[
+                                                                      0]
+                                                                  .id,
+                                                              courseId:
+                                                                  course['id'],
+                                                              chapter: provider
+                                                                  .courseChapters[0]),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      : SafeArea(
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 16, vertical: 12),
+                                            decoration: BoxDecoration(
+                                              color: AppColor.cardColor,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: AppColor.shadowColor
+                                                      .withValues(alpha: 0.1),
+                                                  offset: Offset(0, -4),
+                                                  blurRadius: 10,
+                                                ),
+                                              ],
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .price_label,
+                                                      style: TextStyle(
+                                                          color: AppColor
+                                                              .mainColor),
+                                                    ),
+                                                    Text(
+                                                      'DZD ${course['price']}',
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: AppColor.darker,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                GradientButton(
+                                                  text: context
+                                                          .watch<
+                                                              CourseProvider>()
+                                                          .isLoading
+                                                      ? AppLocalizations.of(
+                                                              context)!
+                                                          .loading // Show "Loading..." when in progress
+                                                      : context
+                                                              .watch<
+                                                                  CourseProvider>()
+                                                              .isSuccess
+                                                          ? AppLocalizations.of(
+                                                                  context)!
+                                                              .loading // Show "Enrolled" when successful
+                                                          : AppLocalizations.of(
+                                                                  context)!
+                                                              .buy_now, // Default "Buy Now" text
+                                                  variant: 'primary',
+                                                  color: Colors.white,
+                                                  onTap: context
+                                                              .watch<
+                                                                  CourseProvider>()
+                                                              .isLoading ||
+                                                          context
+                                                              .watch<
+                                                                  CourseProvider>()
+                                                              .isSuccess
+                                                      ? () {} // Disable button if loading or enrollment is already successful
+                                                      : () async {
+                                                          final courseProvider =
+                                                              context.read<
+                                                                  CourseProvider>();
+                                                          final courseId =
+                                                              courseProvider
+                                                                      .courseData?[
+                                                                  'course']['id'];
+
+                                                          // Trigger enrollment and redirection
+                                                          final response =
+                                                              await courseProvider
+                                                                  .enrollAndRedirect(
+                                                                      context,
+                                                                      courseId);
+
+                                                          if (response ==
+                                                              true) {
+                                                            courseProvider
+                                                                .resetSuccess();
+                                                          }
+                                                        },
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
                         ],
                       ),
-                      GradientButton(
-                        text: AppLocalizations.of(context)!
-                            .watch,
-                        // Add your localization key or hardcoded text
-                        variant: 'primary',
-                        // Variant setting (e.g., primary style)
-                        color: Colors.white,
-                        // Text or icon color
-                        onTap: () {
-                          WidgetsBinding.instance
-                              .addPostFrameCallback((_) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute<dynamic>(
-                                maintainState: true,
-                                builder: (context) =>
-                                    ViewChapterScreen(
-                                      chapterId: provider
-                                          .courseChapters[0].id,
-                                      courseId: course['id'],
-                                    ),
-                              ),
-                            );
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                )
-                    : SafeArea(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: AppColor.cardColor,
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColor.shadowColor
-                              .withValues(alpha: 0.1),
-                          offset: Offset(0, -4),
-                          blurRadius: 10,
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment:
-                          CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              AppLocalizations.of(context)!
-                                  .price_label,
-                              style: TextStyle(
-                                  color:
-                                  AppColor.mainColor),
-                            ),
-                            Text(
-                              'DZD ${course['price']}',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: AppColor.darker,
-                              ),
-                            ),
-                          ],
-                        ),
-                        GradientButton(
-                          text: context
-                              .watch<CourseProvider>()
-                              .isLoading
-                              ? AppLocalizations.of(
-                              context)!
-                              .loading // Show "Loading..." when in progress
-                              : context
-                              .watch<
-                              CourseProvider>()
-                              .isSuccess
-                              ? AppLocalizations.of(
-                              context)!
-                              .loading // Show "Enrolled" when successful
-                              : AppLocalizations.of(
-                              context)!
-                              .buy_now, // Default "Buy Now" text
-                          variant: 'primary',
-                          color: Colors.white,
-                          onTap: context
-                              .watch<
-                              CourseProvider>()
-                              .isLoading ||
-                              context
-                                  .watch<
-                                  CourseProvider>()
-                                  .isSuccess
-                              ? () {} // Disable button if loading or enrollment is already successful
-                              : () async {
-                            final courseProvider =
-                            context.read<
-                                CourseProvider>();
-                            final courseId =
-                            courseProvider
-                                .courseData?[
-                            'course']['id'];
-
-                            // Trigger enrollment and redirection
-                            final response =
-                            await courseProvider
-                                .enrollAndRedirect(
-                                context,
-                                courseId);
-
-                            if (response == true) {
-                              courseProvider
-                                  .resetSuccess();
-                            }
-                          },
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ), onRefresh: () => _refreshCourseData(context)),
+                onRefresh: () => _refreshCourseData(context)),
           );
         },
       ),
@@ -630,7 +688,7 @@ class CourseDetailScreen extends StatelessWidget {
               (course['class'] as List?)?.first?.toString(),
             ),
           ),
-          ],
+        ],
       ),
     );
   }

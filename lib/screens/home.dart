@@ -30,7 +30,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   String _selectedCategory = '';
   int? remainingCooldownTime;
   Timer? cooldownTimer;
@@ -57,7 +56,6 @@ class _HomePageState extends State<HomePage> {
       }
     });
   }
-
 
   Future<void> _handleVerificationButtonPressed() async {
     final success = await AuthService.sendEmailVerification();
@@ -96,6 +94,7 @@ class _HomePageState extends State<HomePage> {
             context: context,
           ),
       context.read<TeacherProvider>().fetchTeachers(),
+      context.read<AuthProvider>().refreshProfile(),
     ]);
   }
 
@@ -196,6 +195,7 @@ class _HomePageState extends State<HomePage> {
       );
     });
   }
+
   Widget _buildBody(localizations) {
     return Consumer<AuthProvider>(builder: (context, authProvider, _) {
       final student = authProvider.student;
@@ -252,11 +252,15 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset("assets/images/no-email.png", width: 200,),
+                Image.asset(
+                  "assets/images/no-email.png",
+                  width: 200,
+                ),
                 const SizedBox(height: 20),
                 Text(
                   AppLocalizations.of(context)!.email_not_verified_message ??
-                      'Please validate your email to access this feature.', // Your localized message here
+                      'Please validate your email to access this feature.',
+                  // Your localized message here
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 18,
@@ -274,8 +278,11 @@ class _HomePageState extends State<HomePage> {
                   child: Text(
                     isOnCooldown
                         ? "${AppLocalizations.of(context)!.wait} ${remainingCooldownTime}s" // Cooldown button text
-                        : AppLocalizations.of(context)!.send_verification_button, // Button text from localization
-                    style: const TextStyle(fontSize: 16, color: AppColor.labelColor),
+                        : AppLocalizations.of(context)!
+                            .send_verification_button,
+                    // Button text from localization
+                    style: const TextStyle(
+                        fontSize: 16, color: AppColor.labelColor),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColor.primary,
@@ -289,7 +296,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         );
-      }else {
+      } else {
         return Center(
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -297,11 +304,15 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 60),
-                Image.asset("assets/images/wait-verification.png", width: 200,),
+                Image.asset(
+                  "assets/images/wait-verification.png",
+                  width: 200,
+                ),
                 const SizedBox(height: 20),
                 Text(
                   AppLocalizations.of(context)!.please_wait_verification ??
-                      'Please wait until we verify you.', // Your localized message here
+                      'Please wait until we verify you.',
+                  // Your localized message here
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 18,
@@ -312,11 +323,9 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         );
-
       }
     });
   }
-
 
   // Widget _buildBody(localizations) {
   //   return SingleChildScrollView(
@@ -442,7 +451,8 @@ class _HomePageState extends State<HomePage> {
                 course.chapters.isNotEmpty ? course.chapters.first : null;
             final totalDuration = course.totalWatchTime;
 
-            final formatedDurationMinutes = Helpers.formatHoursAndMinutes(context, totalDuration!);
+            final formatedDurationMinutes =
+                Helpers.formatHoursAndMinutes(context, totalDuration!);
 
             final finalPrice = course.discount != null
                 ? course.price - course.discount!
@@ -457,10 +467,8 @@ class _HomePageState extends State<HomePage> {
                 "price": "${finalPrice.toString()} DA",
                 "session":
                     "${course.chapters.length} ${AppLocalizations.of(context)!.courses}",
-                "duration":
-                    "${formatedDurationMinutes}",
-                "teacherName":
-                    "${fullName}",
+                "duration": "${formatedDurationMinutes}",
+                "teacherName": "${fullName}",
                 "teacherProfilePic": course.teacher.user.profilePic?.url,
                 "enrollments": course.currentEnrollment.toString()
               },
@@ -500,7 +508,10 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset("assets/images/empty-box.png", width: 200,),
+                Image.asset(
+                  "assets/images/empty-box.png",
+                  width: 200,
+                ),
                 const SizedBox(height: 50),
                 Text(
                   AppLocalizations.of(context)!.no_teachers_found,

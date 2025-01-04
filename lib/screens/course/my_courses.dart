@@ -75,6 +75,7 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                 builder: (context) => ViewChapterScreen(
                   chapterId: course.course.chapters[0].id,
                   courseId: course.course.id,
+                  chapter: course.course.chapters[0],
                 ),
               ),
             );

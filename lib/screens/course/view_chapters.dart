@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:screen_protector/screen_protector.dart';
-
 import '../../providers/course_provider.dart';
 import '../../services/course_service.dart';
 import '../../theme/color.dart';
@@ -16,8 +15,10 @@ import '../../widgets/chapter_card.dart';
 class ViewChapterScreen extends StatefulWidget {
   final chapterId;
   final courseId;
+  final chapter;
 
-  const ViewChapterScreen({Key? key, required this.chapterId, this.courseId})
+  const ViewChapterScreen(
+      {Key? key, required this.chapterId, this.courseId, this.chapter})
       : super(key: key);
 
   @override
@@ -38,6 +39,8 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
   Map<String, dynamic>? _chapterData; // Nullable Map to hold chapter details.
 
   bool _isScreenActive = true;
+  bool _isLoading = false;
+  bool _isError = false;
 
   @override
   void initState() {
@@ -48,13 +51,11 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final courseProvider =
           Provider.of<CourseProvider>(context, listen: false);
-      courseProvider.fetchCourse(
-          widget.courseId, context); // Or any other provider updates
+      courseProvider.fetchCourse(widget.courseId, context);
+      courseProvider.fetchChaptersForCourse(widget.courseId, context);
+      // Or any other provider updates
       _fetchChapterData(widget.chapterId.toString());
     });
-
-    // Print chapter ID for debugging purposes
-    print("chapterId: ${widget.chapterId.toString()}");
 
     // Initialize TabController for the TabBar
     _tabController = TabController(length: 2, vsync: this);
@@ -75,6 +76,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
         final courseProvider =
             Provider.of<CourseProvider>(context, listen: false);
         courseProvider.fetchCourse(widget.courseId, context);
+        courseProvider.fetchChaptersForCourse(widget.courseId, context);
         _fetchChapterData(widget.chapterId.toString());
       });
       _isDataFetched = true;
@@ -82,14 +84,21 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
   }
 
   Future<void> _fetchChapterData(String chapterId) async {
+    if (!mounted) return;
+
+    setState(() {
+      _isLoading = true;
+      _isError = false;
+    });
+
     try {
       final chapterData = await CourseService.viewChapter(chapterId);
+      final provider = Provider.of<CourseProvider>(context, listen: false);
 
       if (chapterData != null && chapterData['url'] != null) {
         final videoUrl = chapterData['url'];
-        final provider = Provider.of<CourseProvider>(context, listen: false);
 
-        if (_isScreenActive) {
+        if (_isScreenActive == true) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (!mounted) return;
             setState(() {
@@ -103,20 +112,33 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
           provider.setCurrentVideo({
             'url': videoUrl,
             'chapterId': chapterId,
-            'title': provider.courseData?['title']
+            'title': provider.courseData?['title'] ?? widget.chapter.title,
           });
         }
 
-        await _changeVideo(
-            videoUrl); // Use await to always wait for it to complete
+        await _changeVideo(videoUrl);
       } else {
+        if (!mounted) return;
+        setState(() {
+          _isError = true;
+        });
         SnackBarHelper.showErrorSnackBar(
             context, AppLocalizations.of(context)!.failed_to_play_video);
       }
     } catch (e) {
+      if (!mounted) return;
       print('Error fetching chapter data: $e');
+      setState(() {
+        _isError = true;
+      });
       SnackBarHelper.showErrorSnackBar(
           context, AppLocalizations.of(context)!.failed_to_load_chapter);
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -190,34 +212,6 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
   }
 
   @override
-  void dispose() {
-    _isScreenActive = false;
-
-    // Stop listening to VideoPlayerController events
-    if (_videoController != null) {
-      _videoController!
-          .removeListener(_videoListener); // Ensure listeners are removed
-      if (_videoController!.value.isInitialized) {
-        _videoController!.pause(); // Pause any playback
-      }
-      _videoController!.dispose(); // Dispose of the controller
-      _videoController = null; // Nullify for safety
-    }
-
-    // Dispose the ChewieController
-    if (_chewieController != null) {
-      _chewieController!.dispose();
-      _chewieController = null; // Nullify for safety
-    }
-
-    // Clean up tab controller and lifecycle observers
-    _tabController.dispose();
-    WidgetsBinding.instance.removeObserver(this);
-
-    super.dispose();
-  }
-
-  @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // Pause video playback when app moves to background
     if ((state == AppLifecycleState.inactive ||
@@ -257,18 +251,16 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
     final courseProvider = Provider.of<CourseProvider>(context);
     final chapters = courseProvider.courseChapters;
 
-    print("provider.currentVideo ${courseProvider.currentVideo}");
-
     return Scaffold(
       backgroundColor: AppColor.appBgColor,
       appBar: CustomAppBar(
         title: localizations!.chapter_title, // Screen title localized
       ),
-      body: courseProvider.isLoading
+      body: _isLoading
           ? Center(
               child: CircularProgressIndicator(color: AppColor.primary),
             )
-          : courseProvider.error != null
+          : _isError
               ? Center(
                   child: Text(
                     courseProvider.error!,
@@ -352,23 +344,15 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                               ListView.builder(
                                 itemCount: chapters.length,
                                 itemBuilder: (context, index) {
-                                  final chapter =
-                                      chapters[index] as Map<String, dynamic>?;
+                                  final chapter = chapters[index];
                                   return chapter != null
                                       ? ChapterCard(
-                                          chapter: {
-                                              ...chapter,
-                                              'duration':
-                                                  chapter['duration'] ?? 0,
-                                              'thumbnail': chapter['thumbnail']
-                                                  ?['url'],
-                                            },
+                                          chapter: chapter,
                                           onTap: () async {
                                             try {
                                               final chapterData =
                                                   await CourseService
-                                                      .viewChapter(
-                                                          chapter['id']);
+                                                      .viewChapter(chapter.id);
                                               if (chapterData != null &&
                                                   chapterData['url'] != null) {
                                                 Future.microtask(() {
@@ -378,8 +362,8 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                                   courseProvider
                                                       .setCurrentVideo({
                                                     'url': chapterData['url'],
-                                                    'chapterId': chapter['id'],
-                                                    'title': chapter['title']
+                                                    'chapterId': chapter.id,
+                                                    'title': chapter.title
                                                   });
                                                 });
                                                 await _changeVideo(
@@ -408,17 +392,18 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                               ListView.builder(
                                 itemCount: chapters.length,
                                 itemBuilder: (context, index) {
-                                  final chapter =
-                                      chapters[index] as Map<String, dynamic>?;
-                                  final attachments =
-                                      chapter?['attachments'] as List<dynamic>?;
+                                  final chapter = chapters[index];
+                                  final attachments = chapter.attachments;
+
+                                  print('attachments $attachments');
+
                                   if (attachments == null ||
                                       attachments.isEmpty) {
                                     return ListTile(
                                       title: Text(
                                         AppLocalizations.of(context)!
                                             .no_attachments_chapter(
-                                                chapter?['title'] ?? ''),
+                                                chapter.title),
                                         style: TextStyle(
                                             color: AppColor.textColor),
                                       ),
@@ -427,19 +412,19 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
 
                                   return ExpansionTile(
                                     title: Text(
-                                      chapter?['title'] ?? 'Chapter',
+                                      chapter.title,
                                       style:
                                           TextStyle(color: AppColor.mainColor),
                                     ),
                                     children: attachments.map((attachment) {
-                                      final file = attachment['file'] ?? {};
+                                      final file = attachment.file;
                                       return ListTile(
                                         title: Text(
-                                            file['fileName'] ?? 'Unknown File'),
+                                            file.fileName ?? 'Unknown File'),
                                         trailing: Icon(Icons.download,
                                             color: AppColor.primary),
                                         onTap: () async {
-                                          final url = file['url'];
+                                          final url = file.url;
                                           if (url != null) {
                                             try {
                                               await launchUrl(Uri.parse(url));
@@ -462,5 +447,33 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                       ],
                     ),
     );
+  }
+
+  @override
+  void dispose() {
+    _isScreenActive = false;
+
+    // Stop listening to VideoPlayerController events
+    if (_videoController != null) {
+      _videoController!
+          .removeListener(_videoListener); // Ensure listeners are removed
+      if (_videoController!.value.isInitialized) {
+        _videoController!.pause(); // Pause any playback
+      }
+      _videoController!.dispose(); // Dispose of the controller
+      _videoController = null; // Nullify for safety
+    }
+
+    // Dispose the ChewieController
+    if (_chewieController != null) {
+      _chewieController!.dispose();
+      _chewieController = null; // Nullify for safety
+    }
+
+    // Clean up tab controller and lifecycle observers
+    _tabController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+
+    super.dispose();
   }
 }

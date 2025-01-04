@@ -14,6 +14,7 @@ class CourseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('Course Card built ${course}');
     return GestureDetector(
       onTap: onTap,
       child: Container(
