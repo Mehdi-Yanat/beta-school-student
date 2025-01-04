@@ -97,7 +97,8 @@ class _AnnouncesPageState extends State<AnnouncesPage> {
                                   teacherId: announcement.teacher.id))),
                       {
                         'name': announcement.teacher.fullName,
-                        'image': announcement.teacher.profilePic?.url,
+                        'image': announcement.teacher.profilePic?.url ??
+                            'assets/images/profile.png',
                         'message': announcement.message,
                         'createdAt': announcement.createdAt,
                         'timeAgo': Helpers.getTimeAgo(
