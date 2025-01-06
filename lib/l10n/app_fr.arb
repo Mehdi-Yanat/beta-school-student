@@ -1,5 +1,4 @@
 {
-  "@@locale": "fr",
   "welcome_message": "Bon retour !",
   "sign_in_message": "Connectez-vous pour accéder à vos cours.",
   "email_hint": "Adresse e-mail",
@@ -366,5 +365,6 @@
   "hours": "Heures",
   "no_announcements": "Aucune annonce trouvée",
   "please_wait_verification": "Veuillez attendre pendant la vérification de votre compte.",
-  "enrolled_students": "Inscrits"
+  "enrolled_students": "Inscrits",
+  "views": "Vues"
 }

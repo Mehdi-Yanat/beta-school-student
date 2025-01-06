@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:online_course/models/chapter.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:online_course/utils/helper.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
 
 class ChapterCard extends StatelessWidget {
   final Chapter chapter; // Contains chapter information
@@ -196,7 +197,7 @@ class ChapterCard extends StatelessWidget {
                             color: AppColor.darker, size: 18), // Views icon
                         SizedBox(width: 4),
                         Text(
-                          '${chapter.views ?? 0} views',
+                          '${chapter.views ?? 0} ${AppLocalizations.of(context)!.views}',
                           style: TextStyle(
                             fontSize: 14,
                             color: AppColor.mainColor,

@@ -13,96 +13,104 @@ class TransactionsPage extends StatelessWidget {
     final localization = AppLocalizations.of(context)!;
     final authProvider = Provider.of<AuthProvider>(context);
 
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: localization.transactions_title,
-      ),
-      body: authProvider.isLoading
-          ? Center(
-              child:
-                  CircularProgressIndicator(), // Show a loader while transactions are loading
-            )
-          : authProvider.studentTransactions.isEmpty
+    Future<void> _refreshData() async {
+      // Refresh all data concurrently
+      await authProvider.fetchStudentTransactions();
+    }
+
+    return RefreshIndicator(
+        child: Scaffold(
+          appBar: CustomAppBar(
+            title: localization.transactions_title,
+          ),
+          body: authProvider.isLoading
               ? Center(
-                  child: Text(
-                    localization.transactions_empty,
-                    style: TextStyle(fontSize: 18, color: AppColor.darker),
-                  ),
+                  child:
+                      CircularProgressIndicator(), // Show a loader while transactions are loading
                 )
-              : ListView.builder(
-                  padding: const EdgeInsets.all(16.0),
-                  itemCount: authProvider.studentTransactions.length,
-                  itemBuilder: (context, index) {
-                    final transaction = authProvider.studentTransactions[index];
-                    return GestureDetector(
-                      onTap: () =>
-                          _showTransactionDetails(context, transaction),
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 16),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.1),
-                              blurRadius: 6,
-                              offset: Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16.0,
-                            vertical: 12.0,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Course Name (Bold and prominent)
-                              Text(
-                                transaction.course.title,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-
-                              // Transaction Date
-                              Text(
-                                localization.transaction_date(
-                                  transaction.createdAt
-                                      .toLocal()
-                                      .toString()
-                                      .split(' ')[0], // Format date
-                                ),
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: AppColor.mainColor,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-
-                              // Status and Price
-                              Text(
-                                "${localization.transaction_status_label}: ${TranslationHelper.getTranslatedStatus(localization, transaction.status)} - ${transaction.amount.toStringAsFixed(2)} DZD",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: _getStatusColor(transaction
-                                      .status), // Dynamically set status color
-                                  fontWeight: FontWeight
-                                      .bold, // Optional: Highlight the text
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+              : authProvider.studentTransactions.isEmpty
+                  ? Center(
+                      child: Text(
+                        localization.transactions_empty,
+                        style: TextStyle(fontSize: 18, color: AppColor.darker),
                       ),
-                    );
-                  },
-                ),
-    );
+                    )
+                  : ListView.builder(
+                      padding: const EdgeInsets.all(16.0),
+                      itemCount: authProvider.studentTransactions.length,
+                      itemBuilder: (context, index) {
+                        final transaction =
+                            authProvider.studentTransactions[index];
+                        return GestureDetector(
+                          onTap: () =>
+                              _showTransactionDetails(context, transaction),
+                          child: Container(
+                            margin: const EdgeInsets.only(bottom: 16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.1),
+                                  blurRadius: 6,
+                                  offset: Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                                vertical: 12.0,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Course Name (Bold and prominent)
+                                  Text(
+                                    transaction.course.title,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+
+                                  // Transaction Date
+                                  Text(
+                                    localization.transaction_date(
+                                      transaction.createdAt
+                                          .toLocal()
+                                          .toString()
+                                          .split(' ')[0], // Format date
+                                    ),
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: AppColor.mainColor,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+
+                                  // Status and Price
+                                  Text(
+                                    "${localization.transaction_status_label}: ${TranslationHelper.getTranslatedStatus(localization, transaction.status)} - ${transaction.amount.toStringAsFixed(2)} DZD",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: _getStatusColor(transaction
+                                          .status), // Dynamically set status color
+                                      fontWeight: FontWeight
+                                          .bold, // Optional: Highlight the text
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+        ),
+        onRefresh: _refreshData);
   }
 
   // Show dialog for transaction details
