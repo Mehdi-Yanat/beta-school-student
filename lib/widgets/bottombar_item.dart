@@ -23,12 +23,11 @@ class BottomBarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Transform.translate(
-      offset: isMiddle ? Offset(0, isActive? -20 : -40) : Offset(0, 0),
-      child: GestureDetector(
+    return GestureDetector(
         onTap: onTap,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 800),
+          margin: isMiddle ? !isActive ? EdgeInsets.fromLTRB(0, 0, 0, 30) : EdgeInsets.zero : EdgeInsets.zero,
+          duration: const Duration(milliseconds: 200),
           curve: Curves.fastOutSlowIn,
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
@@ -39,7 +38,7 @@ class BottomBarItem extends StatelessWidget {
                           .withOpacity(0.3), // Shadow color with transparency
                       blurRadius: isActive? 1 : 20, // Blurry edges of the shadow
                       spreadRadius:1, // Spread the shadow slightly
-                      offset: Offset(0, isActive ? 5 : 12), // Shadow offset (upward
+                      offset: Offset(0, isActive ? 1 : 12), // Shadow offset (upward
                     )
                   ]
                 : null,
@@ -57,15 +56,6 @@ class BottomBarItem extends StatelessWidget {
                   )
                 : null,
             color: isActive ? AppColor.labelColor : Colors.white,
-            // boxShadow: [
-            //   if (isActive)
-            //     BoxShadow(
-            //       color: AppColor.shadowColor.withValues(alpha: 0.1),
-            //       spreadRadius: 2,
-            //       blurRadius: 2,
-            //       offset: Offset(0, 0), // changes position of shadow
-            //     ),
-            // ],
           ),
           child: SvgPicture.asset(
             icon,
@@ -74,7 +64,6 @@ class BottomBarItem extends StatelessWidget {
             height: isMiddle ? 40 : 35,
           ),
         ),
-      ),
-    );
+      );
   }
 }
