@@ -14,7 +14,6 @@ import 'package:online_course/utils/data.dart';
 import 'package:online_course/utils/helper.dart';
 import 'package:online_course/widgets/category_box.dart';
 import 'package:online_course/widgets/feature_item.dart';
-import 'package:online_course/widgets/notification_box.dart';
 import 'package:online_course/widgets/teacher_item.dart';
 import 'package:provider/provider.dart';
 
@@ -138,15 +137,13 @@ class _HomePageState extends State<HomePage> {
 
         final firstName = isArabic
             ? (authProvider.student!.firstNameAr ??
-                authProvider.student!.firstName ??
-                '')
-            : (authProvider.student!.firstName ?? '');
+                authProvider.student!.firstName)
+            : (authProvider.student!.firstName);
 
         final lastName = isArabic
             ? (authProvider.student!.lastNameAr ??
-                authProvider.student!.lastName ??
-                '')
-            : (authProvider.student!.lastName ?? '');
+                authProvider.student!.lastName)
+            : (authProvider.student!.lastName);
 
         return '$firstName $lastName'.trim();
       }
@@ -311,8 +308,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  AppLocalizations.of(context)!.email_not_verified_message ??
-                      'Please validate your email to access this feature.',
+                  AppLocalizations.of(context)!.email_not_verified_message,
                   // Your localized message here
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -363,8 +359,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  AppLocalizations.of(context)!.please_wait_verification ??
-                      'Please wait until we verify you.',
+                  AppLocalizations.of(context)!.please_wait_verification,
                   // Your localized message here
                   textAlign: TextAlign.center,
                   style: TextStyle(

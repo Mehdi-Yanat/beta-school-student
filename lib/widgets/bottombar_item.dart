@@ -35,7 +35,7 @@ class BottomBarItem extends StatelessWidget {
                 ? [
                     BoxShadow(
                       color: AppColor.primary
-                          .withOpacity(0.3), // Shadow color with transparency
+                          .withValues(alpha: 0.3), // Shadow color with transparency
                       blurRadius: isActive? 1 : 20, // Blurry edges of the shadow
                       spreadRadius:1, // Spread the shadow slightly
                       offset: Offset(0, isActive ? 1 : 12), // Shadow offset (upward
@@ -59,7 +59,7 @@ class BottomBarItem extends StatelessWidget {
           ),
           child: SvgPicture.asset(
             icon,
-            color: isMiddle ? Colors.white : null,
+            colorFilter: isMiddle ? ColorFilter.mode(Colors.white, BlendMode.srcIn) : null,
             width: isMiddle ? 40 : 35,
             height: isMiddle ? 40 : 35,
           ),

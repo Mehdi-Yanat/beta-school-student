@@ -111,24 +111,6 @@ class _AnnouncesPageState extends State<AnnouncesPage> {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, 60, 0, 5),
-      child: Column(
-        children: [
-          Text(
-            AppLocalizations.of(context)!.announces_title,
-            style: TextStyle(
-              color: AppColor.mainColor,
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          SizedBox(height: 15),
-        ],
-      ),
-    );
-  }
 
   @override
   void dispose() {

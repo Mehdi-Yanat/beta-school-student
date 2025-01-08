@@ -19,7 +19,7 @@ class CustomBottomBar extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color:
-                Colors.grey.withOpacity(0.2), // Shadow color with transparency
+                Colors.grey.withValues(alpha: 0.2), // Shadow color with transparency
             blurRadius: 20, // Blurry edges of the shadow
             spreadRadius: 5, // Spread the shadow slightly
             offset: Offset(0, -4), // Shadow offset (upward)

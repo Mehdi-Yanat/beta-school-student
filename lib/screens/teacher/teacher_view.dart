@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:online_course/providers/teacher_provider.dart';
 import 'package:online_course/screens/course/course_detail.dart';
 import 'package:online_course/theme/color.dart';
-import 'package:online_course/utils/data.dart';
 import 'package:online_course/widgets/appbar.dart';
 import 'package:online_course/widgets/course_card.dart';
 import 'package:provider/provider.dart';
@@ -303,8 +302,8 @@ class TeacherView extends StatelessWidget {
               Text(AppLocalizations.of(context)!.students_count + ": ", style: TextStyle(fontWeight: FontWeight.w500),),
               SizedBox(width: 8),
               Text(
-                teacher['totalEnrolledStudents'].toString() ??
-                    AppLocalizations.of(context)!.institution_unknown,
+                teacher['totalEnrolledStudents'].toString().isEmpty ?
+                    AppLocalizations.of(context)!.institution_unknown : teacher['totalEnrolledStudents'].toString(),
                 style: TextStyle(
                   color: AppColor.mainColor,
                 ),
