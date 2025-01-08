@@ -25,22 +25,29 @@ class Teacher {
   final int id;
   final String firstName;
   final String lastName;
+  final String firstNameAr;
+  final String lastNameAr;
   final ProfilePic? profilePic;
 
   Teacher({
     required this.id,
     required this.firstName,
     required this.lastName,
+    required this.firstNameAr,
+    required this.lastNameAr,
     this.profilePic,
   });
 
   String get fullName => '$firstName $lastName';
+  String get fullNameAr => '$firstNameAr $lastNameAr';
 
   factory Teacher.fromJson(Map<String, dynamic> json) {
     return Teacher(
       id: json['id'],
       firstName: json['firstName'] ?? '',
       lastName: json['lastName'] ?? '',
+      firstNameAr: json['firstNameAr'] ?? '',
+      lastNameAr: json['lastNameAr'] ?? '',
       profilePic: json['profilePic'] != null
           ? ProfilePic.fromJson(json['profilePic'])
           : null,

@@ -12,6 +12,7 @@ import 'package:online_course/widgets/LikeListTile.dart';
 import 'package:online_course/widgets/course_image.dart';
 import 'package:online_course/widgets/gradient_button.dart';
 import 'package:provider/provider.dart';
+
 import '../../widgets/appbar.dart';
 import '../teacher/teacher_view.dart';
 
@@ -71,6 +72,7 @@ class CourseDetailScreen extends StatelessWidget {
 
           bool isVerified = (authProvider.student?.status == "ACCEPTED");
           bool isPurchased = provider.hasPurchasedCourse(course['id']);
+          bool isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
           return Scaffold(
             backgroundColor: AppColor.appBgColor,
@@ -196,18 +198,35 @@ class CourseDetailScreen extends StatelessWidget {
                                               width: 10,
                                             ),
                                             Text(
-                                              (teacher != null &&
+                                              (Localizations.localeOf(context)
+                                                                  .languageCode ==
+                                                              'ar' &&
+                                                          teacher != null &&
                                                           teacher.isNotEmpty &&
                                                           teacher['user'] !=
                                                               null &&
                                                           teacher['user'][
-                                                                  'firstName'] !=
+                                                                  'firstNameAr'] !=
                                                               null &&
-                                                          teacher['user'][
-                                                                  'lastName'] !=
-                                                              null // VERY IMPORTANT: Check for null AND empty map, then for inner keys
-                                                      ? '${teacher['user']['firstName']} ${teacher['user']['lastName']}'
-                                                      : 'Teacher Name Not Available') +
+                                                          teacher[
+                                                                      'user']
+                                                                  [
+                                                                  'lastNameAr'] !=
+                                                              null
+                                                      ? '${teacher['user']['firstNameAr']} ${teacher['user']['lastNameAr']}'
+                                                      : teacher != null &&
+                                                              teacher
+                                                                  .isNotEmpty &&
+                                                              teacher['user'] !=
+                                                                  null &&
+                                                              teacher['user'][
+                                                                      'firstName'] !=
+                                                                  null &&
+                                                              teacher['user'][
+                                                                      'lastName'] !=
+                                                                  null
+                                                          ? '${teacher['user']['firstName']} ${teacher['user']['lastName']}'
+                                                          : 'Teacher Name Not Available') +
                                                   ' | ',
                                               // Default text
                                               style: TextStyle(
@@ -675,18 +694,29 @@ class CourseDetailScreen extends StatelessWidget {
   Widget _buildCourseDetails(
       BuildContext context, Map<String, dynamic> course) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+              _buildDetailRow(
+                context,
+                Icons.school,
+                AppLocalizations.of(context)!.course_class,
+                TranslationHelper.getTranslatedClass(
+                  context,
+                  (course['class'] as List?)
+                      ?.map((classItem) => classItem.toString())
+                      .join(' • ')),
+              ),
           _buildDetailRow(
             context,
             Icons.school,
-            AppLocalizations.of(context)!.course_class,
+            AppLocalizations.of(context)!.course_branch,
             TranslationHelper.getTranslatedClass(
-              context,
-              (course['class'] as List?)?.first?.toString(),
-            ),
+                context,
+                (course['EducationalBranch'] as List?)
+                    ?.map((classItem) => classItem.toString())
+                    .join(' • ')),
           ),
         ],
       ),

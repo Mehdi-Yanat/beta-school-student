@@ -24,7 +24,7 @@ class BottomBarItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Transform.translate(
-      offset: isMiddle ? Offset(0, -40) : Offset(0, 0),
+      offset: isMiddle ? Offset(0, isActive? -20 : -40) : Offset(0, 0),
       child: GestureDetector(
         onTap: onTap,
         child: AnimatedContainer(
@@ -37,9 +37,9 @@ class BottomBarItem extends StatelessWidget {
                     BoxShadow(
                       color: AppColor.primary
                           .withOpacity(0.3), // Shadow color with transparency
-                      blurRadius: 20, // Blurry edges of the shadow
-                      spreadRadius: 0, // Spread the shadow slightly
-                      offset: Offset(0, 12), // Shadow offset (upward
+                      blurRadius: isActive? 1 : 20, // Blurry edges of the shadow
+                      spreadRadius:1, // Spread the shadow slightly
+                      offset: Offset(0, isActive ? 5 : 12), // Shadow offset (upward
                     )
                   ]
                 : null,

@@ -7,6 +7,7 @@ class TeacherInfo {
   final String subject;
   final String institution;
   final int yearsOfExperience;
+  final int totalEnrolledStudents;
   final String status;
   final String? description;
   final List<Course> courses;
@@ -17,6 +18,7 @@ class TeacherInfo {
     required this.subject,
     required this.institution,
     required this.yearsOfExperience,
+    required this.totalEnrolledStudents,
     required this.status,
     this.description,
     required this.courses,
@@ -30,6 +32,7 @@ class TeacherInfo {
         userId: 0,
         subject: '',
         institution: '',
+        totalEnrolledStudents: 0,
         yearsOfExperience: 0,
         status: '',
         description: null,
@@ -60,6 +63,7 @@ class TeacherInfo {
         userId: json['userId'] ?? 0,
         subject: json['subject'] ?? '',
         institution: json['institution'] ?? '',
+        totalEnrolledStudents: json['totalEnrolledStudents'] ?? 0,
         yearsOfExperience: json['yearsOfExperience'] ?? 0,
         status: json['status'] ?? '',
         description: json['description'],

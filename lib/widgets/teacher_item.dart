@@ -29,10 +29,10 @@ class TeacherItem extends StatelessWidget {
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.1),
-              spreadRadius: 1,
-              blurRadius: 1,
-              offset: Offset(1, 1), // changes position of shadow
+              color: AppColor.primary.withAlpha(50),
+              spreadRadius: 2,
+              blurRadius: 9,
+              offset: Offset(2, 1), // changes position of shadow
             ),
           ],
         ),
@@ -92,13 +92,12 @@ class TeacherItem extends StatelessWidget {
   Widget _buildExperienceAndRate() {
     return Row(
       children: [
-        Icon(Icons.work_history, color: AppColor.darker, size: 14),
+        Icon(Icons.people_alt_rounded, color: AppColor.darker, size: 14),
         const SizedBox(width: 5),
         Text(
-          data["experience"],
+          data["totalEnrolledStudents"].toString(),
           style: TextStyle(fontSize: 12, color: AppColor.darker),
         ),
-        /*
         const SizedBox(width: 15),
         Icon(Icons.star, color: AppColor.yellow, size: 14),
         const SizedBox(width: 5),
@@ -106,7 +105,6 @@ class TeacherItem extends StatelessWidget {
           data["review"],
           style: TextStyle(fontSize: 12, color: AppColor.darker),
         )
-        */
       ],
     );
   }

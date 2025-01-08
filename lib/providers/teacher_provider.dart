@@ -45,6 +45,7 @@ class TeacherProvider with ChangeNotifier {
       if (data != null) {
         _teacherData = {
           'user': Map<String, dynamic>.from(data['user'] as Map),
+          'teacher': Map<String, dynamic>.from(data as Map),
           'description': data['description']
         };
 

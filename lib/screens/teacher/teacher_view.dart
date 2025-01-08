@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:online_course/providers/teacher_provider.dart';
 import 'package:online_course/screens/course/course_detail.dart';
 import 'package:online_course/theme/color.dart';
+import 'package:online_course/utils/data.dart';
 import 'package:online_course/widgets/appbar.dart';
 import 'package:online_course/widgets/course_card.dart';
 import 'package:provider/provider.dart';
 import 'package:online_course/utils/translation.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../widgets/CardFb1.dart';
+import '../../widgets/StarRating.dart'; // Import localization
 
 class TeacherView extends StatelessWidget {
   final int teacherId;
@@ -39,7 +43,7 @@ class TeacherView extends StatelessWidget {
           return Scaffold(
             backgroundColor: AppColor.appBgColor,
             appBar: CustomAppBar(
-              title: '${user['firstName']} ${user['lastName']}',
+              title: AppLocalizations.of(context)!.teacher_info,
             ),
             body: SingleChildScrollView(
               child: Column(
@@ -47,14 +51,14 @@ class TeacherView extends StatelessWidget {
                   // Profile Header
                   _buildProfileHeader(context, user),
 
-                  // Stats Section
-                  _buildStatsSection(context, user['Teacher'], courses.length),
-
                   // Subject & Institution
-                  _buildTeacherInfo(context, user['Teacher']),
+                  _buildTeacherInfo(context, teacher['teacher']),
 
                   // About Teacher Section
                   _buildAboutTeacherSection(context, description),
+
+                  // Stats Section
+                  _buildStatsSection(context, teacher['teacher'], courses.length),
 
                   // Course Grid
                   _buildCourseGrid(context, courses),
@@ -72,7 +76,7 @@ class TeacherView extends StatelessWidget {
   Widget _buildProfileHeader(BuildContext context, Map<String, dynamic> user) {
     return Container(
       padding: EdgeInsets.all(16),
-      child: Column(
+      child: Row(
         children: [
           Container(
             width: 120,
@@ -109,15 +113,48 @@ class TeacherView extends StatelessWidget {
                     ),
             ),
           ),
-          SizedBox(height: 16),
-          Text(
-            '${user['firstName']} ${user['lastName']}',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: AppColor.darker,
-            ),
-            textAlign: TextAlign.center,
+          SizedBox(width: 16),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (user['firstNameAr'] != null && user['lastNameAr'] != null)
+                Text(
+                  '${user['firstNameAr']} '
+                      '${user['lastNameAr']}',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: AppColor.darker,
+                  ),
+                  textAlign: TextAlign.start,
+                ),
+              Text(
+                '${user['firstName'][0].toUpperCase()}${user['firstName'].substring(1).toLowerCase()} '
+                    '${user['lastName'][0].toUpperCase()}${user['lastName'].substring(1).toLowerCase()}',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                  color: AppColor.darker,
+                ),
+                textAlign: TextAlign.start,
+              ),
+              const SizedBox(height: 15,),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  StarRating(color: AppColor.yellow, starCount: 5, rating: 3.9, size: 22,),
+                  const SizedBox(width: 10,),
+                  Text(
+                    "3.9",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600
+                    ),
+                  )
+                ],
+              )
+            ],
           ),
         ],
       ),
@@ -142,17 +179,17 @@ class TeacherView extends StatelessWidget {
             AppLocalizations.of(context)!.years_experience,
           ),
           // Center: Course Count
-          _buildStatItem(
-            context,
-            Icons.school,
-            '$courseCount',
-            AppLocalizations.of(context)!.courses_count,
+          CardFb1(
+            text: AppLocalizations.of(context)!.courses_count,
+            imageUrl: "assets/images/video.png",
+            subtitle: '$courseCount',
+            onPressed: () {},
           ),
           // Right: Students Count
           _buildStatItem(
             context,
             Icons.people,
-            '0',
+            '${teacher['totalEnrolledStudents'].toString()}',
             AppLocalizations.of(context)!.students_count,
           ),
         ],
@@ -163,24 +200,33 @@ class TeacherView extends StatelessWidget {
   /// Displays the "About Teacher" Section
   Widget _buildAboutTeacherSection(BuildContext context, String? description) {
     return Container(
+      margin: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+        color: AppColor.primary.withAlpha(120)
+      ),
+      alignment: AlignmentDirectional.topStart,
       padding: const EdgeInsets.all(16),
       child: Column(
+        mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           // Section Title
           Text(
+            textAlign: TextAlign.start,
             AppLocalizations.of(context)!.about_teacher, // Localized title
             style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+              fontSize: 19,
+              fontWeight: FontWeight.w600,
               color: AppColor.darker,
             ),
           ),
           const SizedBox(height: 8),
-
           // Description Content
           if (description != null && description.isNotEmpty)
             Text(
+              textAlign: TextAlign.start,
               description,
               style: const TextStyle(
                 color: AppColor.mainColor,
@@ -213,17 +259,27 @@ class TeacherView extends StatelessWidget {
           Row(
             children: [
               Icon(Icons.subject, color: AppColor.mainColor),
+              Text(AppLocalizations.of(context)!.class_label + ": ", style: TextStyle(fontWeight: FontWeight.w500),),
               SizedBox(width: 8),
-              Text(
-                TranslationHelper.getTranslatedSubject(
-                  context,
-                  teacher['subject'],
+              Container(
+                padding:
+                const EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                    color: AppColor.secondary
+                        .withValues(alpha: 0.3),
+                    borderRadius:
+                    BorderRadius.all(
+                        Radius.circular(12))),
+                child: Text(
+                  TranslationHelper
+                      .getTranslatedSubject(
+                      context,
+                      teacher['subject']),
+                  style: TextStyle(
+                      color: Colors.purple),
                 ),
-                style: TextStyle(
-                  fontSize: 16,
-                  color: AppColor.mainColor,
-                ),
-              ),
+              )
+,
             ],
           ),
           SizedBox(height: 8),
@@ -233,6 +289,21 @@ class TeacherView extends StatelessWidget {
               SizedBox(width: 8),
               Text(
                 teacher['institution'] ??
+                    AppLocalizations.of(context)!.institution_unknown,
+                style: TextStyle(
+                  color: AppColor.mainColor,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8),
+          Row(
+            children: [
+              Icon(Icons.people_alt_rounded, color: AppColor.mainColor),
+              Text(AppLocalizations.of(context)!.students_count + ": ", style: TextStyle(fontWeight: FontWeight.w500),),
+              SizedBox(width: 8),
+              Text(
+                teacher['totalEnrolledStudents'].toString() ??
                     AppLocalizations.of(context)!.institution_unknown,
                 style: TextStyle(
                   color: AppColor.mainColor,

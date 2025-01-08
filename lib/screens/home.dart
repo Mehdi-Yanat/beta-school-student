@@ -18,6 +18,7 @@ import 'package:online_course/widgets/notification_box.dart';
 import 'package:online_course/widgets/teacher_item.dart';
 import 'package:provider/provider.dart';
 
+import '../utils/translation.dart';
 import '../widgets/custom_image.dart';
 import '../widgets/sliver_app_bar.dart';
 import '../widgets/snackbar.dart';
@@ -162,9 +163,9 @@ class _HomePageState extends State<HomePage> {
               radius: 17,
             ),
           ),
-          Expanded(
+          Flexible(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
@@ -183,13 +184,30 @@ class _HomePageState extends State<HomePage> {
                       fontSize: 22,
                       fontFamily: 'Rubik'),
                 ),
+                const SizedBox(height: 5),
+                Row(
+                  children: [
+                    Flexible(child:                     Text(
+                      TranslationHelper.getTranslatedClass(context, authProvider.student?.studentClass),
+                      style: TextStyle(
+                          color: AppColor.labelColor,
+                          fontSize: 15
+                      ),
+                    )
+                    )
+                  ],
+                ),
               ],
             ),
           ),
-          NotificationBox(
-            notifiedNumber: 0,
-            size: 10,
-          ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.asset("assets/icons/app_icon.png", opacity: AlwaysStoppedAnimation(0.91),),
+          )
+          // NotificationBox(
+          //   notifiedNumber: 0,
+          //   size: 10,
+          // ),
         ],
       );
     });
@@ -245,22 +263,37 @@ class _HomePageState extends State<HomePage> {
               _buildCoursesAccepted(),
               const SizedBox(height: 35),
               Padding(
-                padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                padding: EdgeInsetsDirectional.only(start: 40),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      localizations.teachers,
+                      '🎓 ' + localizations.teachers,
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w600,
                         color: AppColor.mainColor,
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsetsDirectional.only(start: 35),
+                      child:
+                      Text(
+                        textAlign: TextAlign.start,
+                        localizations.recommended_teachers_description,
+                        style: TextStyle(
+                          color: AppColor.textColor,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16,
+                        ),
+                      )
+                      ,)
                   ],
                 ),
               ),
               _buildAcceptedTeachers(),
+              const SizedBox(height: 20,)
             ],
           ),
         );
@@ -584,6 +617,7 @@ class _HomePageState extends State<HomePage> {
                     "name": fullName,
                     "subject": teacher.teacherInfo.subject,
                     "institution": teacher.teacherInfo.institution,
+                    "totalEnrolledStudents": teacher.teacherInfo.totalEnrolledStudents,
                     "experience":
                         "${teacher.teacherInfo.yearsOfExperience} years",
                     "review": "4.5",

@@ -26,28 +26,26 @@ class CustomBottomBar extends StatelessWidget {
         ],
       ),
       child: Stack(
+        clipBehavior: Clip.none,
         children: [
-          ClipRRect(
-            // Ensure blur is constrained to the bottom bar
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(40),
-              topRight: Radius.circular(40),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius:const BorderRadius.only(
+                topLeft: Radius.circular(40),
+                topRight: Radius.circular(40),
+              ),
             ),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(
-                  sigmaX: 10.0, sigmaY: 10.0), // Apply blur effect
-              child: Container(
+            child: Container(
                 height: 90,
                 width: double.infinity,
                 decoration: const BoxDecoration(
                   color: AppColor.appBgColor,
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(0),
-                    topRight: Radius.circular(0),
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40),
                   ),
                 ),
               ),
-            ),
           ),
           Positioned.fill(
               child: Padding(
