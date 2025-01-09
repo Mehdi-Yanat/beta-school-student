@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import '../../models/mycourses.dart';
 import '../../widgets/appbar.dart';
 import '../../providers/course_provider.dart';
+import '../../widgets/gradient_button.dart';
+import 'course_detail.dart';
 
 class MyCourseScreen extends StatefulWidget {
   @override
@@ -72,11 +74,7 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ViewChapterScreen(
-                  chapterId: course.course.chapters[0].id,
-                  courseId: course.course.id,
-                  chapter: course.course.chapters[0],
-                ),
+                builder: (context) => CourseDetailScreen(courseId: course.course.id)
               ),
             );
           },
@@ -174,6 +172,30 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                       */
                     ],
                   ),
+                ),
+                GradientButton(
+                  text: AppLocalizations.of(
+                      context)!
+                      .watch,
+                  // Add your localization key or hardcoded text
+                  variant: 'primary',
+                  // Variant setting (e.g., primary style)
+                  color: Colors.white,
+                  // Text or icon color
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute<dynamic>(
+                        maintainState: true,
+                        builder: (context) =>
+                            ViewChapterScreen(
+                                chapterId: course.course.chapters[0].id,
+                                courseId: course.course.id,
+                                chapter: course.course.chapters[0]
+                      ),
+                    )
+                    );
+                  },
                 ),
               ],
             ),
