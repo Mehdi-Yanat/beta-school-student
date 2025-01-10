@@ -218,20 +218,25 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
               Stack(
                 alignment: Alignment.center,
                 children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundImage: _newProfileImage != null
-                        ? FileImage(_newProfileImage!)
-                        : null,
-                    child: _newProfileImage == null
-                        ? Icon(Icons.person, size: 50)
-                        : null,
+                  GestureDetector(
+                    onTap: _pickImage,
+                    child: CircleAvatar(
+                      radius: 50,
+                      backgroundImage: _newProfileImage != null
+                          ? FileImage(_newProfileImage!)
+                          : null,
+                      child: _newProfileImage == null
+                          ? ClipOval(
+                            child: Image.network(context.read<AuthProvider>().student!.profilePic ?? '', width: 100, height: 100, fit: BoxFit.cover,)
+                          )
+                          : null,
+                    ),
                   ),
                   Positioned(
                     bottom: 0,
                     right: 0,
                     child: IconButton(
-                      icon: Icon(Icons.camera_alt),
+                      icon: Icon(Icons.camera_alt, color: Colors.white,),
                       onPressed: _pickImage,
                     ),
                   ),

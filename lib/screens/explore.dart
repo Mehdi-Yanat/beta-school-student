@@ -236,7 +236,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                                       " ${AppLocalizations.of(context)?.dzd}",
                                                   style: TextStyle(
                                                       color: AppColor.darker)),
-                                              SizedBox(width: 12),
+                                              Spacer(),
                                               Icon(Icons.video_collection_rounded,
                                                   color: AppColor.darker,
                                                   size: 18),
@@ -247,7 +247,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                                 style: TextStyle(
                                                     color: AppColor.darker),
                                               ),
-                                              SizedBox(width: 12),
                                               /*
                                         Spacer(),
                                         Row(
@@ -273,6 +272,13 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                                   style: TextStyle(
                                                       color: AppColor.darker)),
                                               Spacer(),
+                                              Icon(Icons.people_alt_rounded,
+                                                  color: AppColor.darker,
+                                                  size: 18),
+                                              Text(course.currentEnrollment.toString(), // TODO: implement rating
+                                                  style: TextStyle(
+                                                      color: AppColor.darker)),
+                                              Spacer(),
                                               Icon(Icons.schedule,
                                                   color: AppColor.darker,
                                                   size: 18),
@@ -282,7 +288,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                                     color: AppColor.darker),
                                               ),
                                             ],
-                                          )
+                                          ),
                                         ],
                                       ),
                                     )

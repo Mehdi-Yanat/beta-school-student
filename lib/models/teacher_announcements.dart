@@ -73,16 +73,21 @@ class Teacher {
       };
 
   String get fullName => '${user.firstName} ${user.lastName}';
+  String get fullNameAr => '${user.firstNameAr} ${user.lastNameAr}';
 }
 
 class User {
   final String firstName;
   final String lastName;
+  final String firstNameAr;
+  final String lastNameAr;
   final ProfilePic? profilePic;
 
   User({
     required this.firstName,
     required this.lastName,
+    required this.firstNameAr,
+    required this.lastNameAr,
     this.profilePic,
   });
 
@@ -90,6 +95,8 @@ class User {
     return User(
       firstName: json['firstName'],
       lastName: json['lastName'],
+      firstNameAr: json['firstNameAr'],
+      lastNameAr: json['lastNameAr'],
       profilePic: json['profilePic'] != null
           ? ProfilePic.fromJson(json['profilePic'])
           : null,
@@ -99,6 +106,8 @@ class User {
   Map<String, dynamic> toJson() => {
         'firstName': firstName,
         'lastName': lastName,
+        'firstNameAr': firstNameAr,
+        'lastNameAr': lastNameAr,
         'profilePic': profilePic?.toJson(),
       };
 }
