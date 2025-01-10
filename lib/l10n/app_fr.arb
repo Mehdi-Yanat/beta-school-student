@@ -1,5 +1,6 @@
 {
   "@@locale": "fr",
+  "about_chapter_title": "À propos",
   "about_course_description": "Dans l'édition et le design graphique, Lorem ipsum est un texte fictif couramment utilisé...",
   "about_course_title": "À propos du cours",
   "about_teacher": "À propos du professeur",
@@ -116,6 +117,7 @@
   "delete_account_title": "Supprimer le compte",
   "delete_button": "Supprimer",
   "description": "Vous pouvez payer avec la carte CIB, la carte EDAHABIA ou la passerelle Chargily. Choisissez la méthode de paiement qui vous convient le mieux.",
+  "did_you_like_chapter": "Avez-vous aimé ce chapitre?",
   "dzd": "DZD",
   "effective_date": "Date d'entrée en vigueur",
   "email": "Email",
@@ -368,5 +370,6 @@
   "wilaya_TLEMCEN": "Tlemcen",
   "wilaya_TOUGGOURT": "Touggourt",
   "wilaya_required": "Veuillez sélectionner une wilaya",
-  "years_experience": "Années d'expérience"
+  "years_experience": "Années d'expérience",
+  "chapter_rating": "Évaluation du chapitre"
 }

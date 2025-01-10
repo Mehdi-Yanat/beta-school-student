@@ -1,4 +1,5 @@
 {
+  "about_chapter_title": "عن الفصل",
   "about_course_description": "في النشر والتصميم الجرافيكي، يعد Lorem ipsum نصاً مكانياً يُستخدم بشكل شائع...",
   "about_course_title": "عن الدورة",
   "about_teacher": "نبذة عن الأستاذ",
@@ -115,6 +116,7 @@
   "delete_account_title": "حذف الحساب",
   "delete_button": "حذف",
   "description": "يمكنك الدفع عبر بطاقة CIB أو بطاقة الذهبية أو بوابة Chargily. اختر طريقة الدفع التي تناسبك.",
+  "did_you_like_chapter": "هل أعجبك الفصل؟",
   "dzd": "دج",
   "effective_date": "تاريخ السريان",
   "email": "البريد الإلكتروني",
@@ -166,7 +168,7 @@
   "lesson_title_2": "البحث في واجهة وتجربة المستخدم",
   "lessons": "الدروس",
   "lessons_completed": "دروس مكتملة",
-  "lessons_tab": "الدروس",
+  "lessons_tab": "الفصول",
   "level_advanced": "متقدم",
   "level_beginner": "مبتدئ",
   "level_intermediate": "متوسط",
@@ -369,6 +371,7 @@
   "wilaya_TLEMCEN": "تلمسان",
   "wilaya_TOUGGOURT": "تقرت",
   "wilaya_required": "الرجاء اختيار الولاية",
-  "years_experience": "سنوات الخبرة"
+  "years_experience": "سنوات الخبرة",
+  "chapter_rating": "تقييم الفصل"
 }
 

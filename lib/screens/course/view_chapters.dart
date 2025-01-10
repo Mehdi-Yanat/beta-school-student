@@ -1,16 +1,20 @@
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Localization
-import 'package:chewie/chewie.dart';
+import 'package:online_course/widgets/StarRating.dart';
 import 'package:online_course/widgets/snackbar.dart';
 import 'package:provider/provider.dart';
+import 'package:screen_protector/screen_protector.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
-import 'package:screen_protector/screen_protector.dart';
+
 import '../../providers/course_provider.dart';
 import '../../services/course_service.dart';
 import '../../theme/color.dart';
+import '../../utils/helper.dart';
+import '../../widgets/LikeListTile.dart';
+import '../../widgets/ToggleIconBtn.dart';
 import '../../widgets/appbar.dart';
-import '../../widgets/chapter_card.dart';
 
 class ViewChapterScreen extends StatefulWidget {
   final chapterId;
@@ -58,7 +62,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
     });
 
     // Initialize TabController for the TabBar
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
 
     // Initialize data protection feature
     ScreenProtector.protectDataLeakageWithBlur();
@@ -112,7 +116,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
           provider.setCurrentVideo({
             'url': videoUrl,
             'chapterId': chapterId,
-            'title': provider.courseData?['title'] ?? widget.chapter.title,
+            'title':  widget.chapter.title ?? provider.courseData?['title'],
           });
         }
 
@@ -264,6 +268,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
     final localizations = AppLocalizations.of(context); // Localization strings
     final courseProvider = Provider.of<CourseProvider>(context);
     final chapters = courseProvider.courseChapters;
+    bool isExpanded = false;
 
     return Scaffold(
       backgroundColor: AppColor.appBgColor,
@@ -342,6 +347,9 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                           tabs: [
                             Tab(
                                 text:
+                                    AppLocalizations.of(context)!.about_chapter_title),
+                            Tab(
+                                text:
                                     AppLocalizations.of(context)!.lessons_tab),
                             Tab(
                                 text: AppLocalizations.of(context)!
@@ -354,14 +362,95 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                           child: TabBarView(
                             controller: _tabController,
                             children: [
+                              Positioned.fill(
+                                child: Container(
+                                  padding: EdgeInsets.all(20),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        widget.chapter.title,
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          fontSize: 26,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColor.darker,
+                                        ),
+                                      ),
+                                      Text(
+                                        widget.chapter.description,
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColor.mainColor.withValues(alpha: 0.75),
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            AppLocalizations.of(context)!.chapter_rating + ": ",
+                                            style: TextStyle(
+                                              fontSize: 16
+                                            ),
+                                          ),
+                                          StarRating(color: AppColor.yellow, starCount: 5, rating: 5, size: 22,)
+                                        ],
+                                      )
+                                      ,
+                                      Spacer(flex: 2,),
+                                      Text(
+                                        AppLocalizations.of(context)!.did_you_like_chapter,
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColor.mainColor,
+                                        ),
+                                      ),
+                                      Container(
+                                        alignment: Alignment.bottomCenter,
+                                        child: ToggleIconBtnsFb1(
+                                            selectedColor: AppColor.blue,
+                                            icons: List<Icon>.from(
+                                                [Icon(Icons.thumb_up_rounded), Icon(Icons.thumb_down)]),
+                                            selected: (index) {
+                                              if (index == 0) {
+                                                //TODO: send a like
+                                              } else {
+                                                //TODO: send a dislike
+                                              }
+
+                                            }
+                                        ),
+                                      ),
+                                      Spacer(flex: 1,)
+                                    ],
+                                  ),
+                                ),
+                              ),
                               // Lessons Tab
                               ListView.builder(
                                 itemCount: chapters.length,
                                 itemBuilder: (context, index) {
                                   final chapter = chapters[index];
                                   return chapter != null
-                                      ? ChapterCard(
-                                          chapter: chapter,
+                                      ? GestureDetector(
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(horizontal: 25),
+                                              child: LikeListTile(
+                                            imgUrl: chapter.thumbnail.url,
+                                            title: '${index + 1}. ' + chapter.title,
+                                            likes: chapter.views.toString(),
+                                            color: AppColor.primary,
+                                            subtitle: Helpers
+                                                .formatHoursAndMinutes(
+                                                context,
+                                                chapter.duration),
+                                          )),
                                           onTap: () async {
                                             try {
                                               final chapterData =
@@ -426,7 +515,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
 
                                   return ExpansionTile(
                                     title: Text(
-                                      chapter.title,
+                                      '${index+1}. ' + chapter.title,
                                       style:
                                           TextStyle(color: AppColor.mainColor),
                                     ),
