@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:online_course/widgets/appbar.dart';
 
 import '../utils/helper.dart';
+import '../utils/translation.dart';
 
 class ExploreScreen extends StatefulWidget {
   @override
@@ -109,7 +110,14 @@ class _ExploreScreenState extends State<ExploreScreen> {
                         return _buildEmptyState();
                       }
 
-                      return ListView.builder(
+                      return GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 5,
+                          mainAxisSpacing: 16,
+                          childAspectRatio: 0.75,
+                        ),
+                        shrinkWrap: true,
                         controller: _scrollController,
                         itemCount: provider.courses.length +
                             (provider.hasMore ? 1 : 0),
@@ -144,7 +152,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                             ),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 8),
+                                  horizontal: 2, vertical: 8),
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: AppColor.cardColor,
@@ -161,16 +169,39 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(12)),
-                                      child: CourseImage(
-                                        thumbnailUrl:
-                                            firstChapter?.thumbnail?.url,
-                                        iconUrl: course.icon?.url,
-                                        width: double.infinity,
-                                        height: 190,
-                                      ),
+                                    Stack(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(12)),
+                                          child: CourseImage(
+                                            thumbnailUrl:
+                                                firstChapter?.thumbnail?.url,
+                                            iconUrl: course.icon?.url,
+                                            width: double.maxFinite,
+                                            height: 120,
+                                          ),
+                                        ),
+                                        Positioned(
+                                          child: Container(
+                                            padding:
+                                            const EdgeInsets.all(8.0),
+                                            decoration: BoxDecoration(
+                                                color: AppColor.brandMain
+                                                    .withValues(alpha: 1),
+                                                borderRadius:
+                                                BorderRadius.all(
+                                                    Radius.circular(12))),
+                                            child: Text(
+                                              TranslationHelper
+                                                  .getTranslatedSubject(
+                                                  context,
+                                                  course.subject),
+                                              style: TextStyle(
+                                                  color: Colors.white,fontWeight: FontWeight.w400, fontSize: 15),
+                                            ),
+                                          ),),
+                                      ],
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.all(12.0),
@@ -180,11 +211,22 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                         children: [
                                           Text(
                                             course.title,
+                                            maxLines: 1,
                                             style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
                                               color: AppColor.mainColor,
                                             ),
+                                          ),
+                                          Text(
+                                            course.description,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColor.mainColor.withValues(alpha: 0.5),
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
                                           SizedBox(height: 8),
                                           Row(
@@ -195,25 +237,17 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                                   style: TextStyle(
                                                       color: AppColor.darker)),
                                               SizedBox(width: 12),
-                                              Icon(Icons.play_circle_fill,
+                                              Icon(Icons.video_collection_rounded,
                                                   color: AppColor.darker,
                                                   size: 18),
                                               Text(
-                                                AppLocalizations.of(context)!
+                                                " " + AppLocalizations.of(context)!
                                                     .course_lessons(
                                                         course.chapters.length),
                                                 style: TextStyle(
                                                     color: AppColor.darker),
                                               ),
                                               SizedBox(width: 12),
-                                              Icon(Icons.schedule,
-                                                  color: AppColor.darker,
-                                                  size: 18),
-                                              Text(
-                                                "$formatedDuration ${AppLocalizations.of(context)!.hours}",
-                                                style: TextStyle(
-                                                    color: AppColor.darker),
-                                              ),
                                               /*
                                         Spacer(),
                                         Row(
@@ -227,6 +261,26 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                           ],
                                         ),
                                         */
+                                            ],
+                                          ),
+                                          const SizedBox(height: 15,),
+                                          Row(
+                                            children: [
+                                              Icon(Icons.star_rounded,
+                                                  color: AppColor.yellow,
+                                                  size: 18),
+                                              Text("4.5", // TODO: implement rating
+                                                  style: TextStyle(
+                                                      color: AppColor.darker)),
+                                              Spacer(),
+                                              Icon(Icons.schedule,
+                                                  color: AppColor.darker,
+                                                  size: 18),
+                                              Text(
+                                                Helpers.formatHoursAndMinutes(context, course.totalWatchTime ?? 0),
+                                                style: TextStyle(
+                                                    color: AppColor.darker),
+                                              ),
                                             ],
                                           )
                                         ],

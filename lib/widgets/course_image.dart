@@ -131,7 +131,7 @@ class CourseImage extends StatelessWidget {
 
   Widget _buildIconOverlay() {
     return Positioned(
-      top: 60,
+      top: 30,
       left: 0,
       right: 0,
       child: Center(
