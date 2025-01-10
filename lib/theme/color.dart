@@ -15,6 +15,8 @@ class AppColor {
   // React's "primary.main" is mapped to Flutter's "primary"
   static const primary = Color(0xFF0075FF);
 
+  static const primaryTextContrast = Color(0xFF004E68);
+
   // React's "primary.focus" is mapped to Flutter's "secondary"
   static const secondary = Color(0xFF9F7AEA);
 

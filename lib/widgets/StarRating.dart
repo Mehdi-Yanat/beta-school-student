@@ -22,7 +22,7 @@ class StarRating extends StatelessWidget {
     // If the index is greater than or equal to the rating, we show an empty star
     if (index >= rating) {
       icon = Icon(
-        Icons.star_border,  // Empty star
+        Icons.star_border_rounded,  // Empty star
         size: size ?? 16,
         color: AppColors.secondaryContainerGray,  // Light gray for empty stars
       );
@@ -30,7 +30,7 @@ class StarRating extends StatelessWidget {
     // If the index is between the rating minus 1 and the rating, we show a half star
     else if (index > rating - 1 && index < rating) {
       icon = Icon(
-        Icons.star_half,  // Half star
+        Icons.star_half_rounded,  // Half star
         size: size ?? 16,
         color: color ?? AppColors.ratingPrimaryColor,  // Default to gold color or custom color
       );
@@ -38,7 +38,7 @@ class StarRating extends StatelessWidget {
     // Otherwise, we show a full star
     else {
       icon = Icon(
-        Icons.star,  // Full star
+        Icons.star_rounded,  // Full star
         size: size ?? 16,
         color: color ?? AppColors.ratingPrimaryColor,  // Default to gold color or custom color
       );

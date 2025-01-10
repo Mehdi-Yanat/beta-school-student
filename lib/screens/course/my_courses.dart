@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:online_course/screens/course/view_chapters.dart';
 import 'package:online_course/theme/color.dart';
+import 'package:online_course/utils/helper.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/mycourses.dart';
@@ -150,14 +151,22 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                           ),
                           const Spacer(),
                           */
-
+                          Icon(Icons.video_collection_rounded, size: 15,),
+                          const SizedBox(width: 8,),
                           Text(
-                            '${course.course.chapters.length} ${localizations.total_lessons}',
+                            '${course.course.chapters.length}',
                             style: TextStyle(
-                              color: AppColor.inActiveColor,
-                              fontSize: 12,
+                              color: AppColor.darker,
+                              fontSize: 15,
                             ),
                           ),
+                          const SizedBox(width: 16,),
+                          Icon(Icons.timelapse_rounded, size: 15,),
+                          const SizedBox(width: 5,),
+
+                          Text(
+                            Helpers.formatHoursAndMinutes(context, course.course.totalWatchTime)
+                          )
                         ],
                       ),
                       const SizedBox(height: 6),
@@ -178,12 +187,12 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                       context)!
                       .watch,
                   // Add your localization key or hardcoded text
-                  variant: 'primary',
+                  variant: 'blueGradient',
                   // Variant setting (e.g., primary style)
                   color: Colors.white,
                   // Text or icon color
                   onTap: () {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute<dynamic>(
                         maintainState: true,

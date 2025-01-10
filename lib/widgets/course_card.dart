@@ -59,6 +59,7 @@ class CourseCard extends StatelessWidget {
                             ),
                     ),
                     // Level Badge
+                    if (course['rating'] ?? 0 * 5 > 2.7)
                     Positioned(
                       top: 8,
                       right: 8,
@@ -69,16 +70,16 @@ class CourseCard extends StatelessWidget {
                           color: AppColor.mainColor.withValues(alpha: 0.9),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: Text(
-                          TranslationHelper.getTranslatedLevel(
-                            context,
-                            course['level'],
-                          ),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
-                        ),
+                        child: Row(
+                            children: [
+                              Icon(Icons.star_rounded, color: AppColor.yellow, size: 20,),
+                              Text(
+                                course['rating'] ?? "0",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                ),
+                        )]),
                       ),
                     ),
                     // Course Class Label - Position Absolute (Bottom Left of the Image)
@@ -124,6 +125,16 @@ class CourseCard extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                       color: AppColor.darker,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    course['description'],
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 12,
+                      color: AppColor.textColor,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
