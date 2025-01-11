@@ -80,7 +80,7 @@ class FeatureItem extends StatelessWidget {
             // Discount badge (if applicable)
             if (hasDiscount)
               Positioned(
-                top: 20,
+                top: 0,
                 right: 0,
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -96,6 +96,7 @@ class FeatureItem extends StatelessWidget {
                     ],
                   ),
                   child: Row(
+                    textDirection: TextDirection.ltr,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
@@ -152,7 +153,7 @@ class FeatureItem extends StatelessWidget {
 
             // Price section
             Positioned(
-              top: 170,
+              top: hasDiscount ? 150: 170,
               right: 15,
               child: Container(
                 padding: EdgeInsets.all(10),

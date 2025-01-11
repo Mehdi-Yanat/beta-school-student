@@ -521,7 +521,7 @@ class _HomePageState extends State<HomePage> {
             final discountAmount =
                 hasDiscount ? (course.price * course.discount! / 100) : 0;
             final finalPrice =
-                hasDiscount ? (course.price - discountAmount) : course.price;
+                hasDiscount ? (course.price - discountAmount).toInt() : course.price.toInt();
 
             return FeatureItem(
               data: {
@@ -530,8 +530,8 @@ class _HomePageState extends State<HomePage> {
                 "icon": course.icon?.url ?? "assets/images/course_icon.png",
                 "name": course.title,
                 "originalPrice":
-                    hasDiscount ? "${originalPrice.toString()} DA" : "",
-                "price": "${finalPrice.toString()} DA",
+                    hasDiscount ? "${originalPrice.toString()} " + AppLocalizations.of(context)!.dzd  : "",
+                "price": "${finalPrice.toString()} " + AppLocalizations.of(context)!.dzd,
                 "discountPercentage": course.discount.toString(),
                 "session":
                     "${course.chapters.length} ${AppLocalizations.of(context)!.courses}",
