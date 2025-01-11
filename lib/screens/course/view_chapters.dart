@@ -363,70 +363,114 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                             children: [
                               Container(
                                 padding: EdgeInsets.all(20),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      widget.chapter.title,
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        fontSize: 26,
-                                        fontWeight: FontWeight.w600,
-                                        color: AppColor.darker,
-                                      ),
-                                    ),
-                                    Text(
-                                      widget.chapter.description,
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColor.mainColor.withValues(alpha: 0.75),
-                                      ),
-                                    ),
-                                    Spacer(),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          AppLocalizations.of(context)!.chapter_rating + ": ",
-                                          style: TextStyle(
-                                            fontSize: 16
-                                          ),
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        widget.chapter.title,
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          fontSize: 26,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColor.darker,
                                         ),
-                                        StarRating(color: AppColor.yellow, starCount: 5, rating: 5, size: 22,)
-                                      ],
-                                    )
-                                    ,
-                                    Spacer(flex: 2,),
-                                    Text(
-                                      AppLocalizations.of(context)!.did_you_like_chapter,
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColor.mainColor,
                                       ),
-                                    ),
-                                    Container(
-                                      alignment: Alignment.bottomCenter,
-                                      child: ToggleIconBtnsFb1(
-                                          selectedColor: AppColor.blue,
-                                          icons: List<Icon>.from(
-                                              [Icon(Icons.thumb_up_rounded), Icon(Icons.thumb_down)]),
-                                          selected: (index) {
-                                            if (index == 0) {
-                                              //TODO: send a like
-                                            } else {
-                                              //TODO: send a dislike
-                                            }
+                                      Text(
+                                        widget.chapter.description,
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColor.mainColor.withValues(alpha: 0.75),
+                                        ),
+                                      ),
+                                      SizedBox(height: 30,),
+                                      if(widget.chapter.rating != null)
+                                      Row(
+                                        children: [
+                                          Text(
+                                            AppLocalizations.of(context)!.chapter_rating + ": ",
+                                            style: TextStyle(
+                                              fontSize: 16
+                                            ),
+                                          ),
+                                          StarRating(color: AppColor.yellow, starCount: 5, rating: widget.chapter.rating * 5, size: 22,),
+                                          Text(
+                                            widget.chapter.rating.toString(),
+                                            style: TextStyle(
+                                                fontSize: 16
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.remove_red_eye_rounded, color: AppColor.primary,),
+                                          Text(
+                                            " " + AppLocalizations.of(context)!.chapter_views + ": ",
+                                            style: TextStyle(
+                                                fontSize: 16
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12,),
+                                          Text(
+                                            widget.chapter.views.toString() + " " + AppLocalizations.of(context)!.a_view,
+                                            style: TextStyle(
+                                                fontSize: 16
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.timelapse_rounded, color: AppColor.primary,),
+                                          Text(
+                                            " " + AppLocalizations.of(context)!.watch_time + ": ",
+                                            style: TextStyle(
+                                                fontSize: 16
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12,),
+                                          Text(
+                                            Helpers.formatHoursAndMinutes(context, widget.chapter.duration),
+                                            style: TextStyle(
+                                                fontSize: 16
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(height: 60,),
+                                      Text(
+                                        AppLocalizations.of(context)!.did_you_like_chapter,
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColor.mainColor,
+                                        ),
+                                      ),
+                                      Container(
+                                        alignment: Alignment.bottomCenter,
+                                        child: ToggleIconBtnsFb1(
+                                            selectedColor: AppColor.blue,
+                                            icons: List<Icon>.from(
+                                                [Icon(Icons.thumb_up_rounded), Icon(Icons.thumb_down)]),
+                                            selected: (index) {
+                                              if (index == 0) {
+                                                //TODO: send a like
+                                              } else {
+                                                //TODO: send a dislike
+                                              }
 
-                                          }
+                                            }
+                                        ),
                                       ),
-                                    ),
-                                    Spacer(flex: 1,)
-                                  ],
+                                      SizedBox(width: 20,)
+                                    ],
+                                  ),
                                 ),
                               ),
                               // Lessons Tab

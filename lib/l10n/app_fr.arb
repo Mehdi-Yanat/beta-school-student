@@ -372,5 +372,8 @@
   "wilaya_required": "Veuillez sélectionner une wilaya",
   "years_experience": "Années d'expérience",
   "chapter_rating": "Évaluation du chapitre",
-  "all_teacher_announces_title": "Annonces de l'enseignants"
+  "all_teacher_announces_title": "Annonces de l'enseignants",
+  "chapter_views": "Vues du chapitre",
+  "watch_time": "Temps de visionnage",
+  "a_view": "Vue(s)"
 }

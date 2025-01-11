@@ -373,6 +373,9 @@
   "wilaya_required": "الرجاء اختيار الولاية",
   "years_experience": "سنوات الخبرة",
   "chapter_rating": "تقييم الفصل",
-  "all_teacher_announces_title": "كل إعلانات الأستاذ"
+  "all_teacher_announces_title": "كل إعلانات الأستاذ",
+  "chapter_views": "عدد المشاهدات",
+  "watch_time": "وقت المشاهدة",
+  "a_view": "مرة"
 }
 
