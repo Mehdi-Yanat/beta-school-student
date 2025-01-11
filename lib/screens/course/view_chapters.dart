@@ -268,7 +268,6 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
     final localizations = AppLocalizations.of(context); // Localization strings
     final courseProvider = Provider.of<CourseProvider>(context);
     final chapters = courseProvider.courseChapters;
-    bool isExpanded = false;
 
     return Scaffold(
       backgroundColor: AppColor.appBgColor,
@@ -362,74 +361,72 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                           child: TabBarView(
                             controller: _tabController,
                             children: [
-                              Positioned.fill(
-                                child: Container(
-                                  padding: EdgeInsets.all(20),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        widget.chapter.title,
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                          fontSize: 26,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColor.darker,
-                                        ),
+                              Container(
+                                padding: EdgeInsets.all(20),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      widget.chapter.title,
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                        fontSize: 26,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColor.darker,
                                       ),
-                                      Text(
-                                        widget.chapter.description,
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColor.mainColor.withValues(alpha: 0.75),
-                                        ),
+                                    ),
+                                    Text(
+                                      widget.chapter.description,
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColor.mainColor.withValues(alpha: 0.75),
                                       ),
-                                      Spacer(),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            AppLocalizations.of(context)!.chapter_rating + ": ",
-                                            style: TextStyle(
-                                              fontSize: 16
-                                            ),
+                                    ),
+                                    Spacer(),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          AppLocalizations.of(context)!.chapter_rating + ": ",
+                                          style: TextStyle(
+                                            fontSize: 16
                                           ),
-                                          StarRating(color: AppColor.yellow, starCount: 5, rating: 5, size: 22,)
-                                        ],
-                                      )
-                                      ,
-                                      Spacer(flex: 2,),
-                                      Text(
-                                        AppLocalizations.of(context)!.did_you_like_chapter,
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColor.mainColor,
                                         ),
+                                        StarRating(color: AppColor.yellow, starCount: 5, rating: 5, size: 22,)
+                                      ],
+                                    )
+                                    ,
+                                    Spacer(flex: 2,),
+                                    Text(
+                                      AppLocalizations.of(context)!.did_you_like_chapter,
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColor.mainColor,
                                       ),
-                                      Container(
-                                        alignment: Alignment.bottomCenter,
-                                        child: ToggleIconBtnsFb1(
-                                            selectedColor: AppColor.blue,
-                                            icons: List<Icon>.from(
-                                                [Icon(Icons.thumb_up_rounded), Icon(Icons.thumb_down)]),
-                                            selected: (index) {
-                                              if (index == 0) {
-                                                //TODO: send a like
-                                              } else {
-                                                //TODO: send a dislike
-                                              }
-
+                                    ),
+                                    Container(
+                                      alignment: Alignment.bottomCenter,
+                                      child: ToggleIconBtnsFb1(
+                                          selectedColor: AppColor.blue,
+                                          icons: List<Icon>.from(
+                                              [Icon(Icons.thumb_up_rounded), Icon(Icons.thumb_down)]),
+                                          selected: (index) {
+                                            if (index == 0) {
+                                              //TODO: send a like
+                                            } else {
+                                              //TODO: send a dislike
                                             }
-                                        ),
+
+                                          }
                                       ),
-                                      Spacer(flex: 1,)
-                                    ],
-                                  ),
+                                    ),
+                                    Spacer(flex: 1,)
+                                  ],
                                 ),
                               ),
                               // Lessons Tab
@@ -522,7 +519,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                       final file = attachment.file;
                                       return ListTile(
                                         title: Text(
-                                            file.fileName ?? 'Unknown File'),
+                                            file.fileName),
                                         trailing: Icon(Icons.download,
                                             color: AppColor.primary),
                                         onTap: () async {
