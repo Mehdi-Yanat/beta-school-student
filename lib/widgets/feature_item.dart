@@ -22,6 +22,10 @@ class FeatureItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool hasDiscount = data["discountPercentage"] != null &&
+        data["originalPrice"] != null &&
+        (num.tryParse(data["discountPercentage"].toString()) ?? 0) > 0;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -32,26 +36,17 @@ class FeatureItem extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color(0xFF00BBFF), // main
-              Color(0xFF21D4FD), // state
+              Color(0xFF00BBFF),
+              Color(0xFF21D4FD),
             ],
-            begin:
-                Alignment(0.838, 0.546), // Start point shifted for 127 degrees
-            end: Alignment(-0.838, -0.546), // End point aligned for 127 degrees
+            begin: Alignment(0.838, 0.546),
+            end: Alignment(-0.838, -0.546),
           ),
           borderRadius: BorderRadius.circular(20),
-          // boxShadow: [
-          //   BoxShadow(
-          //     color: AppColor.shadowColor.withValues(alpha: 0.2),
-          //     spreadRadius: 3,
-          //     blurRadius: 10,
-          //     offset: Offset(1, 3), // changes position of shadow
-          //   ),
-          // ],
         ),
         child: Stack(
           children: [
-            // Background thumbnail with blur
+            // Background and thumbnail
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
@@ -64,7 +59,6 @@ class FeatureItem extends StatelessWidget {
                     width: width,
                     height: 190,
                   ),
-                  // Gradient overlay
                   Container(
                     width: double.infinity,
                     height: 190,
@@ -82,7 +76,48 @@ class FeatureItem extends StatelessWidget {
                 ],
               ),
             ),
-            // Centered course icon
+
+            // Discount badge (if applicable)
+            if (hasDiscount)
+              Positioned(
+                top: 20,
+                right: 0,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.2),
+                        blurRadius: 4,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.local_offer,
+                        color: Colors.white,
+                        size: 16,
+                      ),
+                      SizedBox(width: 4),
+                      Text(
+                        "-${data["discountPercentage"]}%",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+            // Course icon
             Positioned(
               top: 10,
               left: 0,
@@ -108,23 +143,63 @@ class FeatureItem extends StatelessWidget {
                     child: CustomImage(
                       data["icon"] ?? "assets/images/course_icon.png",
                       fit: BoxFit.cover,
-                      isNetwork: data["icon"].toString().startsWith('https')
-                          ? true
-                          : false,
+                      isNetwork: data["icon"].toString().startsWith('https'),
                     ),
                   ),
                 ),
               ),
             ),
+
+            // Price section
             Positioned(
               top: 170,
               right: 15,
-              child: _buildPrice(),
+              child: Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColor.shadowColor.withValues(alpha: 0.5),
+                      spreadRadius: 1,
+                      blurRadius: 2,
+                      offset: Offset(0, 1),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    if (hasDiscount) ...[
+                      Text(
+                        data["originalPrice"],
+                        style: TextStyle(
+                          color: Colors.grey,
+                          decoration: TextDecoration.lineThrough,
+                          fontSize: 12,
+                        ),
+                      ),
+                      SizedBox(height: 2),
+                    ],
+                    Text(
+                      data["price"],
+                      style: TextStyle(
+                        color: hasDiscount ? Colors.red : AppColor.darker,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
+
+            // Course info
             Positioned(
               top: 210,
               child: _buildInfo(),
-            )
+            ),
           ],
         ),
       ),
@@ -138,53 +213,23 @@ class FeatureItem extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(
-            height: 10,
-          ),
+          SizedBox(height: 10),
           _buildTeacherDetails(),
-          const SizedBox(
-            height: 2,
-          ),
+          SizedBox(height: 2),
           Text(
             data["name"],
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-                fontSize: 22,
-                color: AppColor.labelColor,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Rubik'),
+              fontSize: 22,
+              color: AppColor.labelColor,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Rubik',
+            ),
           ),
-          const SizedBox(
-            height: 10,
-          ),
+          SizedBox(height: 10),
           _buildAttributes(),
         ],
-      ),
-    );
-  }
-
-  Widget _buildPrice() {
-    return Container(
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(25),
-        boxShadow: [
-          BoxShadow(
-            color: AppColor.shadowColor.withValues(alpha: 0.5),
-            spreadRadius: 1,
-            blurRadius: 2,
-            offset: Offset(0, 1),
-          ),
-        ],
-      ),
-      child: Text(
-        data["price"],
-        style: TextStyle(
-          color: AppColor.darker,
-          fontWeight: FontWeight.w800,
-        ),
       ),
     );
   }
@@ -202,7 +247,7 @@ class FeatureItem extends StatelessWidget {
               data["session"] ?? "0 Sessions",
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Expanded(
             flex: 2,
             child: _getAttribute(
@@ -211,7 +256,7 @@ class FeatureItem extends StatelessWidget {
               data["duration"] ?? "0 min",
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Expanded(
             flex: 2,
             child: _getAttribute(
@@ -233,7 +278,7 @@ class FeatureItem extends StatelessWidget {
           size: 22,
           color: color,
         ),
-        const SizedBox(width: 3),
+        SizedBox(width: 3),
         Expanded(
           child: Text(
             info,
@@ -259,23 +304,23 @@ class FeatureItem extends StatelessWidget {
                 width: 40,
                 height: 40,
                 isNetwork:
-                    data["teacherProfilePic"].toString().startsWith('https')
-                        ? true
-                        : false,
+                    data["teacherProfilePic"].toString().startsWith('https'),
               )
             : SvgPicture.asset(
                 "assets/icons/profile.svg",
                 color: Colors.white,
               ),
         Container(
-            margin: EdgeInsets.all(10),
-            child: Text(
-              data["teacherName"],
-              style: TextStyle(
-                  color: AppColor.labelColor,
-                  fontWeight: FontWeight.normal,
-                  fontSize: 19),
-            ))
+          margin: EdgeInsets.all(10),
+          child: Text(
+            data["teacherName"],
+            style: TextStyle(
+              color: AppColor.labelColor,
+              fontWeight: FontWeight.normal,
+              fontSize: 19,
+            ),
+          ),
+        )
       ],
     );
   }

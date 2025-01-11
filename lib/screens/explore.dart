@@ -168,6 +168,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize:
+                                      MainAxisSize.min, // Add this line
                                   children: [
                                     Stack(
                                       children: [
@@ -182,29 +184,72 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                             height: 120,
                                           ),
                                         ),
+                                        if (course.discount != null &&
+                                            course.discount! > 0)
+                                          Positioned(
+                                            top: 80,
+                                            right: 0,
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 12, vertical: 6),
+                                              decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black
+                                                        .withValues(alpha: 0.2),
+                                                    blurRadius: 4,
+                                                    offset: Offset(0, 2),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Icon(
+                                                    Icons.local_offer,
+                                                    color: Colors.white,
+                                                    size: 16,
+                                                  ),
+                                                  SizedBox(width: 4),
+                                                  Text(
+                                                    "-${course.discount}%",
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
                                         Positioned(
                                           child: Container(
-                                            padding:
-                                            const EdgeInsets.all(8.0),
+                                            padding: const EdgeInsets.all(12.0),
                                             decoration: BoxDecoration(
                                                 color: AppColor.brandMain
                                                     .withValues(alpha: 1),
-                                                borderRadius:
-                                                BorderRadius.all(
+                                                borderRadius: BorderRadius.all(
                                                     Radius.circular(12))),
                                             child: Text(
                                               TranslationHelper
                                                   .getTranslatedSubject(
-                                                  context,
-                                                  course.subject),
+                                                      context, course.subject),
                                               style: TextStyle(
-                                                  color: Colors.white,fontWeight: FontWeight.w400, fontSize: 15),
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 15),
                                             ),
-                                          ),),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.all(12.0),
+                                      padding: const EdgeInsets.all(8.0),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -223,27 +268,59 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                             style: TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.w400,
-                                              color: AppColor.mainColor.withValues(alpha: 0.5),
+                                              color: AppColor.mainColor
+                                                  .withValues(alpha: 0.5),
                                             ),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                           ),
-                                          SizedBox(height: 8),
+                                          SizedBox(height: 7),
                                           Row(
                                             children: [
-                                              Text(
-                                                  course.price.toString() +
-                                                      " ${AppLocalizations.of(context)?.dzd}",
-                                                  style: TextStyle(
-                                                      color: AppColor.darker)),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  if (course.discount != null &&
+                                                      course.discount! > 0) ...[
+                                                    Text(
+                                                      "${course.price} ${AppLocalizations.of(context)?.dzd}",
+                                                      style: TextStyle(
+                                                        color: Colors.grey,
+                                                        decoration:
+                                                            TextDecoration
+                                                                .lineThrough,
+                                                        fontSize: 8,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                  Text(
+                                                    "${(course.price - (course.price * (course.discount ?? 0) / 100)).toStringAsFixed(2)} ${AppLocalizations.of(context)?.dzd}",
+                                                    style: TextStyle(
+                                                        color: course.discount !=
+                                                                    null &&
+                                                                course.discount! >
+                                                                    0
+                                                            ? Colors.red
+                                                            : AppColor.darker,
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                        fontSize: 12),
+                                                  ),
+                                                ],
+                                              ),
                                               Spacer(),
-                                              Icon(Icons.video_collection_rounded,
+                                              Icon(
+                                                  Icons
+                                                      .video_collection_rounded,
                                                   color: AppColor.darker,
                                                   size: 18),
                                               Text(
-                                                " " + AppLocalizations.of(context)!
-                                                    .course_lessons(
-                                                        course.chapters.length),
+                                                " " +
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .course_lessons(course
+                                                            .chapters.length),
                                                 style: TextStyle(
                                                     color: AppColor.darker),
                                               ),
@@ -262,20 +339,25 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                         */
                                             ],
                                           ),
-                                          const SizedBox(height: 15,),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
                                           Row(
                                             children: [
                                               Icon(Icons.star_rounded,
                                                   color: AppColor.yellow,
                                                   size: 18),
-                                              Text("4.5", // TODO: implement rating
+                                              Text(
+                                                  "4.5", // TODO: implement rating
                                                   style: TextStyle(
                                                       color: AppColor.darker)),
                                               Spacer(),
                                               Icon(Icons.people_alt_rounded,
                                                   color: AppColor.darker,
                                                   size: 18),
-                                              Text(course.currentEnrollment.toString(), // TODO: implement rating
+                                              Text(
+                                                  course.currentEnrollment
+                                                      .toString(), // TODO: implement rating
                                                   style: TextStyle(
                                                       color: AppColor.darker)),
                                               Spacer(),
@@ -283,7 +365,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                                   color: AppColor.darker,
                                                   size: 18),
                                               Text(
-                                                Helpers.formatHoursAndMinutes(context, course.totalWatchTime ?? 0),
+                                                Helpers.formatHoursAndMinutes(
+                                                    context,
+                                                    course.totalWatchTime ?? 0),
                                                 style: TextStyle(
                                                     color: AppColor.darker),
                                               ),

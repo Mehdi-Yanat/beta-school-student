@@ -74,6 +74,15 @@ class CourseDetailScreen extends StatelessWidget {
           bool isPurchased = provider.hasPurchasedCourse(course['id']);
           bool isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
+          // Calculate discount percentage and prices
+          final hasDiscount =
+              course['discount'] != null && course['discount']! > 0;
+          final originalPrice = course['price'].toDouble();
+          final discountAmount =
+              hasDiscount ? (originalPrice * course['discount']! / 100) : 0;
+          final finalPrice =
+              hasDiscount ? (originalPrice - discountAmount) : originalPrice;
+
           return Scaffold(
             backgroundColor: AppColor.appBgColor,
             appBar: CustomAppBar(
@@ -514,14 +523,12 @@ class CourseDetailScreen extends StatelessWidget {
                                                           color: AppColor
                                                               .mainColor),
                                                     ),
-                                                    Text(
-                                                      'DZD ${course['price']}',
-                                                      style: TextStyle(
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: AppColor.darker,
-                                                      ),
+                                                    _buildPriceDisplay(
+                                                      course['price']
+                                                          .toDouble(),
+                                                      finalPrice,
+                                                      course['discount']
+                                                          ?.toDouble(),
                                                     ),
                                                   ],
                                                 ),
@@ -532,17 +539,17 @@ class CourseDetailScreen extends StatelessWidget {
                                                           .isLoading
                                                       ? AppLocalizations.of(
                                                               context)!
-                                                          .loading // Show "Loading..." when in progress
+                                                          .loading
                                                       : context
                                                               .watch<
                                                                   CourseProvider>()
                                                               .isSuccess
                                                           ? AppLocalizations.of(
                                                                   context)!
-                                                              .loading // Show "Enrolled" when successful
+                                                              .loading
                                                           : AppLocalizations.of(
                                                                   context)!
-                                                              .buy_now, // Default "Buy Now" text
+                                                              .buy_now,
                                                   variant: 'primary',
                                                   color: Colors.white,
                                                   onTap: context
@@ -553,7 +560,7 @@ class CourseDetailScreen extends StatelessWidget {
                                                               .watch<
                                                                   CourseProvider>()
                                                               .isSuccess
-                                                      ? () {} // Disable button if loading or enrollment is already successful
+                                                      ? () {}
                                                       : () async {
                                                           final courseProvider =
                                                               context.read<
@@ -562,14 +569,11 @@ class CourseDetailScreen extends StatelessWidget {
                                                               courseProvider
                                                                       .courseData?[
                                                                   'course']['id'];
-
-                                                          // Trigger enrollment and redirection
                                                           final response =
                                                               await courseProvider
                                                                   .enrollAndRedirect(
                                                                       context,
                                                                       courseId);
-
                                                           if (response ==
                                                               true) {
                                                             courseProvider
@@ -698,16 +702,16 @@ class CourseDetailScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-              _buildDetailRow(
+          _buildDetailRow(
+            context,
+            Icons.school,
+            AppLocalizations.of(context)!.course_class,
+            TranslationHelper.getTranslatedClass(
                 context,
-                Icons.school,
-                AppLocalizations.of(context)!.course_class,
-                TranslationHelper.getTranslatedClass(
-                  context,
-                  (course['class'] as List?)
-                      ?.map((classItem) => classItem.toString())
-                      .join(' • ')),
-              ),
+                (course['class'] as List?)
+                    ?.map((classItem) => classItem.toString())
+                    .join(' • ')),
+          ),
           _buildDetailRow(
             context,
             Icons.school,
@@ -742,6 +746,60 @@ class CourseDetailScreen extends StatelessWidget {
             color: AppColor.darker,
           ),
         ),
+      ],
+    );
+  }
+
+  Widget _buildPriceDisplay(
+      double originalPrice, double finalPrice, double? discount) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (discount != null && discount > 0) ...[
+          Text(
+            'DZD ${originalPrice.toStringAsFixed(2)}',
+            style: TextStyle(
+              fontSize: 16,
+              color: AppColor.textColor,
+              decoration: TextDecoration.lineThrough,
+            ),
+          ),
+          Row(
+            children: [
+              Text(
+                'DZD ${finalPrice.toStringAsFixed(2)}',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: AppColor.red,
+                ),
+              ),
+              SizedBox(width: 8),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: AppColor.red,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  '-${discount.toStringAsFixed(0)}%',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ] else
+          Text(
+            'DZD ${originalPrice.toStringAsFixed(2)}',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: AppColor.darker,
+            ),
+          ),
       ],
     );
   }

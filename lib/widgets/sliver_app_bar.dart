@@ -1,4 +1,4 @@
-import 'dart:ui'; // For BackdropFilter
+// For BackdropFilter
 import 'package:flutter/material.dart';
 
 class CustomSliverAppBar extends StatelessWidget {

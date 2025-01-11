@@ -500,8 +500,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
 
                                   print('attachments $attachments');
 
-                                  if (attachments == null ||
-                                      attachments.isEmpty) {
+                                  if (attachments.isEmpty) {
                                     return ListTile(
                                       title: Text(
                                         AppLocalizations.of(context)!
@@ -528,17 +527,15 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                             color: AppColor.primary),
                                         onTap: () async {
                                           final url = file.url;
-                                          if (url != null) {
-                                            try {
-                                              await launchUrl(Uri.parse(url));
-                                            } catch (_) {
-                                              SnackBarHelper.showErrorSnackBar(
-                                                  context,
-                                                  AppLocalizations.of(context)!
-                                                      .failed_to_open_attachment);
-                                            }
+                                          try {
+                                            await launchUrl(Uri.parse(url));
+                                          } catch (_) {
+                                            SnackBarHelper.showErrorSnackBar(
+                                                context,
+                                                AppLocalizations.of(context)!
+                                                    .failed_to_open_attachment);
                                           }
-                                        },
+                                                                                },
                                       );
                                     }).toList(),
                                   );

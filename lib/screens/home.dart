@@ -184,14 +184,13 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 5),
                 Row(
                   children: [
-                    Flexible(child:                     Text(
-                      TranslationHelper.getTranslatedClass(context, authProvider.student?.studentClass),
-                      style: TextStyle(
-                          color: AppColor.labelColor,
-                          fontSize: 15
-                      ),
-                    )
-                    )
+                    Flexible(
+                        child: Text(
+                      TranslationHelper.getTranslatedClass(
+                          context, authProvider.student?.studentClass),
+                      style:
+                          TextStyle(color: AppColor.labelColor, fontSize: 15),
+                    ))
                   ],
                 ),
               ],
@@ -199,7 +198,10 @@ class _HomePageState extends State<HomePage> {
           ),
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Image.asset("assets/icons/app_icon.png", opacity: AlwaysStoppedAnimation(0.91),),
+            child: Image.asset(
+              "assets/icons/app_icon.png",
+              opacity: AlwaysStoppedAnimation(0.91),
+            ),
           )
           // NotificationBox(
           //   notifiedNumber: 0,
@@ -224,25 +226,24 @@ class _HomePageState extends State<HomePage> {
             children: [
               const SizedBox(height: 5),
               Padding(
-                padding: EdgeInsetsDirectional.only(start: 25),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      textAlign: TextAlign.start,
-                      '✨ ' + localizations.featured,
-                      // Localized "Featured" title with shining emoji
-                      style: TextStyle(
-                        color: AppColor.mainColor,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 23,
+                  padding: EdgeInsetsDirectional.only(start: 25),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        textAlign: TextAlign.start,
+                        '✨ ' + localizations.featured,
+                        // Localized "Featured" title with shining emoji
+                        style: TextStyle(
+                          color: AppColor.mainColor,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 23,
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsetsDirectional.only(start: 35),
-                      child:
-                        Text(
+                      Padding(
+                        padding: EdgeInsetsDirectional.only(start: 35),
+                        child: Text(
                           textAlign: TextAlign.start,
                           localizations.recommended_courses_description,
                           style: TextStyle(
@@ -250,11 +251,13 @@ class _HomePageState extends State<HomePage> {
                             fontWeight: FontWeight.w400,
                             fontSize: 16,
                           ),
-                        )
-                      ,)                  ],
-                )
+                        ),
+                      )
+                    ],
+                  )),
+              const SizedBox(
+                height: 15,
               ),
-              const SizedBox(height: 15,),
               _buildCategories(localizations),
               const SizedBox(height: 15),
               _buildCoursesAccepted(),
@@ -275,8 +278,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Padding(
                       padding: EdgeInsetsDirectional.only(start: 35),
-                      child:
-                      Text(
+                      child: Text(
                         textAlign: TextAlign.start,
                         localizations.recommended_teachers_description,
                         style: TextStyle(
@@ -284,13 +286,15 @@ class _HomePageState extends State<HomePage> {
                           fontWeight: FontWeight.w400,
                           fontSize: 16,
                         ),
-                      )
-                      ,)
+                      ),
+                    )
                   ],
                 ),
               ),
               _buildAcceptedTeachers(),
-              const SizedBox(height: 20,)
+              const SizedBox(
+                height: 20,
+              )
             ],
           ),
         );
@@ -511,9 +515,13 @@ class _HomePageState extends State<HomePage> {
             final formatedDurationMinutes =
                 Helpers.formatHoursAndMinutes(context, totalDuration!);
 
-            final finalPrice = course.discount != null
-                ? course.price - course.discount!
-                : course.price;
+            // Calculate discount percentage and prices
+            final hasDiscount = course.discount != null && course.discount! > 0;
+            final originalPrice = course.price;
+            final discountAmount =
+                hasDiscount ? (course.price * course.discount! / 100) : 0;
+            final finalPrice =
+                hasDiscount ? (course.price - discountAmount) : course.price;
 
             return FeatureItem(
               data: {
@@ -521,7 +529,10 @@ class _HomePageState extends State<HomePage> {
                     "assets/images/course_icon.png",
                 "icon": course.icon?.url ?? "assets/images/course_icon.png",
                 "name": course.title,
+                "originalPrice":
+                    hasDiscount ? "${originalPrice.toString()} DA" : "",
                 "price": "${finalPrice.toString()} DA",
+                "discountPercentage": course.discount.toString(),
                 "session":
                     "${course.chapters.length} ${AppLocalizations.of(context)!.courses}",
                 "duration": "${formatedDurationMinutes}",
@@ -612,7 +623,8 @@ class _HomePageState extends State<HomePage> {
                     "name": fullName,
                     "subject": teacher.teacherInfo.subject,
                     "institution": teacher.teacherInfo.institution,
-                    "totalEnrolledStudents": teacher.teacherInfo.totalEnrolledStudents,
+                    "totalEnrolledStudents":
+                        teacher.teacherInfo.totalEnrolledStudents,
                     "experience":
                         "${teacher.teacherInfo.yearsOfExperience} years",
                     "review": "4.5",

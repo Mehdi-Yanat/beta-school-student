@@ -160,16 +160,15 @@ class ChapterCard extends StatelessWidget {
                     SizedBox(height: 8),
 
                     // Description
-                    if (chapter.description != null)
-                      Text(
-                        chapter.description ?? '',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: AppColor.textColor.withValues(alpha: 0.8),
-                        ),
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
+                    Text(
+                      chapter.description ?? '',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: AppColor.textColor.withValues(alpha: 0.8),
                       ),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     SizedBox(height: 8),
 
                     // Rating and Views
