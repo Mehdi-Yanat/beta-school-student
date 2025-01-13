@@ -14,7 +14,7 @@
   "address": "العنوان",
   "address_required": "الرجاء إدخال العنوان",
   "already_have_account": "لديك حساب بالفعل؟ ",
-  "already_purchased": "تم الشراء بالفعل",
+  "already_purchased": "هذه الدورة بحوزتك",
   "amount_label": "المبلغ",
   "announces_title": "الإعلانات",
   "app_permissions": "أذونات التطبيق",
@@ -376,6 +376,16 @@
   "all_teacher_announces_title": "كل إعلانات الأستاذ",
   "chapter_views": "عدد المشاهدات",
   "watch_time": "وقت المشاهدة",
-  "a_view": "مرة"
+  "a_view": "مرة",
+  "chose_payment_method": "اختر طريقة الدفع",
+  "you_can_pay_card_or_cash": "يمكنك الدفع باستخدام البطاقة أو نقدًا",
+  "payment_method_cash": "نقدًا",
+  "payment_method_card": "بالبطاقة",
+  "can_pay_with_eddhabia_cib": "يمكنك الدفع باستخدام البطاقة الذهبية أو CIB",
+  "come_to_one_our_offices_pay": "قم بزيارة مكتبنا للدفع خلال الأيام 7 القادمة",
+  "are_you_sure": "هل أنت متأكد؟",
+  "do_you_want_to_proceed": "هل تريد المتابعة مع هذا الإجراء؟",
+  "confirm": "تأكيد",
+  "something_went_wrong": "حدث خطأ ما"
 }
 

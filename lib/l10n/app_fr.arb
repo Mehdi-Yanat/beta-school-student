@@ -375,5 +375,15 @@
   "all_teacher_announces_title": "Annonces de l'enseignants",
   "chapter_views": "Vues du chapitre",
   "watch_time": "Temps de visionnage",
-  "a_view": "Vue(s)"
+  "a_view": "Vue(s)",
+  "chose_payment_method": "Choisir une méthode de paiement",
+  "you_can_pay_card_or_cash": "Vous pouvez payer par carte ou en espèces",
+  "payment_method_cash": "Paiement en espèces",
+  "payment_method_card": "Paiement par carte",
+  "can_pay_with_eddhabia_cib": "Vous pouvez payer avec Edahabia ou CIB",
+  "come_to_one_our_offices_pay": "Rendez-vous dans l'un de nos bureaux pour payer dans les 7 jours suivants",
+  "are_you_sure": "Êtes-vous sûr ?",
+  "do_you_want_to_proceed": "Voulez-vous continuer ?",
+  "confirm": "Confirmer",
+  "something_went_wrong": "Une erreur s'est produite. Veuillez réessayer plus tard."
 }

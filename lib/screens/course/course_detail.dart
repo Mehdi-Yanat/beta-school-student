@@ -3,17 +3,22 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localiza
 import 'package:online_course/providers/auth_provider.dart';
 import 'package:online_course/providers/course_provider.dart';
 import 'package:online_course/screens/course/view_chapters.dart';
+import 'package:online_course/services/student_service.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:online_course/utils/helper.dart';
 import 'package:online_course/utils/translation.dart';
 import 'package:online_course/widgets/CardFb1.dart';
+import 'package:online_course/widgets/CardFb3.dart';
 import 'package:online_course/widgets/DialogFb3.dart';
+import 'package:online_course/widgets/Drawer.dart';
 import 'package:online_course/widgets/LikeListTile.dart';
 import 'package:online_course/widgets/course_image.dart';
 import 'package:online_course/widgets/gradient_button.dart';
 import 'package:provider/provider.dart';
 
+import '../../widgets/AlertDialogue.dart';
 import '../../widgets/appbar.dart';
+import '../../widgets/snackbar.dart';
 import '../teacher/teacher_view.dart';
 
 class CourseDetailScreen extends StatelessWidget {
@@ -552,34 +557,124 @@ class CourseDetailScreen extends StatelessWidget {
                                                               .buy_now,
                                                   variant: 'primary',
                                                   color: Colors.white,
-                                                  onTap: context
-                                                              .watch<
-                                                                  CourseProvider>()
-                                                              .isLoading ||
-                                                          context
-                                                              .watch<
-                                                                  CourseProvider>()
-                                                              .isSuccess
-                                                      ? () {}
-                                                      : () async {
-                                                          final courseProvider =
-                                                              context.read<
-                                                                  CourseProvider>();
-                                                          final courseId =
-                                                              courseProvider
-                                                                      .courseData?[
-                                                                  'course']['id'];
-                                                          final response =
-                                                              await courseProvider
-                                                                  .enrollAndRedirect(
-                                                                      context,
-                                                                      courseId);
-                                                          if (response ==
-                                                              true) {
-                                                            courseProvider
-                                                                .resetSuccess();
-                                                          }
-                                                        },
+                                                  onTap: () {
+                                                    showModalBottomSheet(
+                                                      context: context,
+                                                      constraints: BoxConstraints.expand(),
+                                                      backgroundColor: AppColor.appBgColor,
+                                                      shape: const RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.vertical(
+                                                          top: Radius.circular(20),
+                                                        ),
+                                                      ),
+                                                      builder: (BuildContext context) {
+                                                        return Container(
+                                                          padding: EdgeInsets.all(5),
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                            children: [
+                                                              Spacer(),
+                                                              Text(
+                                                                  AppLocalizations.of(context)!.chose_payment_method,
+                                                                style: TextStyle(
+                                                                  fontSize: 22,
+                                                                  fontWeight: FontWeight.w500
+                                                                ),
+                                                              ),
+                                                              const SizedBox(height: 12,),
+                                                              Text(
+                                                                  AppLocalizations.of(context)!.you_can_pay_card_or_cash,
+                                                                style: TextStyle(
+                                                                  color: AppColor.textColor,
+                                                                  fontSize: 16,
+                                                                  fontWeight: FontWeight.w400
+                                                                ),
+                                                              ),
+                                                              Spacer(flex: 2,),
+                                                              Row(
+                                                                children: [
+                                                                  Spacer(),
+                                                                  Stack(
+                                                                    children: [
+                                                                      CardFb3(
+                                                                        text: AppLocalizations.of(context)!.payment_method_card,
+                                                                        imageUrl: "assets/images/card.png",
+                                                                        subtitle: AppLocalizations.of(context)!.can_pay_with_eddhabia_cib,
+                                                                        onPressed: () async {
+                                                                      // Access CourseProvider without listening
+                                                                      final courseProvider = context.read<CourseProvider>();
+
+                                                                      // Check if the provider is loading or already successful
+                                                                      if (courseProvider.isLoading || courseProvider.isSuccess) {
+                                                                        print("Already loading or success...");
+                                                                        return;
+                                                                      }
+
+                                                                      try {
+                                                                        // Attempt to enroll and redirect
+                                                                        final response = await courseProvider.enrollAndRedirect(context, courseId);
+
+                                                                        // Handle the response
+                                                                        if (response == true) {
+                                                                          courseProvider.resetSuccess();
+                                                                        }
+                                                                      } catch (error) {
+                                                                        print("Error during enrollment: $error");
+                                                                      }
+                                                                    },),
+                                                                      Positioned(top: 130, right: 5,  child: Image.asset("assets/images/dab-banque.jpg", width: 50,))
+                                                                    
+                                                                    ],
+                                                                  ),
+                                                                  Spacer(),
+                                                                  CardFb3(
+                                                                      text: AppLocalizations.of(context)!.payment_method_cash,
+                                                                      imageUrl: "assets/images/cash.png",
+                                                                      subtitle: AppLocalizations.of(context)!.come_to_one_our_offices_pay,
+                                                                      onPressed: (){
+                                                                        showDialog(
+                                                                          context: context,
+                                                                          builder: (context) => AlertDialogFb1(
+                                                                            title: AppLocalizations.of(context)!.are_you_sure,
+                                                                            description: AppLocalizations.of(context)!.do_you_want_to_proceed,
+                                                                            actions: [
+                                                                              TextButton(
+                                                                                style: ButtonStyle(
+                                                                                  foregroundColor: WidgetStatePropertyAll(AppColor.primary)
+                                                                                ),
+                                                                                onPressed: () {
+                                                                                  Navigator.of(context).pop(); // Close the dialog
+                                                                                },
+                                                                                child: Text(AppLocalizations.of(context)!.cancel),
+                                                                              ),
+                                                                              TextButton(
+                                                                                style: ButtonStyle(
+                                                                                    foregroundColor: WidgetStatePropertyAll(AppColor.primary)
+                                                                                ),
+                                                                                onPressed: () async {
+                                                                                    await StudentService.enrollByCash(context, courseId);
+                                                                                    Navigator.of(context).pop();
+                                                                                    Navigator.of(context).pop();
+                                                                                },
+                                                                                child: Text(AppLocalizations.of(context)!.confirm),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        );
+
+                                                                      }),
+                                                                  Spacer()
+                                                                ],
+                                                              ),
+                                                              Spacer(),
+                                                            ],
+                                                          ),
+                                                        );
+                                                      },
+                                                    );
+                                                  }
+
                                                 )
                                               ],
                                             ),
