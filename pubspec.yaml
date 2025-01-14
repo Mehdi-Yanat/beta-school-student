@@ -11,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  flutter_native_splash: ^2.4.4
   timeago: ^3.7.0
   http_interceptor: ^2.0.0
   app_links: ^6.3.3
@@ -42,6 +42,14 @@ flutter_icons:
   android: true
   ios: true
   image_path: "assets/icons/app_icon.png"
+
+flutter_native_splash:
+  color: "#0B0F35"
+  image: assets/icons/logo-v2-gradient.png
+  android_12:
+    color: "#0B0F35"
+    icon_background_color: "#0B0F35"
+    image: assets/icons/logo-v2-gradient.png
 
 flutter:
   generate: true # Add this line

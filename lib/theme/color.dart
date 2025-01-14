@@ -92,4 +92,6 @@ class AppColor {
   ];
 
   static const warning = Color(0xFFF53939);
+
+  static const darkBackground = Color(0xFF0B0F35);
 }

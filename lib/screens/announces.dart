@@ -52,14 +52,14 @@ class _AnnouncesPageState extends State<AnnouncesPage> {
   @override
   Widget build(BuildContext context) {
     final currentLocale = Localizations.localeOf(context).languageCode;
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: AppLocalizations.of(context)!.announces_title,
-      ),
-      backgroundColor: AppColor.appBgColor,
-      body: RefreshIndicator(
-        onRefresh: _fetchAnnouncements,
-        child: _isLoading
+    return RefreshIndicator(
+      onRefresh: _fetchAnnouncements,
+      child: Scaffold(
+        appBar: CustomAppBar(
+          title: AppLocalizations.of(context)!.announces_title,
+        ),
+        backgroundColor: AppColor.appBgColor,
+        body: _isLoading
             ? Center( // Show loading indicator if fetching data
           child: Padding(
             padding: const EdgeInsets.only(top: 20),

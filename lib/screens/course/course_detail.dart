@@ -571,8 +571,8 @@ class CourseDetailScreen extends StatelessWidget {
                                           style: ButtonStyle(
                                               foregroundColor: WidgetStatePropertyAll(AppColor.primary)
                                           ),
-                                          onPressed: () {
-                                            StudentService.cancelCashTransaction(context ,provider.currentTransactionId);
+                                          onPressed: () async {
+                                            await provider.cancelCashTransaction(context ,provider.currentTransactionId);
 
                                             Navigator.of(context).pop(); // Close the dialog
                                           },
@@ -745,7 +745,7 @@ class CourseDetailScreen extends StatelessWidget {
                                                                                     foregroundColor: WidgetStatePropertyAll(AppColor.primary)
                                                                                 ),
                                                                                 onPressed: () async {
-                                                                                    await StudentService.enrollByCash(context, courseId);
+                                                                                    await provider.enrollByCash(context, courseId);
                                                                                     Navigator.of(context).pop();
                                                                                     Navigator.of(context).pop();
                                                                                 },

@@ -155,6 +155,30 @@ class CourseProvider with ChangeNotifier {
     }
   }
 
+
+
+  Future<void> enrollByCash(BuildContext context,String courseId) async {
+    bool isEnrolled = await StudentService.enrollByCash(context, courseId);
+
+    final checkPendingTransactionResponse = await StudentService.checkCashTransaction(courseId);
+    if (checkPendingTransactionResponse['status'] != null) {
+      _isPending = checkPendingTransactionResponse['status'] == "PENDING";
+      notifyListeners();
+    }
+    if (checkPendingTransactionResponse['transactionId'] != null) {
+      _currentTransactionId = checkPendingTransactionResponse['transactionId'];
+      notifyListeners();
+    }
+  }
+
+  Future<void> cancelCashTransaction(BuildContext context,String transactionId) async {
+    print(transactionId);
+    bool isCancelled = await StudentService.cancelCashTransaction(context ,transactionId);
+
+    _isPending = !isCancelled;
+    notifyListeners();
+  }
+
   Future<void> fetchCourse(String courseId, BuildContext context) async {
     final localizations = AppLocalizations.of(context)!;
     try {

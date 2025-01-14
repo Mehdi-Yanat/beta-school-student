@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:online_course/services/auth_service.dart';
 import 'package:online_course/utils/translation.dart';
 import 'package:online_course/widgets/snackbar.dart';
@@ -28,6 +29,10 @@ class _SignupScreenState extends State<SignupScreen> {
   final _addressController = TextEditingController();
   final _phoneController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  String? _firstNameError;
+  String? _lastNameError;
+  String? _firstNameArError;
+  String? _lastNameArError;
   bool _isPasswordVisible = false;
 
   File? _profileImage;
@@ -154,7 +159,7 @@ class _SignupScreenState extends State<SignupScreen> {
       Step(
         state: _currentStep > 0 ? StepState.complete : StepState.indexed,
         isActive: _currentStep >= 0,
-        title: Text(AppLocalizations.of(context)!.personal_info),
+        title: Text(AppLocalizations.of(context)!.personal_info, style: TextStyle(fontSize: 19,)),
         content: Column(
           children: [
             TextFormField(
@@ -225,6 +230,17 @@ class _SignupScreenState extends State<SignupScreen> {
                   borderSide: BorderSide.none,
                 ),
               ),
+              validator: (value) {
+                // Regular Expression to match Arabic characters
+                final arabicRegex = RegExp(r'^[\u0600-\u06FF\s]+$');
+
+                if (value == null || value.isEmpty) {
+                  return 'This field is required'; // Replace with localization if needed
+                } else if (!arabicRegex.hasMatch(value)) {
+                  return 'Please enter text in Arabic'; // Replace with localization
+                }
+                return null;
+              },
             ),
           ],
         ),
@@ -232,7 +248,7 @@ class _SignupScreenState extends State<SignupScreen> {
       Step(
         state: _currentStep > 1 ? StepState.complete : StepState.indexed,
         isActive: _currentStep >= 1,
-        title: Text(AppLocalizations.of(context)!.account_info),
+        title: Text(AppLocalizations.of(context)!.account_info, style: TextStyle(fontSize: 19,)),
         content: Column(
           children: [
             TextFormField(
@@ -301,7 +317,7 @@ class _SignupScreenState extends State<SignupScreen> {
       Step(
         state: _currentStep > 2 ? StepState.complete : StepState.indexed,
         isActive: _currentStep >= 2,
-        title: Text(AppLocalizations.of(context)!.contact_info),
+        title: Text(AppLocalizations.of(context)!.contact_info, style: TextStyle(fontSize: 19,)),
         content: Column(
           children: [
             TextFormField(
@@ -350,7 +366,7 @@ class _SignupScreenState extends State<SignupScreen> {
       Step(
         state: _currentStep > 3 ? StepState.complete : StepState.indexed,
         isActive: _currentStep >= 3,
-        title: Text(AppLocalizations.of(context)!.location_class),
+        title: Text(AppLocalizations.of(context)!.location_class, style: TextStyle(fontSize: 19,)),
         content: Column(
           children: [
             DropdownButtonFormField<String>(
@@ -427,7 +443,7 @@ class _SignupScreenState extends State<SignupScreen> {
       Step(
         state: _currentStep > 4 ? StepState.complete : StepState.indexed,
         isActive: _currentStep >= 4,
-        title: Text(AppLocalizations.of(context)!.profile_photo),
+        title: Text(AppLocalizations.of(context)!.profile_photo, style: TextStyle(fontSize: 19,)),
         content: Column(
           children: [
             if (_profileImage != null)
@@ -504,18 +520,38 @@ class _SignupScreenState extends State<SignupScreen> {
         child: Form(
           key: _formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
               Center(
+                child: SvgPicture.asset(
+                  'assets/icons/logo-v2-gradient.svg',
+                  // height: 80,
+                  width: 100,
+                )
+              ),
+              Center(
                 child: Image.asset(
-                  'assets/logo.png',
-                  height: 80,
-                  color: AppColor.primary,
+                  'assets/icons/logo-large.png',
+                  // height: 80,
+                  width: 200,
+                  color: AppColor.darkBackground,
+                )
+              ),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                child: Text(AppLocalizations.of(context)!.signup_subtitle,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
                 ),
               ),
               const SizedBox(height: 20),
               Expanded(
                 child: Stepper(
+                  connectorColor: WidgetStatePropertyAll(AppColor.primary),
+                  stepIconWidth: 50,
+                  stepIconHeight: 50,
                   type: StepperType.vertical,
                   currentStep: _currentStep,
                   steps: getSteps(),
@@ -556,7 +592,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             Expanded(
                               child: GradientButton(
                                 text: AppLocalizations.of(context)!.back,
-                                variant: 'secondary',
+                                variant: 'blueGradient',
                                 onTap: details.onStepCancel!,
                                 color: AppColor.primary,
                               ),
@@ -570,8 +606,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                       : AppLocalizations.of(context)!
                                           .signup_button)
                                   : AppLocalizations.of(context)!.next,
-                              variant: 'primary',
-                              disabled: _isLoading || !isStepValid,
+                              variant: 'blueGradient',
+                              disabled: _isLoading,
                               onTap: details.onStepContinue!,
                               color: AppColor.primary,
                             ),

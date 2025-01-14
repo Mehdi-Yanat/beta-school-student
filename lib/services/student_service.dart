@@ -64,7 +64,7 @@ class StudentService {
     }
   }
 
-  static Future<void> enrollByCash(BuildContext context,String courseId) async {
+  static Future<bool> enrollByCash(BuildContext context,String courseId) async {
     try {
       final response = await _client.post(
         Uri.parse('$baseUrl/course/${courseId}/enroll/cash'),
@@ -75,9 +75,12 @@ class StudentService {
         final data = json.decode(response.body);
         if (data['message'] != null) {
           SnackBarHelper.showSuccessSnackBar(context, data['message']);
+          return true;
         }
+        return true;
       } else {
         SnackBarHelper.showErrorSnackBar(context, AppLocalizations.of(context)!.something_went_wrong);
+        return false;
       }
     } catch (e, stack) {
       print('❌ Error getting student transactions: $e');
@@ -109,7 +112,7 @@ class StudentService {
         return <String, dynamic>{};
     }
 
-  static Future<void> cancelCashTransaction(BuildContext context,String transactionId) async {
+  static Future<bool> cancelCashTransaction(BuildContext context,String transactionId) async {
     try {
       final response = await _client.delete(
         Uri.parse('$baseUrl/transactions/cancel/${transactionId}?lng=${getCurrentLocale()}'),
@@ -118,11 +121,14 @@ class StudentService {
 
       if (response.statusCode >= 200 && response.statusCode < 400) {
         final data = json.decode(response.body);
-        if (data['status'] != null) {
+        if (data['message'] != null) {
           SnackBarHelper.showSuccessSnackBar(context, data['message']);
+          return true;
         }
+        return true;
       } else {
         SnackBarHelper.showErrorSnackBar(context, AppLocalizations.of(context)!.something_went_wrong);
+        return false;
       }
     } catch (e, stack) {
       print('❌ Error getting student transactions: $e');

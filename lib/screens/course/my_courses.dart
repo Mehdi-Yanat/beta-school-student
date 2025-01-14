@@ -30,12 +30,12 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
     final courseProvider =
         Provider.of<CourseProvider>(context); // Access CourseProvider
 
-    return Scaffold(
-        backgroundColor: AppColor.appBgColor,
-        appBar: CustomAppBar(title: localizations!.my_courses_title),
-        body: RefreshIndicator(
-          onRefresh: _refreshCourses,
-          child: Column(
+    return RefreshIndicator(
+        onRefresh: _refreshCourses,
+      child: Scaffold(
+          backgroundColor: AppColor.appBgColor,
+          appBar: CustomAppBar(title: localizations!.my_courses_title),
+          body: Column(
             children: [
               // For now, simply display all courses (Disable tabs)
               Expanded(
@@ -57,8 +57,8 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                             localizations, courseProvider.myCourses),
               ),
             ],
-          ),
-        ));
+          )),
+    );
   }
 
   // Render the list of courses

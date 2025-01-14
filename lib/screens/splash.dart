@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:online_course/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 import '../theme/color.dart';
@@ -97,7 +98,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColor.darkBackground,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -108,11 +109,7 @@ class _SplashScreenState extends State<SplashScreen>
                     ? _fadeAnimation
                     : const AlwaysStoppedAnimation(0.0),
                 child: _imageLoaded
-                    ? Image.asset(
-                        'assets/logo.png',
-                        height: 150,
-                        color: AppColor.primary,
-                      )
+                    ? SvgPicture.asset("assets/icons/logo-v2.svg", width: 200, color: Colors.white,)
                     : const SizedBox(),
               ),
             ),

@@ -387,5 +387,12 @@
   "confirm": "Confirmer",
   "something_went_wrong": "Une erreur s'est produite. Veuillez réessayer plus tard.",
   "waiting_for_cash_payment": "En attente de paiement en espèces",
-  "this_will_delete_the_payment_order": "Cela supprimera la commande de paiement"
+  "this_will_delete_the_payment_order": "Cela supprimera la commande de paiement",
+  "start_your_learning_journey": "Commencez votre voyage d'apprentissage",
+  "new_welcome_message": "Bienvenue !",
+  "learn_anytime_anywhere": "Apprenez à tout moment et partout",
+  "access_ressources_at_your_fingerprints": "Accédez aux ressources à portée de main",
+  "learn_at_your_pace": "Apprenez à votre rythme",
+  "you_can_learn_at_any_pace": "Vous pouvez apprendre à votre rythme et progresser selon vos objectifs",
+  "start_learning_now": "Commencez à apprendre maintenant"
 }

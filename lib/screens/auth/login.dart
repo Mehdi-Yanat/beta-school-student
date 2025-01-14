@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:online_course/providers/auth_provider.dart';
 import 'package:online_course/widgets/snackbar.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
+  bool _passwordVisible = false;
 
   void _login() async {
     if (!_formKey.currentState!.validate()) return;
@@ -63,11 +65,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
               // Logo
               Center(
-                child: Image.asset(
-                  'assets/logo.png',
+                child: SvgPicture.asset(
+                  'assets/icons/logo-v2-gradient.svg',
                   // height: 80,
-                  width: 1000,
-                  color: AppColor.primary,
+                  width: 100,
                 ),
               ),
               const SizedBox(height: 20),
@@ -78,8 +79,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: AppColor.primary,
+                  fontWeight: FontWeight.w400,
+                  color: AppColor.darker,
                 ),
               ),
               const SizedBox(height: 10),
@@ -87,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 AppLocalizations.of(context)!.sign_in_message,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: AppColor.textColor.withValues(alpha: 0.7),
+                  color: AppColor.textColor.withValues(alpha: 1),
                   fontSize: 16,
                 ),
               ),
@@ -131,6 +132,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       decoration: InputDecoration(
                         hintText: AppLocalizations.of(context)!.password_hint,
                         prefixIcon: Icon(Icons.lock, color: AppColor.textColor),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                            color: Colors.grey, // Adjust color as needed
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _passwordVisible = !_passwordVisible; // Toggle visibility
+                            });
+                          },
+                        ),
                         filled: true,
                         fillColor: AppColor.textBoxColor,
                         border: OutlineInputBorder(
@@ -138,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderSide: BorderSide.none,
                         ),
                       ),
-                      obscureText: true,
+                      obscureText: !_passwordVisible,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return AppLocalizations.of(context)!
@@ -159,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 text: _isLoading
                     ? AppLocalizations.of(context)!.loading
                     : AppLocalizations.of(context)!.login_button,
-                variant: 'primary',
+                variant: 'blueGradient',
                 disabled: _isLoading,
                 onTap: _login,
                 color: AppColor.primary,

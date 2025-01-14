@@ -9,6 +9,7 @@ import 'package:online_course/screens/auth/forget_password.dart';
 import 'package:online_course/screens/auth/login.dart';
 import 'package:online_course/screens/auth/reset_password.dart';
 import 'package:online_course/screens/auth/signup.dart';
+import 'package:online_course/screens/onboarding.dart';
 import 'package:online_course/screens/payments/failed.dart';
 import 'package:online_course/screens/payments/success.dart';
 import 'package:online_course/screens/root_app.dart';
@@ -143,7 +144,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               // showPerformanceOverlay: true,
               navigatorKey: navigatorKey,
               debugShowCheckedModeBanner: false,
-              title: 'Beta Prime School',
+              title: 'Beta Prime School Online',
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               locale: locale,
@@ -160,11 +161,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                   backgroundColor: Colors.transparent,
                 ),
               ),
-              home: auth.isLoading
+              home:
+              auth.isLoading
                   ? SplashScreen(MyApp.currentLocale.value)
                   : auth.isAuthenticated
                       ? const RootApp()
-                      : const LoginScreen(),
+                      : const OnboardingScreen(),
               routes: {
                 '/root': (context) => const RootApp(),
                 '/login': (context) => const LoginScreen(),
