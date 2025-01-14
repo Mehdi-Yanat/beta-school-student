@@ -386,6 +386,8 @@
   "are_you_sure": "هل أنت متأكد؟",
   "do_you_want_to_proceed": "هل تريد المتابعة مع هذا الإجراء؟",
   "confirm": "تأكيد",
-  "something_went_wrong": "حدث خطأ ما"
+  "something_went_wrong": "حدث خطأ ما",
+  "waiting_for_cash_payment": "في انتظار الدفع نقدًا",
+  "this_will_delete_the_payment_order": "سيتم حذف طلب الدفع"
 }
 

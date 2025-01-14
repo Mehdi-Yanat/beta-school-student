@@ -10,7 +10,6 @@ import 'package:online_course/utils/translation.dart';
 import 'package:online_course/widgets/CardFb1.dart';
 import 'package:online_course/widgets/CardFb3.dart';
 import 'package:online_course/widgets/DialogFb3.dart';
-import 'package:online_course/widgets/Drawer.dart';
 import 'package:online_course/widgets/LikeListTile.dart';
 import 'package:online_course/widgets/course_image.dart';
 import 'package:online_course/widgets/gradient_button.dart';
@@ -18,7 +17,6 @@ import 'package:provider/provider.dart';
 
 import '../../widgets/AlertDialogue.dart';
 import '../../widgets/appbar.dart';
-import '../../widgets/snackbar.dart';
 import '../teacher/teacher_view.dart';
 
 class CourseDetailScreen extends StatelessWidget {
@@ -77,7 +75,7 @@ class CourseDetailScreen extends StatelessWidget {
 
           bool isVerified = (authProvider.student?.status == "ACCEPTED");
           bool isPurchased = provider.hasPurchasedCourse(course['id']);
-          bool isArabic = Localizations.localeOf(context).languageCode == 'ar';
+          bool isPending =  provider.isPendingCourse(context ,course['id']);
 
           // Calculate discount percentage and prices
           final hasDiscount =
@@ -494,7 +492,101 @@ class CourseDetailScreen extends StatelessWidget {
                                             ],
                                           ),
                                         )
-                                      : SafeArea(
+                                      : isPending ? Container(
+                            // No SafeArea if course is purchased
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: AppColor.cardColor,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColor.shadowColor
+                                      .withValues(alpha: 0.1),
+                                  offset: const Offset(0, -4),
+                                  blurRadius: 10,
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      AppLocalizations.of(
+                                          context)!
+                                          .waiting_for_cash_payment, // Purchased text
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight:
+                                        FontWeight.bold,
+                                        color: AppColor.darker,
+                                      ),
+                                    ),
+                                    Text(
+                                      AppLocalizations.of(
+                                          context)!
+                                          .price_label,
+                                      style: TextStyle(
+                                          color: AppColor
+                                              .mainColor),
+                                    ),
+                                    _buildPriceDisplay(
+                                      course['price']
+                                          .toDouble(),
+                                      finalPrice,
+                                      course['discount']
+                                          ?.toDouble(),
+                                    ),
+                                  ],
+                                ),
+                                GradientButton(
+                                  text: AppLocalizations.of(
+                                      context)!
+                                      .cancel,
+                                  // Add your localization key or hardcoded text
+                                  variant: 'red',
+                                  // Variant setting (e.g., primary style)
+                                  color: Colors.white,
+                                  // Text or icon color
+                                  onTap: () {
+                                    showDialog(context: context, builder: (context) => AlertDialogFb1(
+                                      title: AppLocalizations.of(context)!.are_you_sure,
+                                      description: AppLocalizations.of(context)!.this_will_delete_the_payment_order,
+                                      actions: [
+                                        TextButton(
+                                          style: ButtonStyle(
+                                              foregroundColor: WidgetStatePropertyAll(AppColor.primary)
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(context).pop(); // Close the dialog
+                                          },
+                                          child: Text(AppLocalizations.of(context)!.cancel),
+                                        ),
+                                        TextButton(
+                                          style: ButtonStyle(
+                                              foregroundColor: WidgetStatePropertyAll(AppColor.primary)
+                                          ),
+                                          onPressed: () {
+                                            StudentService.cancelCashTransaction(context ,provider.currentTransactionId);
+
+                                            Navigator.of(context).pop(); // Close the dialog
+                                          },
+                                          child: Text(AppLocalizations.of(context)!.confirm),
+                                        )
+                                      ],
+
+                                    ));
+                                  }
+                                    )
+                              ],
+                            ),
+                          )
+                              : SafeArea(
                                           child: Container(
                                             padding: EdgeInsets.symmetric(
                                                 horizontal: 16, vertical: 12),
@@ -624,7 +716,7 @@ class CourseDetailScreen extends StatelessWidget {
                                                                       }
                                                                     },),
                                                                       Positioned(top: 130, right: 5,  child: Image.asset("assets/images/dab-banque.jpg", width: 50,))
-                                                                    
+
                                                                     ],
                                                                   ),
                                                                   Spacer(),
@@ -690,7 +782,6 @@ class CourseDetailScreen extends StatelessWidget {
   }
 
   Widget _buildCourseStats(BuildContext context, Map<String, dynamic> course) {
-    final int lessonsCount = (course['chapters'] as List?)?.length ?? 0;
     final double rating = course['rating'] != null
         ? double.parse(course['rating'].toString())
         : 0.0;

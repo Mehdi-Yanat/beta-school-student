@@ -14,12 +14,14 @@ class CourseProvider with ChangeNotifier {
   Chapter.Chapter? _currentChapter;
   Map<String, dynamic>? _currentVideo;
   bool _isLoading = false;
+  bool _isPending = false;
   bool _isLoadingCourses = false;
   bool _isLoadingChapter = false;
   Map<String, dynamic>? _courseData;
   String? _error;
   int _currentPage = 1;
   int _totalPages = 1;
+  String _currentTransactionId = "";
   String? _searchQuery;
   String? _selectedSubject;
   String? _selectedClass;
@@ -31,7 +33,11 @@ class CourseProvider with ChangeNotifier {
 
   Map<String, dynamic>? get currentVideo => _currentVideo;
 
+  String get currentTransactionId => _currentTransactionId;
+
   bool get isLoading => _isLoading;
+
+  bool get isPending => _isPending;
 
   bool get isLoadingCourses => _isLoadingCourses;
 
@@ -156,6 +162,18 @@ class CourseProvider with ChangeNotifier {
       _error = null;
       notifyListeners();
 
+      if (courseId.isNotEmpty) {
+        final checkPendingTransactionResponse = await StudentService.checkCashTransaction(courseId);
+        if (checkPendingTransactionResponse['status'] != null) {
+          _isPending = checkPendingTransactionResponse['status'] == "PENDING";
+          notifyListeners();
+        }
+        if (checkPendingTransactionResponse['transactionId'] != null) {
+          _currentTransactionId = checkPendingTransactionResponse['transactionId'];
+          notifyListeners();
+        }
+      }
+
       final data = await CourseService.getCourse(courseId);
       if (data != null) {
         _courseData = {
@@ -246,5 +264,10 @@ class CourseProvider with ChangeNotifier {
     _searchQuery = null;
     fetchCourses(refresh: true, context: context);
     print(localizations.clear_filters); // Log success message
+  }
+
+  bool isPendingCourse(BuildContext context ,String courseId) {
+
+    return _isPending;
   }
 }

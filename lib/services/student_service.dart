@@ -11,7 +11,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localiza
 import 'dart:convert';
 
 import '../models/mycourses.dart';
-import '../utils/storage.dart';
 
 class StudentService {
   static final String baseUrl = dotenv.env['API_URL'] ?? '';
@@ -87,32 +86,33 @@ class StudentService {
     }
   }
 
-  static Future<void> getCashTransaction(BuildContext context,String courseId) async {
-    try {
-      final response = await _client.post(
-        Uri.parse('$baseUrl/transactions/pendingCash/${courseId}?lng=${getCurrentLocale()}'),
-        headers: _headers(),
-      );
+    static Future<Map<String, dynamic>> checkCashTransaction(String courseId) async {
+        try {
+            final response = await _client.get(
+                Uri.parse('$baseUrl/transactions/check/${courseId}?lng=${getCurrentLocale()}'),
+                headers: _headers(),
+            );
 
-      if (response.statusCode >= 200 && response.statusCode < 400) {
-        final data = json.decode(response.body);
-        if (data['status'] != null) {
-          SnackBarHelper.showSuccessSnackBar(context, data['message']);
+            if (response.statusCode >= 200 && response.statusCode < 400) {
+                final data = json.decode(response.body);
+                if (data != null) {
+                    return data as Map<String, dynamic>;
+                }
+                return <String, dynamic>{};
+            }
+        } catch (e, stack) {
+            print('❌ Error getting student transactions: $e');
+            print('📍 Stack trace: $stack');
+            throw e;
         }
-      } else {
-        SnackBarHelper.showErrorSnackBar(context, AppLocalizations.of(context)!.something_went_wrong);
-      }
-    } catch (e, stack) {
-      print('❌ Error getting student transactions: $e');
-      print('📍 Stack trace: $stack');
-      throw e;
-    }
-  }
 
-  static Future<void> cancelCashTransaction(BuildContext context,String courseId) async {
+        return <String, dynamic>{};
+    }
+
+  static Future<void> cancelCashTransaction(BuildContext context,String transactionId) async {
     try {
-      final response = await _client.post(
-        Uri.parse('$baseUrl/transactions/pendingCash/cancel/${courseId}?lng=${getCurrentLocale()}'),
+      final response = await _client.delete(
+        Uri.parse('$baseUrl/transactions/cancel/${transactionId}?lng=${getCurrentLocale()}'),
         headers: _headers(),
       );
 

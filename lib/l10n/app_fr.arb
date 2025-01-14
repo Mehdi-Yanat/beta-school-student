@@ -385,5 +385,7 @@
   "are_you_sure": "Êtes-vous sûr ?",
   "do_you_want_to_proceed": "Voulez-vous continuer ?",
   "confirm": "Confirmer",
-  "something_went_wrong": "Une erreur s'est produite. Veuillez réessayer plus tard."
+  "something_went_wrong": "Une erreur s'est produite. Veuillez réessayer plus tard.",
+  "waiting_for_cash_payment": "En attente de paiement en espèces",
+  "this_will_delete_the_payment_order": "Cela supprimera la commande de paiement"
 }
