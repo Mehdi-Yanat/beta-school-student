@@ -23,7 +23,7 @@ class CardFb3 extends StatelessWidget {
       child: Container(
         width: 150,
         height: 150,
-        constraints: BoxConstraints.expand(width: 180, height: 290),
+        constraints: BoxConstraints.expand(width: 180, height: 300),
         padding: const EdgeInsets.all(15.0),
         decoration: BoxDecoration(
           color: Colors.white,
