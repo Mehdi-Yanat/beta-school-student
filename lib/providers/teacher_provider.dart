@@ -4,6 +4,14 @@ import 'package:online_course/services/teacher_service.dart';
 
 class TeacherProvider with ChangeNotifier {
   List<Teacher> _teachers = [];
+  List<FeaturedTeacher> _featuredTeachers = [];
+
+  List<FeaturedTeacher> get featuredTeachers => _featuredTeachers;
+
+  set featuredTeachers(List<FeaturedTeacher> value) {
+    _featuredTeachers = value;
+  }
+
   Map<String, dynamic>? _teacherData;
   String? _error;
 
@@ -25,7 +33,7 @@ class TeacherProvider with ChangeNotifier {
       notifyListeners();
 
       final teachersData = await TeacherService.getAcceptedTeachers();
-      _teachers = teachersData.map((data) => Teacher.fromJson(data)).toList();
+      _featuredTeachers = teachersData.map((data) => FeaturedTeacher.fromJson(data)).toList();
       print('✅ Fetched ${_teachers.length} teachers');
     } catch (e) {
       print('❌ Error fetching teachers: $e');

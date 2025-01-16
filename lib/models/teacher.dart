@@ -77,6 +77,73 @@ class TeacherInfo {
   }
 }
 
+class FeaturedTeacher {
+  final int id;
+  final String fullName;
+  final String? fullNameAr;
+  final String email;
+  final String? profilePic;
+  final String subject;
+  final String institution;
+  final int yearsOfExperience;
+  final String? description;
+  final FeaturedTeacherStats stats;
+  final double score;
+
+  FeaturedTeacher({
+    required this.id,
+    required this.fullName,
+    this.fullNameAr,
+    required this.email,
+    this.profilePic,
+    required this.subject,
+    required this.institution,
+    required this.yearsOfExperience,
+    this.description,
+    required this.stats,
+    required this.score,
+  });
+
+  factory FeaturedTeacher.fromJson(Map<String, dynamic> json) {
+    return FeaturedTeacher(
+      id: json['id'] ?? 0,
+      fullName: json['fullName'] ?? '',
+      fullNameAr: json['fullNameAr'],
+      email: json['email'] ?? '',
+      profilePic: json['profilePic'] ,
+      subject: json['subject'] ?? '',
+      institution: json['institution'] ?? '',
+      yearsOfExperience: json['yearsOfExperience'] ?? 0,
+      description: json['description'],
+      stats: FeaturedTeacherStats.fromJson(json['stats'] ?? {}),
+      score: (json['score'] as num?)?.toDouble() ?? 0.0,
+    );
+  }
+}
+
+class FeaturedTeacherStats {
+  final double rating;
+  final int totalCourses;
+  final int totalEnrolledStudents;
+  final int totalActiveCourses;
+
+  FeaturedTeacherStats({
+    required this.rating,
+    required this.totalCourses,
+    required this.totalEnrolledStudents,
+    required this.totalActiveCourses,
+  });
+
+  factory FeaturedTeacherStats.fromJson(Map<String, dynamic> json) {
+    return FeaturedTeacherStats(
+      rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
+      totalCourses: json['totalCourses'] ?? 0,
+      totalEnrolledStudents: json['totalEnrolledStudents'] ?? 0,
+      totalActiveCourses: json['totalActiveCourses'] ?? 0,
+    );
+  }
+}
+
 class Teacher {
   final int id;
   final String email;

@@ -93,13 +93,6 @@ class _HomePageState extends State<HomePage> {
             },
             context: context,
           ),
-      context.read<CourseProvider>().fetchCourses(
-            refresh: true,
-            filters: {
-              'subject': _selectedCategory.isEmpty ? null : _selectedCategory
-            },
-            context: context,
-          ),
       context.read<TeacherProvider>().fetchTeachers(),
       context.read<AuthProvider>().refreshProfile(),
     ]);
@@ -477,7 +470,7 @@ class _HomePageState extends State<HomePage> {
           );
         }
 
-        if (courseProvider.courses.isEmpty) {
+        if (courseProvider.featuredCourses.isEmpty) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -578,7 +571,7 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         }
-        if (teacherProvider.teachers.isEmpty) {
+        if (teacherProvider.featuredTeachers.isEmpty) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -605,15 +598,15 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.fromLTRB(15, 15, 0, 15),
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: teacherProvider.teachers.map((teacher) {
+            children: teacherProvider.featuredTeachers.map((teacher) {
               final isArabic =
                   Localizations.localeOf(context).languageCode == 'ar';
               final fullName = isArabic
-                  ? "${teacher.firstNameAr ?? teacher.firstName} ${teacher.lastNameAr ?? teacher.lastName}"
-                  : "${teacher.firstName} ${teacher.lastName}";
+                  ? "${teacher.fullNameAr}"
+                  : "${teacher.fullName}";
 
-              final profilePic = teacher.profilePic?.url != null
-                  ? teacher.profilePic?.url
+              final profilePic = teacher.profilePic != null
+                  ? teacher.profilePic
                   : "assets/images/profile.png";
 
               return Padding(
@@ -628,13 +621,13 @@ class _HomePageState extends State<HomePage> {
                   data: {
                     "image": profilePic,
                     "name": fullName,
-                    "subject": teacher.teacherInfo.subject,
-                    "institution": teacher.teacherInfo.institution,
+                    "subject": teacher.subject,
+                    "institution": teacher.institution,
                     "totalEnrolledStudents":
-                        teacher.teacherInfo.totalEnrolledStudents,
+                        teacher.stats.totalEnrolledStudents,
                     "experience":
-                        "${teacher.teacherInfo.yearsOfExperience} years",
-                    "review": "4.5",
+                        "${teacher.yearsOfExperience} years",
+                    "review": "${teacher.stats.rating * 5}",
                   },
                 ),
               );

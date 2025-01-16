@@ -132,7 +132,7 @@ class CourseProvider with ChangeNotifier {
 
       final result = await CourseService.getSuggestedCourses(
         title: _searchQuery,
-        // subject: filters?['subject'] ?? _selectedSubject,
+        subject: filters?['subject'] ?? _selectedSubject,
         teacherClass: filters?['teacherClass'] ?? _selectedClass,
         educationalBranch: filters?['educationalBranch'] ?? _selectedBranch,
         page: _currentPage,
