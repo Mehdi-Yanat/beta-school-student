@@ -86,6 +86,13 @@ class _HomePageState extends State<HomePage> {
   Future<void> _refreshData() async {
     // Refresh all data concurrently
     await Future.wait([
+      context.read<CourseProvider>().fetchSuggestedCourses(
+            refresh: true,
+            filters: {
+              'subject': _selectedCategory.isEmpty ? null : _selectedCategory
+            },
+            context: context,
+          ),
       context.read<CourseProvider>().fetchCourses(
             refresh: true,
             filters: {
@@ -440,7 +447,7 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 setState(() => _selectedCategory = category['id']);
                 // Filter courses based on selected category
-                context.read<CourseProvider>().setFilters(
+                context.read<CourseProvider>().setFiltersForSuggestedCourses(
                     subject: category['id'] == '' ? null : category['id'],
                     refresh: true,
                     context: context);
@@ -502,18 +509,18 @@ class _HomePageState extends State<HomePage> {
             viewportFraction: .75,
             pageSnapping: true,
           ),
-          items: courseProvider.courses.map((course) {
+          items: courseProvider.featuredCourses.map((course) {
             final isArabic =
                 Localizations.localeOf(context).languageCode == 'ar';
             final fullName = isArabic
                 ? "${course.teacher.user.firstNameAr ?? course.teacher.user.firstName} ${course.teacher.user.lastNameAr ?? course.teacher.user.lastName}"
                 : "${course.teacher.user.firstName} ${course.teacher.user.lastName}";
             final firstChapter =
-                course.chapters.isNotEmpty ? course.chapters.first : null;
+                course.chapters != null && course.chapters!.isNotEmpty ? course.chapters?.first : null;
             final totalDuration = course.totalWatchTime;
 
             final formatedDurationMinutes =
-                Helpers.formatHoursAndMinutes(context, totalDuration!);
+                Helpers.formatHoursAndMinutes(context, totalDuration);
 
             // Calculate discount percentage and prices
             final hasDiscount = course.discount != null && course.discount! > 0;
@@ -525,7 +532,7 @@ class _HomePageState extends State<HomePage> {
 
             return FeatureItem(
               data: {
-                "thumbnail": firstChapter?.thumbnail?.url ??
+                "thumbnail": firstChapter?.thumbnail.url ??
                     "assets/images/course_icon.png",
                 "icon": course.icon?.url ?? "assets/images/course_icon.png",
                 "name": course.title,
@@ -534,7 +541,7 @@ class _HomePageState extends State<HomePage> {
                 "price": "${finalPrice.toString()} " + AppLocalizations.of(context)!.dzd,
                 "discountPercentage": course.discount.toString(),
                 "session":
-                    "${course.chapters.length} ${AppLocalizations.of(context)!.courses}",
+                    "${course.chapters != null ? course.chapters?.length : 0} ${AppLocalizations.of(context)!.courses}",
                 "duration": "${formatedDurationMinutes}",
                 "teacherName": "${fullName}",
                 "teacherProfilePic": course.teacher.user.profilePic?.url,

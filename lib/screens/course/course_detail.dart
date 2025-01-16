@@ -3,7 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localiza
 import 'package:online_course/providers/auth_provider.dart';
 import 'package:online_course/providers/course_provider.dart';
 import 'package:online_course/screens/course/view_chapters.dart';
-import 'package:online_course/services/student_service.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:online_course/utils/helper.dart';
 import 'package:online_course/utils/translation.dart';
@@ -892,50 +891,56 @@ class CourseDetailScreen extends StatelessWidget {
             context,
             Icons.school,
             AppLocalizations.of(context)!.course_class,
-            TranslationHelper.getTranslatedClass(
-                context,
-                (course['class'] as List?)
-                    ?.map((classItem) => classItem.toString())
-                    .join(' • ')),
+            (course['class'] as List?)
+                !.map((classItem) => TranslationHelper.getTranslatedClass(context, classItem))
+                .join(' • '),
           ),
           _buildDetailRow(
             context,
             Icons.school,
             AppLocalizations.of(context)!.course_branch,
-            TranslationHelper.getTranslatedClass(
-                context,
-                (course['EducationalBranch'] as List?)
-                    ?.map((classItem) => classItem.toString())
-                    .join(' • ')),
+              (course['EducationalBranch'] as List?)
+                  !.map((classItem) => TranslationHelper.getTranslatedBranch(context, classItem))
+                  .join('  •  ')
           ),
         ],
       ),
     );
   }
 
-  Widget _buildDetailRow(
-      BuildContext context, IconData icon, String label, String value) {
-    return Row(
-      children: [
-        Icon(icon, size: 16, color: AppColor.mainColor),
-        SizedBox(width: 8),
-        Text(
-          '$label: ',
-          style: TextStyle(
-            color: AppColor.mainColor,
-            fontWeight: FontWeight.w500,
+  Widget _buildDetailRow(BuildContext context, IconData icon, String title, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start, // Aligns items to the start
+        children: [
+          Icon(icon, color: AppColor.darker),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    color: Colors.black54,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        Text(
-          value,
-          style: TextStyle(
-            color: AppColor.darker,
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
-
   Widget _buildPriceDisplay(
       double originalPrice, double finalPrice, double? discount) {
     return Column(

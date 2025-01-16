@@ -59,6 +59,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
       courseProvider.fetchChaptersForCourse(widget.courseId, context);
       // Or any other provider updates
       _fetchChapterData(widget.chapterId.toString());
+      _isDataFetched = true;
     });
 
     // Initialize TabController for the TabBar

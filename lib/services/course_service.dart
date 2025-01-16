@@ -25,6 +25,47 @@ class CourseService {
     };
   }
 
+  static Future<Map<String, dynamic>> getSuggestedCourses({
+    String? title,
+    String? subject,
+    String? teacherClass,
+    String? educationalBranch,
+    int? limit = 10,
+    int? page = 1,
+  }) async {
+    try {
+      final queryParams = {
+        if (title != null) 'title': title,
+        if (subject != null) 'subject': subject,
+        if (teacherClass != null) 'teacherClass': teacherClass,
+        if (educationalBranch != null) 'educationalBranch': educationalBranch,
+        'limit': limit.toString(),
+        'page': page.toString(),
+      };
+
+      final uri = Uri.parse('$baseUrl/course/all/suggestions')
+          .replace(queryParameters: queryParams);
+
+      final response = await _client.get(
+        uri,
+        headers: _headers(),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return {
+          'courses': data ?? [],
+          'total':  data.length,
+        };
+      }
+      return {'courses': [], 'total': 0, 'page': 1, 'limit': 10};
+    } catch (e) {
+      print('❌ Error getting courses: $e');
+      return {'courses': [], 'total': 0, 'page': 1, 'limit': 10};
+    }
+  }
+
+
   // Get all courses
   static Future<Map<String, dynamic>> getCourses({
     String? title,

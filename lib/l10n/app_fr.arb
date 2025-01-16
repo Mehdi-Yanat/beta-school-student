@@ -394,5 +394,9 @@
   "access_ressources_at_your_fingerprints": "Accédez aux ressources à portée de main",
   "learn_at_your_pace": "Apprenez à votre rythme",
   "you_can_learn_at_any_pace": "Vous pouvez apprendre à votre rythme et progresser selon vos objectifs",
-  "start_learning_now": "Commencez à apprendre maintenant"
+  "start_learning_now": "Commencez à apprendre maintenant",
+  "our_contact_info": "Nous contacter",
+  "you_will_have_to_verify_account_again_and_no_access_to_courses": "Vous devrez vérifier votre compte à nouveau et vous n'aurez pas accès aux cours",
+  "licenses": "Licences",
+  "attributing_authors": "Attribution aux auteurs"
 }

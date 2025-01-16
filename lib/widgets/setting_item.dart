@@ -10,12 +10,14 @@ class SettingItem extends StatelessWidget {
     this.leadingIcon,
     this.leadingIconColor = Colors.white,
     this.bgIconColor = AppColor.primary,
+    this.fullIcon,
   }) : super(key: key);
 
   final String? leadingIcon;
   final Color leadingIconColor;
   final Color bgIconColor;
   final String title;
+  final Icon? fullIcon;
   final GestureTapCallback? onTap;
 
   @override
@@ -32,8 +34,8 @@ class SettingItem extends StatelessWidget {
   Widget _buildPrefixIcon() {
     return Container(
       padding: EdgeInsets.all(6),
-      decoration: BoxDecoration(color: bgIconColor, shape: BoxShape.circle),
-      child: SvgPicture.asset(
+      decoration: fullIcon == null ? BoxDecoration(color: bgIconColor, shape: BoxShape.circle) : null,
+      child: fullIcon != null ? fullIcon : SvgPicture.asset(
         leadingIcon!,
         color: leadingIconColor,
         width: 22,
