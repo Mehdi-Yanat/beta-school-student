@@ -3,7 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localiza
 import 'package:online_course/providers/auth_provider.dart';
 import 'package:online_course/providers/course_provider.dart';
 import 'package:online_course/screens/course/view_chapters.dart';
-import 'package:online_course/services/student_service.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:online_course/utils/helper.dart';
 import 'package:online_course/utils/translation.dart';

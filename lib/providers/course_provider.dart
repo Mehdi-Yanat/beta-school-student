@@ -155,12 +155,11 @@ class CourseProvider with ChangeNotifier {
     }
   }
 
-
-
-  Future<void> enrollByCash(BuildContext context,String courseId) async {
+  Future<void> enrollByCash(BuildContext context, String courseId) async {
     bool isEnrolled = await StudentService.enrollByCash(context, courseId);
 
-    final checkPendingTransactionResponse = await StudentService.checkCashTransaction(courseId);
+    final checkPendingTransactionResponse =
+        await StudentService.checkCashTransaction(courseId);
     if (checkPendingTransactionResponse['status'] != null) {
       _isPending = checkPendingTransactionResponse['status'] == "PENDING";
       notifyListeners();
@@ -171,9 +170,11 @@ class CourseProvider with ChangeNotifier {
     }
   }
 
-  Future<void> cancelCashTransaction(BuildContext context,String transactionId) async {
+  Future<void> cancelCashTransaction(
+      BuildContext context, String transactionId) async {
     print(transactionId);
-    bool isCancelled = await StudentService.cancelCashTransaction(context ,transactionId);
+    bool isCancelled =
+        await StudentService.cancelCashTransaction(context, transactionId);
 
     _isPending = !isCancelled;
     notifyListeners();
@@ -187,13 +188,15 @@ class CourseProvider with ChangeNotifier {
       notifyListeners();
 
       if (courseId.isNotEmpty) {
-        final checkPendingTransactionResponse = await StudentService.checkCashTransaction(courseId);
+        final checkPendingTransactionResponse =
+            await StudentService.checkCashTransaction(courseId);
         if (checkPendingTransactionResponse['status'] != null) {
           _isPending = checkPendingTransactionResponse['status'] == "PENDING";
           notifyListeners();
         }
         if (checkPendingTransactionResponse['transactionId'] != null) {
-          _currentTransactionId = checkPendingTransactionResponse['transactionId'];
+          _currentTransactionId =
+              checkPendingTransactionResponse['transactionId'];
           notifyListeners();
         }
       }
@@ -290,8 +293,7 @@ class CourseProvider with ChangeNotifier {
     print(localizations.clear_filters); // Log success message
   }
 
-  bool isPendingCourse(BuildContext context ,String courseId) {
-
+  bool isPendingCourse(BuildContext context, String courseId) {
     return _isPending;
   }
 }

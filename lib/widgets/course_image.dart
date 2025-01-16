@@ -67,21 +67,33 @@ class CourseImage extends StatelessWidget {
       final tempDir = await getTemporaryDirectory();
       final blurredFile = File('${tempDir.path}/$blurredFileName');
 
-      // If the blurred file already exists, return it.
+      // Check if the blurred file exists AND is not empty
       if (await blurredFile.exists()) {
-        return blurredFile;
+        final fileSize = await blurredFile.length();
+        if (fileSize > 0) {
+          return blurredFile;
+        } else {
+          // Delete the empty file
+          await blurredFile.delete();
+        }
       }
 
-      // Otherwise, create the blurred image file from the original image.
+      // Create the blurred image file from the original image
       final Uint8List? blurredBytes = await _generateBlurredImage(imageUrl);
-      if (blurredBytes != null) {
+      if (blurredBytes != null && blurredBytes.isNotEmpty) {
         await blurredFile.writeAsBytes(blurredBytes);
-        return blurredFile;
+
+        // Verify the file was written successfully
+        if (await blurredFile.length() > 0) {
+          return blurredFile;
+        }
       }
+
+      throw Exception('Failed to create valid blurred image');
     } catch (e) {
       debugPrint("Error creating blurred image: $e");
+      return null;
     }
-    return null; // Return null in case of an error
   }
 
   /// Generates a blurred image from the given URL.
@@ -92,6 +104,10 @@ class CourseImage extends StatelessWidget {
           ? await _downloadImageBytes(imageUrl)
           : await _loadAssetImageBytes(imageUrl);
 
+      if (imageBytes.isEmpty) {
+        throw Exception('Source image bytes are empty');
+      }
+
       // Decode the image
       final ui.Codec codec = await ui.instantiateImageCodec(imageBytes);
       final ui.FrameInfo frame = await codec.getNextFrame();
@@ -100,14 +116,22 @@ class CourseImage extends StatelessWidget {
       // Apply the blur effect
       final ui.PictureRecorder recorder = ui.PictureRecorder();
       final Canvas canvas = Canvas(recorder);
-      final Paint paint = Paint()..imageFilter = ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10);
+      final Paint paint = Paint()
+        ..imageFilter = ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10);
       canvas.drawImage(image, Offset.zero, paint);
 
       // Finalize the blurred image and convert to byte data
-      final ui.Image blurredImage = await recorder.endRecording().toImage(image.width, image.height);
-      final ByteData? byteData = await blurredImage.toByteData(format: ui.ImageByteFormat.png);
+      final ui.Image blurredImage =
+          await recorder.endRecording().toImage(image.width, image.height);
+      final ByteData? byteData =
+          await blurredImage.toByteData(format: ui.ImageByteFormat.png);
 
-      return byteData?.buffer.asUint8List();
+      final result = byteData?.buffer.asUint8List();
+      if (result == null || result.isEmpty) {
+        throw Exception('Generated blurred image is empty');
+      }
+
+      return result;
     } catch (e) {
       debugPrint("Error blurring image: $e");
       return null;
@@ -165,39 +189,39 @@ class CourseImage extends StatelessWidget {
 
     return imageUrl.startsWith('http')
         ? CachedNetworkImage(
-      imageUrl: imageUrl,
-      fit: BoxFit.cover,
-      placeholder: (context, url) => _buildPlaceholder(),
-      errorWidget: (context, url, error) => _buildErrorWidget(),
-    )
+            imageUrl: imageUrl,
+            fit: BoxFit.cover,
+            placeholder: (context, url) => _buildPlaceholder(),
+            errorWidget: (context, url, error) => _buildErrorWidget(),
+          )
         : Image.asset(imageUrl, fit: BoxFit.cover);
   }
 
   Widget _buildPlaceholder() => const Center(
-    child: CircularProgressIndicator(
-      color: AppColor.mainColor,
-      strokeWidth: 2,
-    ),
-  );
+        child: CircularProgressIndicator(
+          color: AppColor.mainColor,
+          strokeWidth: 2,
+        ),
+      );
 
   Widget _buildErrorWidget() => Icon(
-    Icons.image_not_supported_outlined,
-    color: Colors.grey[400],
-    size: 24,
-  );
+        Icons.image_not_supported_outlined,
+        color: Colors.grey[400],
+        size: 24,
+      );
 
   Widget _buildGradientOverlay() => Container(
-    width: width,
-    height: height,
-    decoration: BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [
-          Colors.black.withOpacity(0.1),
-          Colors.black.withOpacity(0.5),
-        ],
-      ),
-    ),
-  );
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.black.withOpacity(0.1),
+              Colors.black.withOpacity(0.5),
+            ],
+          ),
+        ),
+      );
 }
