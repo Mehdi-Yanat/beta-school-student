@@ -398,5 +398,15 @@
   "our_contact_info": "Nous contacter",
   "you_will_have_to_verify_account_again_and_no_access_to_courses": "Vous devrez vérifier votre compte à nouveau et vous n'aurez pas accès aux cours",
   "licenses": "Licences",
-  "attributing_authors": "Attribution aux auteurs"
+  "attributing_authors": "Attribution aux auteurs",
+  "name_must_be_in_latin_char": "Le nom doit être en caractères latins",
+  "name_must_be_in_arabic_char": "Le nom doit être en caractères arabes",
+  "invalid_email_format": "Format d'e-mail invalide",
+  "password_must_be_longer_than_8_chars": "Le mot de passe doit contenir plus de 8 caractères",
+  "password_must_contain_letters": "Le mot de passe doit contenir des lettres",
+  "password_must_contain_numbers": "Le mot de passe doit contenir des chiffres",
+  "password_must_contain_special_chars": "Le mot de passe doit contenir des caractères spéciaux",
+  "invalid_algerian_phone_number": "Numéro de téléphone algérien invalide.",
+  "profile_photo_not_necessary": "La photo de profil n'est pas nécessaire.",
+  "take_photo": "Prendre une photo"
 }

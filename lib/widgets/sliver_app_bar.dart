@@ -61,7 +61,7 @@ class CustomSliverAppBar extends StatelessWidget {
               elevation: 0,
               clipBehavior: Clip.none,
               backgroundColor: Colors.transparent, // Fully transparent
-              automaticallyImplyLeading: false, // Remove the back arrow
+              automaticallyImplyLeading: false,
             ),
           ),
         ),

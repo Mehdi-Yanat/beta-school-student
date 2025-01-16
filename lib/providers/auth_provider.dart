@@ -7,7 +7,7 @@ import '../services/student_service.dart';
 
 class AuthProvider with ChangeNotifier {
   Student? _student;
-  bool _isAuthenticated = false;
+  static bool _isAuthenticated = false;
   bool _isLoading = true;
   bool _focused = true;
   Map<String, dynamic>? _transactionDetails; // To store the transaction details

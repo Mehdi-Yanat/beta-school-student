@@ -40,7 +40,11 @@ class _LoginScreenState extends State<LoginScreen> {
         if (result.success) {
           SnackBarHelper.showSuccessSnackBar(
               context, AppLocalizations.of(context)!.login_success);
-          Navigator.pushReplacementNamed(context, '/root');
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/root',
+                (Route<dynamic> route) => false,
+          );
         } else {
           SnackBarHelper.showErrorSnackBar(context, result.message);
         }

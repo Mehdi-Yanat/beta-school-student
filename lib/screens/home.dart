@@ -298,7 +298,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         );
-      } else if (!student?.isEmailVerified) {
+      } else if (student?.isEmailVerified == null || !student?.isEmailVerified ) {
         // Render the validation message
         return Center(
           child: Padding(
@@ -306,6 +306,7 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const SizedBox(height: 80),
                 Image.asset(
                   "assets/images/no-email.png",
                   width: 200,
@@ -356,7 +357,7 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 60),
+                const SizedBox(height: 80),
                 Image.asset(
                   "assets/images/wait-verification.png",
                   width: 200,
@@ -506,7 +507,7 @@ class _HomePageState extends State<HomePage> {
             final isArabic =
                 Localizations.localeOf(context).languageCode == 'ar';
             final fullName = isArabic
-                ? "${course.teacher.user.firstNameAr ?? course.teacher.user.firstName} ${course.teacher.user.lastNameAr ?? course.teacher.user.lastName}"
+                ? "${course.teacher.user.firstNameAr} ${course.teacher.user.lastNameAr}"
                 : "${course.teacher.user.firstName} ${course.teacher.user.lastName}";
             final firstChapter =
                 course.chapters != null && course.chapters!.isNotEmpty ? course.chapters?.first : null;

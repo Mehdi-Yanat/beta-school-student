@@ -13,7 +13,7 @@
   "add_card": "إضافة بطاقة",
   "address": "العنوان",
   "address_required": "الرجاء إدخال العنوان",
-  "already_have_account": "لديك حساب بالفعل؟ ",
+  "already_have_account": "هل لديك حساب؟ ",
   "already_purchased": "هذه الدورة بحوزتك",
   "amount_label": "المبلغ",
   "announces_title": "الإعلانات",
@@ -24,7 +24,7 @@
   "auth_description": "للحصول على أفضل تجربة تعليمية، يرجى منح الأذونات اللازمة لتلقي الإشعارات وشراء الدورات الدراسية.",
   "auth_title": "إذن الوصول للتطبيق",
   "available_payment_methods": "طرق الدفع المتوفرة",
-  "back": "السابق",
+  "back": "العودة",
   "back_to_home_button": "العودة إلى الصفحة الرئيسية",
   "back_to_login": "العودة إلى تسجيل الدخول",
   "bookmark_item": "إشارة مرجعية",
@@ -400,6 +400,16 @@
   "our_contact_info": "اتصل بنا",
   "you_will_have_to_verify_account_again_and_no_access_to_courses": "سيُطلب منك التحقق من حسابك مرة أخرى ولن تتمكن من الوصول إلى الدورات التدريبية",
   "licenses": "التراخيص",
-  "attributing_authors": "إسناد المؤلفين"
+  "attributing_authors": "إسناد المؤلفين",
+  "name_must_be_in_latin_char": "الاسم يجب أن يكون بالأحرف اللاتينية",
+  "name_must_be_in_arabic_char": "الاسم يجب أن يكون بالأحرف العربية",
+  "invalid_email_format": "تنسيق البريد الإلكتروني غير صحيح",
+  "password_must_be_longer_than_8_chars": "كلمة المرور يجب أن تكون أطول من 8 أحرف",
+  "password_must_contain_letters": "كلمة المرور يجب أن تحتوي على أحرف",
+  "password_must_contain_numbers": "كلمة المرور يجب أن تحتوي على أرقام",
+  "password_must_contain_special_chars": "كلمة المرور يجب أن تحتوي على رموز خاصة (@ # %)",
+  "invalid_algerian_phone_number": "رقم الهاتف الجزائري غير صحيح",
+  "profile_photo_not_necessary": "الصورة ليست ضرورية",
+  "take_photo": "التقط صورة"
 }
 
