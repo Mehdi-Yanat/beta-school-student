@@ -28,14 +28,14 @@ class TeacherService {
     try {
       print('🔵 Fetching accepted teachers...');
       final response = await _client.get(
-        Uri.parse('$baseUrl/teacher/accepted?lng=${getCurrentLocale()}'),
+        Uri.parse('$baseUrl/teacher/all/suggestions?lng=${getCurrentLocale()}'),
         headers: _headers(),
       );
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        if (data != null && data['users'] != null) {
-          return data['users'];
+        if (data != null) {
+          return data;
         }
         print('⚠️ No users data found in response');
         return [];

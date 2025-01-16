@@ -38,7 +38,7 @@ class AuthService {
   }
 
   // Register student
-  static Future<bool> registerStudent(Student student,
+  static Future<AuthResult> registerStudent(Student student,
       {String lang = 'ar'}) async {
     try {
       var request = http.MultipartRequest(
@@ -69,12 +69,27 @@ class AuthService {
           ),
         );
       }
-
       final response = await request.send();
-      return response.statusCode == 201;
+      final http.Response httpResponse = await http.Response.fromStream(response);
+      final Map<String, dynamic> responseData = jsonDecode(httpResponse.body);
+      final String message = responseData['message'] ?? 'Unknown error';
+
+      if (response.statusCode >= 200 && response.statusCode < 400) {
+        final String accessToken =
+            responseData['tokens']['access']['token'] ?? '';
+        final String refreshToken =
+            responseData['tokens']['refresh']['token'] ?? '';
+        await StorageService.saveToken("accessToken", accessToken);
+        await StorageService.saveToken("refreshToken", refreshToken);
+
+        return AuthResult(true, message);
+      } else {
+        return AuthResult(false, message);
+      }
+
     } catch (e) {
       print('Registration error: $e');
-      return false;
+      return AuthResult(false, e.toString());
     }
   }
 

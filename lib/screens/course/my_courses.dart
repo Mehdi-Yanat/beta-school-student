@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:online_course/screens/course/view_chapters.dart';
 import 'package:online_course/theme/color.dart';
+import 'package:online_course/utils/helper.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/mycourses.dart';
 import '../../widgets/appbar.dart';
 import '../../providers/course_provider.dart';
+import '../../widgets/gradient_button.dart';
+import 'course_detail.dart';
 
 class MyCourseScreen extends StatefulWidget {
   @override
@@ -27,12 +30,12 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
     final courseProvider =
         Provider.of<CourseProvider>(context); // Access CourseProvider
 
-    return Scaffold(
-        backgroundColor: AppColor.appBgColor,
-        appBar: CustomAppBar(title: localizations!.my_courses_title),
-        body: RefreshIndicator(
-          onRefresh: _refreshCourses,
-          child: Column(
+    return RefreshIndicator(
+        onRefresh: _refreshCourses,
+      child: Scaffold(
+          backgroundColor: AppColor.appBgColor,
+          appBar: CustomAppBar(title: localizations!.my_courses_title),
+          body: Column(
             children: [
               // For now, simply display all courses (Disable tabs)
               Expanded(
@@ -54,8 +57,8 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                             localizations, courseProvider.myCourses),
               ),
             ],
-          ),
-        ));
+          )),
+    );
   }
 
   // Render the list of courses
@@ -72,11 +75,7 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ViewChapterScreen(
-                  chapterId: course.course.chapters[0].id,
-                  courseId: course.course.id,
-                  chapter: course.course.chapters[0],
-                ),
+                builder: (context) => CourseDetailScreen(courseId: course.course.id)
               ),
             );
           },
@@ -152,14 +151,22 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                           ),
                           const Spacer(),
                           */
-
+                          Icon(Icons.video_collection_rounded, size: 15,),
+                          const SizedBox(width: 8,),
                           Text(
-                            '${course.course.chapters.length} ${localizations.total_lessons}',
+                            '${course.course.chapters.length}',
                             style: TextStyle(
-                              color: AppColor.inActiveColor,
-                              fontSize: 12,
+                              color: AppColor.darker,
+                              fontSize: 15,
                             ),
                           ),
+                          const SizedBox(width: 16,),
+                          Icon(Icons.timelapse_rounded, size: 15,),
+                          const SizedBox(width: 5,),
+
+                          Text(
+                            Helpers.formatHoursAndMinutes(context, course.course.totalWatchTime)
+                          )
                         ],
                       ),
                       const SizedBox(height: 6),
@@ -174,6 +181,30 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                       */
                     ],
                   ),
+                ),
+                GradientButton(
+                  text: AppLocalizations.of(
+                      context)!
+                      .watch,
+                  // Add your localization key or hardcoded text
+                  variant: 'blueGradient',
+                  // Variant setting (e.g., primary style)
+                  color: Colors.white,
+                  // Text or icon color
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<dynamic>(
+                        maintainState: true,
+                        builder: (context) =>
+                            ViewChapterScreen(
+                                chapterId: course.course.chapters[0].id,
+                                courseId: course.course.id,
+                                chapter: course.course.chapters[0]
+                      ),
+                    )
+                    );
+                  },
                 ),
               ],
             ),

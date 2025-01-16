@@ -14,10 +14,10 @@ import 'package:online_course/utils/data.dart';
 import 'package:online_course/utils/helper.dart';
 import 'package:online_course/widgets/category_box.dart';
 import 'package:online_course/widgets/feature_item.dart';
-import 'package:online_course/widgets/notification_box.dart';
 import 'package:online_course/widgets/teacher_item.dart';
 import 'package:provider/provider.dart';
 
+import '../utils/translation.dart';
 import '../widgets/custom_image.dart';
 import '../widgets/sliver_app_bar.dart';
 import '../widgets/snackbar.dart';
@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> _refreshData() async {
     // Refresh all data concurrently
     await Future.wait([
-      context.read<CourseProvider>().fetchCourses(
+      context.read<CourseProvider>().fetchSuggestedCourses(
             refresh: true,
             filters: {
               'subject': _selectedCategory.isEmpty ? null : _selectedCategory
@@ -137,15 +137,13 @@ class _HomePageState extends State<HomePage> {
 
         final firstName = isArabic
             ? (authProvider.student!.firstNameAr ??
-                authProvider.student!.firstName ??
-                '')
-            : (authProvider.student!.firstName ?? '');
+                authProvider.student!.firstName)
+            : (authProvider.student!.firstName);
 
         final lastName = isArabic
             ? (authProvider.student!.lastNameAr ??
-                authProvider.student!.lastName ??
-                '')
-            : (authProvider.student!.lastName ?? '');
+                authProvider.student!.lastName)
+            : (authProvider.student!.lastName);
 
         return '$firstName $lastName'.trim();
       }
@@ -154,8 +152,7 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            margin: const EdgeInsets.fromLTRB(
-                20.0, 0, 0, 0), // Adjust margin values as needed
+            margin: EdgeInsetsDirectional.only(end: 20),
             child: CustomImage(
               authProvider.student?.profilePic ?? "",
               width: 55,
@@ -163,13 +160,13 @@ class _HomePageState extends State<HomePage> {
               radius: 17,
             ),
           ),
-          Expanded(
+          Flexible(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  localizations.greeting,
+                  localizations.greeting + ' 👋',
                   style: TextStyle(
                       color: AppColor.labelColor,
                       fontSize: 14,
@@ -184,13 +181,32 @@ class _HomePageState extends State<HomePage> {
                       fontSize: 22,
                       fontFamily: 'Rubik'),
                 ),
+                const SizedBox(height: 5),
+                Row(
+                  children: [
+                    Flexible(
+                        child: Text(
+                      TranslationHelper.getTranslatedClass(
+                          context, authProvider.student?.studentClass),
+                      style:
+                          TextStyle(color: AppColor.labelColor, fontSize: 15),
+                    ))
+                  ],
+                ),
               ],
             ),
           ),
-          NotificationBox(
-            notifiedNumber: 1,
-            size: 10,
-          ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.asset(
+              "assets/icons/app_icon.png",
+              opacity: AlwaysStoppedAnimation(0.91),
+            ),
+          )
+          // NotificationBox(
+          //   notifiedNumber: 0,
+          //   size: 10,
+          // ),
         ],
       );
     });
@@ -208,43 +224,81 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // _buildCategories(localizations),
               const SizedBox(height: 5),
               Padding(
-                padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
-                child: Text(
-                  localizations.featured, // Localized "Featured" title
-                  style: TextStyle(
-                    color: AppColor.mainColor,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 30,
-                  ),
-                ),
+                  padding: EdgeInsetsDirectional.only(start: 25),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        textAlign: TextAlign.start,
+                        '✨ ' + localizations.featured,
+                        // Localized "Featured" title with shining emoji
+                        style: TextStyle(
+                          color: AppColor.mainColor,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 23,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsetsDirectional.only(start: 35),
+                        child: Text(
+                          textAlign: TextAlign.start,
+                          localizations.recommended_courses_description,
+                          style: TextStyle(
+                            color: AppColor.textColor,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16,
+                          ),
+                        ),
+                      )
+                    ],
+                  )),
+              const SizedBox(
+                height: 15,
               ),
+              _buildCategories(localizations),
               const SizedBox(height: 15),
               _buildCoursesAccepted(),
-              const SizedBox(height: 1),
+              const SizedBox(height: 35),
               Padding(
-                padding: const EdgeInsets.fromLTRB(15, 0, 15, 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                padding: EdgeInsetsDirectional.only(start: 40),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      localizations.teachers,
+                      '🎓 ' + localizations.teachers,
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w600,
                         color: AppColor.mainColor,
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsetsDirectional.only(start: 35),
+                      child: Text(
+                        textAlign: TextAlign.start,
+                        localizations.recommended_teachers_description,
+                        style: TextStyle(
+                          color: AppColor.textColor,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16,
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),
               _buildAcceptedTeachers(),
+              const SizedBox(
+                height: 20,
+              )
             ],
           ),
         );
-      } else if (!student?.isEmailVerified) {
+      } else if (student?.isEmailVerified == null || !student?.isEmailVerified ) {
         // Render the validation message
         return Center(
           child: Padding(
@@ -252,14 +306,14 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const SizedBox(height: 80),
                 Image.asset(
                   "assets/images/no-email.png",
                   width: 200,
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  AppLocalizations.of(context)!.email_not_verified_message ??
-                      'Please validate your email to access this feature.',
+                  AppLocalizations.of(context)!.email_not_verified_message,
                   // Your localized message here
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -303,15 +357,14 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 60),
+                const SizedBox(height: 80),
                 Image.asset(
                   "assets/images/wait-verification.png",
                   width: 200,
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  AppLocalizations.of(context)!.please_wait_verification ??
-                      'Please wait until we verify you.',
+                  AppLocalizations.of(context)!.please_wait_verification,
                   // Your localized message here
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -388,7 +441,7 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 setState(() => _selectedCategory = category['id']);
                 // Filter courses based on selected category
-                context.read<CourseProvider>().setFilters(
+                context.read<CourseProvider>().setFiltersForSuggestedCourses(
                     subject: category['id'] == '' ? null : category['id'],
                     refresh: true,
                     context: context);
@@ -418,7 +471,7 @@ class _HomePageState extends State<HomePage> {
           );
         }
 
-        if (courseProvider.courses.isEmpty) {
+        if (courseProvider.featuredCourses.isEmpty) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -426,6 +479,14 @@ class _HomePageState extends State<HomePage> {
                 Image.asset(
                   "assets/images/empty-folder.png",
                   width: 200,
+                ),
+                SizedBox(height: 16),
+                Text(
+                  AppLocalizations.of(context)!.no_courses_found,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: AppColor.mainColor,
+                  ),
                 ),
               ],
             ),
@@ -440,33 +501,41 @@ class _HomePageState extends State<HomePage> {
             enlargeCenterPage: true,
             disableCenter: true,
             viewportFraction: .75,
+            pageSnapping: true,
           ),
-          items: courseProvider.courses.map((course) {
+          items: courseProvider.featuredCourses.map((course) {
             final isArabic =
                 Localizations.localeOf(context).languageCode == 'ar';
             final fullName = isArabic
-                ? "${course.teacher.user.firstNameAr ?? course.teacher.user.firstName} ${course.teacher.user.lastNameAr ?? course.teacher.user.lastName}"
+                ? "${course.teacher.user.firstNameAr} ${course.teacher.user.lastNameAr}"
                 : "${course.teacher.user.firstName} ${course.teacher.user.lastName}";
             final firstChapter =
-                course.chapters.isNotEmpty ? course.chapters.first : null;
+                course.chapters != null && course.chapters!.isNotEmpty ? course.chapters?.first : null;
             final totalDuration = course.totalWatchTime;
 
             final formatedDurationMinutes =
-                Helpers.formatHoursAndMinutes(context, totalDuration!);
+                Helpers.formatHoursAndMinutes(context, totalDuration);
 
-            final finalPrice = course.discount != null
-                ? course.price - course.discount!
-                : course.price;
+            // Calculate discount percentage and prices
+            final hasDiscount = course.discount != null && course.discount! > 0;
+            final originalPrice = course.price;
+            final discountAmount =
+                hasDiscount ? (course.price * course.discount! / 100) : 0;
+            final finalPrice =
+                hasDiscount ? (course.price - discountAmount).toInt() : course.price.toInt();
 
             return FeatureItem(
               data: {
-                "thumbnail": firstChapter?.thumbnail?.url ??
+                "thumbnail": firstChapter?.thumbnail.url ??
                     "assets/images/course_icon.png",
                 "icon": course.icon?.url ?? "assets/images/course_icon.png",
                 "name": course.title,
-                "price": "${finalPrice.toString()} DA",
+                "originalPrice":
+                    hasDiscount ? "${originalPrice.toString()} " + AppLocalizations.of(context)!.dzd  : "",
+                "price": "${finalPrice.toString()} " + AppLocalizations.of(context)!.dzd,
+                "discountPercentage": course.discount.toString(),
                 "session":
-                    "${course.chapters.length} ${AppLocalizations.of(context)!.courses}",
+                    "${course.chapters != null ? course.chapters?.length : 0} ${AppLocalizations.of(context)!.courses}",
                 "duration": "${formatedDurationMinutes}",
                 "teacherName": "${fullName}",
                 "teacherProfilePic": course.teacher.user.profilePic?.url,
@@ -503,7 +572,7 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         }
-        if (teacherProvider.teachers.isEmpty) {
+        if (teacherProvider.featuredTeachers.isEmpty) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -530,15 +599,15 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.fromLTRB(15, 15, 0, 15),
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: teacherProvider.teachers.map((teacher) {
+            children: teacherProvider.featuredTeachers.map((teacher) {
               final isArabic =
                   Localizations.localeOf(context).languageCode == 'ar';
               final fullName = isArabic
-                  ? "${teacher.firstNameAr ?? teacher.firstName} ${teacher.lastNameAr ?? teacher.lastName}"
-                  : "${teacher.firstName} ${teacher.lastName}";
+                  ? "${teacher.fullNameAr}"
+                  : "${teacher.fullName}";
 
-              final profilePic = teacher.profilePic?.url != null
-                  ? teacher.profilePic?.url
+              final profilePic = teacher.profilePic != null
+                  ? teacher.profilePic
                   : "assets/images/profile.png";
 
               return Padding(
@@ -553,11 +622,13 @@ class _HomePageState extends State<HomePage> {
                   data: {
                     "image": profilePic,
                     "name": fullName,
-                    "subject": teacher.teacherInfo.subject,
-                    "institution": teacher.teacherInfo.institution,
+                    "subject": teacher.subject,
+                    "institution": teacher.institution,
+                    "totalEnrolledStudents":
+                        teacher.stats.totalEnrolledStudents,
                     "experience":
-                        "${teacher.teacherInfo.yearsOfExperience} years",
-                    "review": "4.5",
+                        "${teacher.yearsOfExperience} years",
+                    "review": "${teacher.stats.rating * 5}",
                   },
                 ),
               );

@@ -7,6 +7,8 @@ import 'package:online_course/utils/helper.dart';
 import 'package:online_course/widgets/announces_item.dart';
 import 'package:online_course/widgets/custom_image.dart';
 
+import '../../widgets/appbar.dart';
+
 class TeacherAnnouncesPage extends StatefulWidget {
   final teacherId;
   const TeacherAnnouncesPage({Key? key, required this.teacherId})
@@ -59,6 +61,9 @@ class _TeacherAnnouncesPageState extends State<TeacherAnnouncesPage> {
   Widget build(BuildContext context) {
     final currentLocale = Localizations.localeOf(context).languageCode;
     return Scaffold(
+      appBar: CustomAppBar(
+        title: AppLocalizations.of(context)!.all_teacher_announces_title,
+      ),
       backgroundColor: AppColor.appBgColor,
       body: RefreshIndicator(
         onRefresh: _fetchAnnouncements,
@@ -67,7 +72,6 @@ class _TeacherAnnouncesPageState extends State<TeacherAnnouncesPage> {
           padding: EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             children: [
-              _buildHeader(context),
               if (_isLoading)
                 Center(
                   child: Padding(
@@ -101,7 +105,7 @@ class _TeacherAnnouncesPageState extends State<TeacherAnnouncesPage> {
                       onTap: () =>
                           _showAnnouncementDetails(announcement, context),
                       {
-                        'name': announcement.teacher.fullName,
+                        'name': Localizations.localeOf(context).languageCode == 'ar'?  announcement.teacher.fullNameAr : announcement.teacher.fullName,
                         'image': announcement.teacher.user.profilePic?.url ??
                             'assets/images/profile.png',
                         'message': announcement.message,

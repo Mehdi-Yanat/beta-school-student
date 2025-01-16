@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:online_course/theme/color.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -121,11 +122,7 @@ class _PaymentStatusContentState extends State<PaymentStatusContent> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(
-              isSuccess ? Icons.check_circle : Icons.error,
-              color: isSuccess ? Colors.green : Colors.red,
-              size: 100,
-            ),
+              isSuccess ? Image.asset("assets/images/payment-ok.png", width: 200,) : Image.asset("assets/images/fail.png"),
             const SizedBox(height: 20),
             Text(
               isSuccess
@@ -169,7 +166,7 @@ class _PaymentStatusContentState extends State<PaymentStatusContent> {
         Navigator.pop(context);
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.green,
+        backgroundColor: AppColor.primary,
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
       ),
       child: Text(

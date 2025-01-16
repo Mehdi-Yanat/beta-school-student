@@ -3,53 +3,63 @@ var profile = {
   "image": "https://avatars.githubusercontent.com/u/86506519?v=4",
   "email": "sangvaleap.vanny@gmail.com"
 };
-
+/* Attributing authors:
+<a href="https://www.flaticon.com/free-icons/basic-education" title="basic education icons">Basic education icons created by Falcone - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/calculus" title="calculus icons">Calculus icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/chemistry" title="chemistry icons">Chemistry icons created by Rasama studio - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/atom" title="atom icons">Atom icons created by iconixar - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/study" title="study icons">Study icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/quran" title="Quran icons">Quran icons created by Us and Up - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/arabic-language" title="arabic language icons">Arabic language icons created by Laisa Islam Ani - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/french" title="french icons">French icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/basic-education" title="basic education icons">Basic education icons created by Falcone - Flaticon</a>
+*/
 List categories = [
-  {"id": "", "name": "Tout", "icon": "assets/icons/categories/all.svg"},
+  {"id": "", "name": "Tout", "icon": "assets/icons/categories/all.png"},
   {
     "id": "MATHEMATICS",
     "name": "Mathématiques",
-    "icon": "assets/icons/categories/mathematics.svg"
+    "icon": "assets/icons/categories/maths.png"
   },
   {
     "id": "SCIENCE",
     "name": "Sciences",
-    "icon": "assets/icons/categories/science.svg"
+    "icon": "assets/icons/categories/chemistry-class.png"
   },
   {
     "id": "PHYSICS",
     "name": "Physique",
-    "icon": "assets/icons/categories/physics.svg"
+    "icon": "assets/icons/categories/atom.png"
   },
   {
     "id": "HISTORY_GEOGRAPHY",
     "name": "Histoire",
-    "icon": "assets/icons/categories/geography.svg"
+    "icon": "assets/icons/categories/geo.png"
   },
   {
     "id": "ISLAMIC_STUDIES",
     "name": "Islamiques",
-    "icon": "assets/icons/categories/islamic.svg"
+    "icon": "assets/icons/categories/quran.png"
   },
   {
     "id": "ARABIC",
     "name": "Arabe",
-    "icon": "assets/icons/categories/ar-language-icon.svg"
+    "icon": "assets/icons/categories/ar.png"
   },
   {
     "id": "FRENCH",
     "name": "Français",
-    "icon": "assets/icons/categories/fr-language-icon.svg"
+    "icon": "assets/icons/categories/fr.png"
   },
   {
     "id": "ENGLISH",
     "name": "Anglais",
-    "icon": "assets/icons/categories/en-language-icon.svg"
+    "icon": "assets/icons/categories/other.png"
   },
   {
     "id": "OTHER",
     "name": "Autres",
-    "icon": "assets/icons/categories/other.svg"
+    "icon": "assets/icons/categories/other.png"
   },
 ];
 

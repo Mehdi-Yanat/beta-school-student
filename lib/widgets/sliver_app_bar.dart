@@ -1,4 +1,4 @@
-import 'dart:ui'; // For BackdropFilter
+// For BackdropFilter
 import 'package:flutter/material.dart';
 
 class CustomSliverAppBar extends StatelessWidget {
@@ -27,22 +27,22 @@ class CustomSliverAppBar extends StatelessWidget {
       elevation: 8,
       backgroundColor: Colors.white.withValues(alpha: 0.9),
       // Transparent to show blur and gradient
-      flexibleSpace: ClipRRect(
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(40),
-          bottomRight: Radius.circular(40),
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.only(
+            bottomLeft: Radius.circular(40),
+            bottomRight: Radius.circular(40),
+          ),
         ),
         // Ensure the blur effect is clipped to the AppBar's area
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0), // Apply blur
-          child: Container(
+        child: Container(
             decoration: const BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                  color: Color(0xFF162835),
-                  spreadRadius: 2,
-                  blurRadius: 20,
-                  offset: Offset(0, 8),
+                  color: Colors.black12,
+                  spreadRadius: 5,
+                  blurRadius: 10,
+                  offset: Offset(0, 2),
                 ),
               ],
               gradient: LinearGradient(
@@ -59,12 +59,12 @@ class CustomSliverAppBar extends StatelessWidget {
             child: AppBar(
               title: title,
               elevation: 0,
+              clipBehavior: Clip.none,
               backgroundColor: Colors.transparent, // Fully transparent
-              automaticallyImplyLeading: false, // Remove the back arrow
+              automaticallyImplyLeading: false,
             ),
           ),
         ),
-      ),
     );
   }
 }

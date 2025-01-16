@@ -15,6 +15,8 @@ import 'package:online_course/widgets/setting_item.dart';
 import 'package:provider/provider.dart';
 import '../../providers/course_provider.dart';
 import '../../widgets/appbar.dart';
+import 'licenses.dart';
+import 'contact/ContactInfoPage.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({Key? key}) : super(key: key);
@@ -150,6 +152,7 @@ class _AccountPageState extends State<AccountPage> {
           SettingItem(
             title: AppLocalizations.of(context)!.settings_title,
             // Localized text
+            fullIcon: Icon(Icons.settings_applications_rounded, color: AppColor.primary, size: 28,),
             leadingIcon: "assets/icons/setting.svg",
             bgIconColor: AppColor.blue,
             onTap: () {
@@ -169,6 +172,7 @@ class _AccountPageState extends State<AccountPage> {
           SettingItem(
             title: AppLocalizations.of(context)!.payments_title,
             // Localized text
+            fullIcon: Icon(Icons.wallet_rounded, color: AppColor.primary, size: 28,),
             leadingIcon: "assets/icons/wallet.svg",
             bgIconColor: AppColor.green,
             onTap: () {
@@ -203,12 +207,39 @@ class _AccountPageState extends State<AccountPage> {
           SettingItem(
             title: AppLocalizations.of(context)!.privacy_title,
             // Localized text
+            fullIcon: Icon(Icons.shield, color: AppColor.primary, size: 28,),
             leadingIcon: "assets/icons/shield.svg",
             bgIconColor: AppColor.orange,
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => PrivacyPage()),
+              );
+            },
+          ),
+          SettingItem(
+            title: AppLocalizations.of(context)!.our_contact_info,
+            // Localized text
+            fullIcon: Icon(Icons.contact_mail_rounded, color: AppColor.primary, size: 28,),
+            leadingIcon: "assets/icons/shield.svg",
+            bgIconColor: AppColor.orange,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => OurContactInfo()),
+              );
+            },
+          ),
+          SettingItem(
+            title: AppLocalizations.of(context)!.licenses,
+            // Localized text
+            fullIcon: Icon(Icons.local_police_rounded, color: AppColor.primary, size: 28,),
+            leadingIcon: "assets/icons/shield.svg",
+            bgIconColor: AppColor.orange,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LicensesPage()),
               );
             },
           ),
@@ -234,6 +265,7 @@ class _AccountPageState extends State<AccountPage> {
       ),
       child: SettingItem(
         title: AppLocalizations.of(context)!.account_logout, // Localized text
+        fullIcon: Icon(Icons.logout_rounded, color: AppColor.red, size: 28,),
         leadingIcon: "assets/icons/logout.svg",
         bgIconColor: AppColor.darker,
         onTap: () {

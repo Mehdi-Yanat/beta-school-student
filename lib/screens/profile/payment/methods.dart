@@ -48,6 +48,29 @@ class PaymentMethodsScreen extends StatelessWidget {
                 color: Colors.grey[700],
               ),
             ),
+
+            const SizedBox(height: 100),
+
+            // Image containing all payment methods
+            Image.asset(
+              'assets/images/cash.png',
+              width: double.infinity, // Take full width of the screen
+              height: 150, // Set height for the image
+              fit: BoxFit.contain, // Adjust image to fit properly
+            ),
+
+            const SizedBox(height: 16),
+
+            // Description for payment methods (localized in English/French/Arabic)
+            Text(
+              AppLocalizations.of(context)!
+                  .you_can_pay_cash, // Localized description
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[700],
+              ),
+            ),
           ],
         ),
       ),

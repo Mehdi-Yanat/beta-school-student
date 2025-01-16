@@ -71,11 +71,17 @@ class Chapter {
   final int id;
   final String title;
   final String description;
+  final double? rating;
+  final int views;
+  final int duration;
 
   Chapter({
     required this.id,
     required this.title,
+    required this.views,
     required this.description,
+    required this.duration,
+    this.rating
   });
 
   factory Chapter.fromJson(Map<String, dynamic> json) {
@@ -83,6 +89,9 @@ class Chapter {
       id: json['id'] ?? 0,
       title: json['title'] ?? '',
       description: json['description'] ?? '',
+      rating: json['rating'],
+      views: json['views'],
+      duration: json['duration']
     );
   }
 }

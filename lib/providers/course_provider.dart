@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
+import 'package:online_course/models/FeaturedCourse.dart';
 import 'package:online_course/models/chapter.dart' as Chapter;
 import 'package:url_launcher/url_launcher.dart';
 import '../models/course.dart' as Course;
@@ -10,28 +11,41 @@ import '../widgets/snackbar.dart';
 
 class CourseProvider with ChangeNotifier {
   List<Course.Course> _courses = [];
+  List<FeaturedCourse> _featuredCourses = [];
+
   List<Chapter.Chapter> _courseChapters = [];
+
   Chapter.Chapter? _currentChapter;
   Map<String, dynamic>? _currentVideo;
   bool _isLoading = false;
+  bool _isPending = false;
   bool _isLoadingCourses = false;
   bool _isLoadingChapter = false;
   Map<String, dynamic>? _courseData;
   String? _error;
   int _currentPage = 1;
   int _totalPages = 1;
+  String _currentTransactionId = "";
   String? _searchQuery;
   String? _selectedSubject;
   String? _selectedClass;
   String? _selectedBranch;
   bool _isSuccess = false;
   List<MyCourse.MyCourse> _myCourses = [];
-
   Map<String, dynamic>? get courseData => _courseData;
+  List<FeaturedCourse> get featuredCourses => _featuredCourses;
+
+  set featuredCourses(List<FeaturedCourse> value) {
+    _featuredCourses = value;
+  }
 
   Map<String, dynamic>? get currentVideo => _currentVideo;
 
+  String get currentTransactionId => _currentTransactionId;
+
   bool get isLoading => _isLoading;
+
+  bool get isPending => _isPending;
 
   bool get isLoadingCourses => _isLoadingCourses;
 
@@ -101,6 +115,55 @@ class CourseProvider with ChangeNotifier {
     }
   }
 
+  Future<void> fetchSuggestedCourses({
+    bool refresh = false,
+    Map<String, dynamic>? filters,
+    required BuildContext context,
+  }) async {
+    final localizations = AppLocalizations.of(context)!;
+    if (refresh) {
+      _currentPage = 1;
+      _courses = [];
+    }
+
+    try {
+      _isLoading = true;
+      notifyListeners();
+
+      final result = await CourseService.getSuggestedCourses(
+        title: _searchQuery,
+        subject: filters?['subject'] ?? _selectedSubject,
+        teacherClass: filters?['teacherClass'] ?? _selectedClass,
+        educationalBranch: filters?['educationalBranch'] ?? _selectedBranch,
+        page: _currentPage,
+      );
+
+      final newCourses = (result['courses'] as List?)
+          ?.map((data) => FeaturedCourse.fromJson(data))
+          .toList() ??
+          [];
+
+      if (refresh) {
+        _featuredCourses = newCourses;
+      } else {
+        _featuredCourses.addAll(newCourses);
+      }
+
+      final total = (result['total'] as num?)?.toInt() ?? 0;
+      final limit = (result['limit'] as num?)?.toInt() ?? 10;
+
+      _totalPages = limit > 0 ? (total / limit).ceil() : 1;
+      _currentPage++;
+      _error = null;
+    } catch (e) {
+      _error = localizations.fetch_courses_error; // Use translation key
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+
   Future<void> fetchCourses({
     bool refresh = false,
     Map<String, dynamic>? filters,
@@ -149,12 +212,48 @@ class CourseProvider with ChangeNotifier {
     }
   }
 
+
+
+  Future<void> enrollByCash(BuildContext context,String courseId) async {
+    bool isEnrolled = await StudentService.enrollByCash(context, courseId);
+
+    final checkPendingTransactionResponse = await StudentService.checkCashTransaction(courseId);
+    if (checkPendingTransactionResponse['status'] != null) {
+      _isPending = checkPendingTransactionResponse['status'] == "PENDING";
+      notifyListeners();
+    }
+    if (checkPendingTransactionResponse['transactionId'] != null) {
+      _currentTransactionId = checkPendingTransactionResponse['transactionId'];
+      notifyListeners();
+    }
+  }
+
+  Future<void> cancelCashTransaction(BuildContext context,String transactionId) async {
+    print(transactionId);
+    bool isCancelled = await StudentService.cancelCashTransaction(context ,transactionId);
+
+    _isPending = !isCancelled;
+    notifyListeners();
+  }
+
   Future<void> fetchCourse(String courseId, BuildContext context) async {
     final localizations = AppLocalizations.of(context)!;
     try {
       _isLoading = true;
       _error = null;
       notifyListeners();
+
+      if (courseId.isNotEmpty) {
+        final checkPendingTransactionResponse = await StudentService.checkCashTransaction(courseId);
+        if (checkPendingTransactionResponse['status'] != null) {
+          _isPending = checkPendingTransactionResponse['status'] == "PENDING";
+          notifyListeners();
+        }
+        if (checkPendingTransactionResponse['transactionId'] != null) {
+          _currentTransactionId = checkPendingTransactionResponse['transactionId'];
+          notifyListeners();
+        }
+      }
 
       final data = await CourseService.getCourse(courseId);
       if (data != null) {
@@ -223,6 +322,20 @@ class CourseProvider with ChangeNotifier {
     }
   }
 
+  void setFiltersForSuggestedCourses(
+      {String? subject,
+        String? teacherClass,
+        String? educationalBranch,
+        String? searchQuery,
+        refresh = false,
+        context}) {
+    _selectedSubject = subject;
+    _selectedClass = teacherClass;
+    _selectedBranch = educationalBranch;
+    _searchQuery = searchQuery;
+    fetchSuggestedCourses(refresh: true, context: context);
+  }
+
   void setFilters(
       {String? subject,
       String? teacherClass,
@@ -246,5 +359,10 @@ class CourseProvider with ChangeNotifier {
     _searchQuery = null;
     fetchCourses(refresh: true, context: context);
     print(localizations.clear_filters); // Log success message
+  }
+
+  bool isPendingCourse(BuildContext context ,String courseId) {
+
+    return _isPending;
   }
 }

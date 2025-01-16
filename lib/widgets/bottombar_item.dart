@@ -23,23 +23,22 @@ class BottomBarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Transform.translate(
-      offset: isMiddle ? Offset(0, -40) : Offset(0, 0),
-      child: GestureDetector(
+    return GestureDetector(
         onTap: onTap,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 800),
+          margin: isMiddle ? !isActive ? EdgeInsets.fromLTRB(0, 0, 0, 30) : EdgeInsets.zero : EdgeInsets.zero,
+          duration: const Duration(milliseconds: 200),
           curve: Curves.fastOutSlowIn,
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             boxShadow: isMiddle
                 ? [
                     BoxShadow(
-                      color: Colors.grey
-                          .withOpacity(0.8), // Shadow color with transparency
-                      blurRadius: 20, // Blurry edges of the shadow
-                      spreadRadius: 0, // Spread the shadow slightly
-                      offset: Offset(0, 12), // Shadow offset (upward
+                      color: AppColor.primary
+                          .withValues(alpha: 0.3), // Shadow color with transparency
+                      blurRadius: isActive? 1 : 20, // Blurry edges of the shadow
+                      spreadRadius:1, // Spread the shadow slightly
+                      offset: Offset(0, isActive ? 1 : 12), // Shadow offset (upward
                     )
                   ]
                 : null,
@@ -57,24 +56,14 @@ class BottomBarItem extends StatelessWidget {
                   )
                 : null,
             color: isActive ? AppColor.labelColor : Colors.white,
-            // boxShadow: [
-            //   if (isActive)
-            //     BoxShadow(
-            //       color: AppColor.shadowColor.withValues(alpha: 0.1),
-            //       spreadRadius: 2,
-            //       blurRadius: 2,
-            //       offset: Offset(0, 0), // changes position of shadow
-            //     ),
-            // ],
           ),
           child: SvgPicture.asset(
             icon,
-            color: isMiddle ? Colors.white : null,
+            colorFilter: isMiddle ? ColorFilter.mode(Colors.white, BlendMode.srcIn) : null,
             width: isMiddle ? 40 : 35,
             height: isMiddle ? 40 : 35,
           ),
         ),
-      ),
-    );
+      );
   }
 }

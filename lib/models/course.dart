@@ -161,6 +161,7 @@ class Course {
   final CourseStatus status;
   final String? statusNote;
   final Teacher teacher;
+  final String? subject;
 
   Course({
     required this.id,
@@ -185,6 +186,7 @@ class Course {
     required this.chapters,
     required this.status,
     this.statusNote,
+    this.subject,
     required this.teacher,
   });
 
@@ -223,6 +225,7 @@ class Course {
           orElse: () => CourseStatus.PENDING,
         ),
         statusNote: json['statusNote'],
+        subject: json['subject'],
         teacher: Teacher.fromJson(json['teacher']),
       );
     } else {

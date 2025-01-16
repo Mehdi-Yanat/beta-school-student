@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:http_interceptor/http_interceptor.dart';
 import 'package:online_course/main.dart';
 import 'package:online_course/models/announcements.dart';
@@ -5,12 +6,15 @@ import 'package:online_course/models/teacher_announcements.dart';
 import 'package:online_course/models/transaction.dart';
 import 'package:online_course/utils/auth_interceptor.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:online_course/widgets/snackbar.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
 import 'dart:convert';
 
 import '../models/mycourses.dart';
 
 class StudentService {
   static final String baseUrl = dotenv.env['API_URL'] ?? '';
+
 
   static final _client = InterceptedClient.build(
     interceptors: [AuthInterceptor()],
@@ -24,7 +28,7 @@ class StudentService {
   static Map<String, String> _headers() {
     return {
       'Content-Type': 'application/json',
-      'Accept-Language': getCurrentLocale(),
+      'Accept-Language': getCurrentLocale()
     };
   }
 
@@ -59,6 +63,80 @@ class StudentService {
       return [];
     }
   }
+
+  static Future<bool> enrollByCash(BuildContext context,String courseId) async {
+    try {
+      final response = await _client.post(
+        Uri.parse('$baseUrl/course/${courseId}/enroll/cash'),
+        headers: _headers(),
+      );
+
+      if (response.statusCode >= 200 && response.statusCode < 400) {
+        final data = json.decode(response.body);
+        if (data['message'] != null) {
+          SnackBarHelper.showSuccessSnackBar(context, data['message']);
+          return true;
+        }
+        return true;
+      } else {
+        SnackBarHelper.showErrorSnackBar(context, AppLocalizations.of(context)!.something_went_wrong);
+        return false;
+      }
+    } catch (e, stack) {
+      print('❌ Error getting student transactions: $e');
+      print('📍 Stack trace: $stack');
+      throw e;
+    }
+  }
+
+    static Future<Map<String, dynamic>> checkCashTransaction(String courseId) async {
+        try {
+            final response = await _client.get(
+                Uri.parse('$baseUrl/transactions/check/${courseId}?lng=${getCurrentLocale()}'),
+                headers: _headers(),
+            );
+
+            if (response.statusCode >= 200 && response.statusCode < 400) {
+                final data = json.decode(response.body);
+                if (data != null) {
+                    return data as Map<String, dynamic>;
+                }
+                return <String, dynamic>{};
+            }
+        } catch (e, stack) {
+            print('❌ Error getting student transactions: $e');
+            print('📍 Stack trace: $stack');
+            throw e;
+        }
+
+        return <String, dynamic>{};
+    }
+
+  static Future<bool> cancelCashTransaction(BuildContext context,String transactionId) async {
+    try {
+      final response = await _client.delete(
+        Uri.parse('$baseUrl/transactions/cancel/${transactionId}?lng=${getCurrentLocale()}'),
+        headers: _headers(),
+      );
+
+      if (response.statusCode >= 200 && response.statusCode < 400) {
+        final data = json.decode(response.body);
+        if (data['message'] != null) {
+          SnackBarHelper.showSuccessSnackBar(context, data['message']);
+          return true;
+        }
+        return true;
+      } else {
+        SnackBarHelper.showErrorSnackBar(context, AppLocalizations.of(context)!.something_went_wrong);
+        return false;
+      }
+    } catch (e, stack) {
+      print('❌ Error getting student transactions: $e');
+      print('📍 Stack trace: $stack');
+      throw e;
+    }
+  }
+
 
 // Get a specific transaction by ID
   static Future getTransactionByCheckoutId(String checkoutId) async {

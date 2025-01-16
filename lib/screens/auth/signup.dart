@@ -1,14 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:online_course/providers/auth_provider.dart';
 import 'package:online_course/services/auth_service.dart';
 import 'package:online_course/utils/translation.dart';
 import 'package:online_course/widgets/snackbar.dart';
+
 import '../../models/student.dart';
 import '../../theme/color.dart';
 import '../../utils/constant.dart';
+import '../../widgets/FloatingActionButton.dart';
 import '../../widgets/gradient_button.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -27,8 +32,15 @@ class _SignupScreenState extends State<SignupScreen> {
   final _passwordController = TextEditingController();
   final _addressController = TextEditingController();
   final _phoneController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
+  String? _firstNameError;
+  String? _lastNameError;
+  String? _firstNameArError;
+  String? _lastNameArError;
+  String? _emailError;
+  String? _passwordError;
+  String? _phoneError;
   bool _isPasswordVisible = false;
+  AuthProvider authProvider = AuthProvider();
 
   File? _profileImage;
   final _picker = ImagePicker();
@@ -69,6 +81,12 @@ class _SignupScreenState extends State<SignupScreen> {
       3: [], // Dropdown fields handled separately
       4: [], // Profile photo is optional
     };
+    if (_currentStep == 0) {
+      return _firstNameError == null &&
+          _lastNameError == null &&
+          _firstNameArError == null &&
+          _lastNameArError == null;
+    }
 
     // For step 3 (Location and Class), check dropdown values
     if (_currentStep == 3) {
@@ -82,18 +100,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
     // For step 1 (Account Info), validate special rules (e.g., password length)
     if (_currentStep == 1) {
-      final email = _emailController.text;
-      final password = _passwordController.text;
-
-      // Check if email and password are not empty
-      if (email.isEmpty || password.isEmpty) {
-        return false;
-      }
-
-      // Add custom password length validation
-      if (password.length <= 6) {
-        return false;
-      }
+      return _emailError == null && _passwordError == null;
     }
 
     // For other steps, check if all required fields are filled
@@ -124,18 +131,23 @@ class _SignupScreenState extends State<SignupScreen> {
 
       final locale = Localizations.localeOf(context).languageCode;
 
-      final success = await AuthService.registerStudent(student, lang: locale);
+      final signup = await AuthService.registerStudent(student, lang: locale);
 
-      if (success) {
+      if (signup.success) {
+        await authProvider.initAuth();
         if (mounted) {
           SnackBarHelper.showSuccessSnackBar(
               context, AppLocalizations.of(context)!.signup_success);
-          Navigator.pushReplacementNamed(context, '/login');
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/root',
+                (Route<dynamic> route) => false,
+          );
         }
       } else {
         if (mounted) {
           SnackBarHelper.showErrorSnackBar(
-              context, AppLocalizations.of(context)!.signup_failed);
+              context, signup.message);
         }
       }
     } catch (e) {
@@ -154,12 +166,16 @@ class _SignupScreenState extends State<SignupScreen> {
       Step(
         state: _currentStep > 0 ? StepState.complete : StepState.indexed,
         isActive: _currentStep >= 0,
-        title: Text(AppLocalizations.of(context)!.personal_info),
+        title: Text(AppLocalizations.of(context)!.personal_info,
+            style: TextStyle(
+              fontSize: 19,
+            )),
         content: Column(
           children: [
             TextFormField(
               controller: _firstNameController,
               decoration: InputDecoration(
+                errorText: _firstNameError,
                 hintText: AppLocalizations.of(context)!.first_name,
                 prefixIcon: Icon(Icons.person, color: AppColor.textColor),
                 filled: true,
@@ -169,17 +185,12 @@ class _SignupScreenState extends State<SignupScreen> {
                   borderSide: BorderSide.none,
                 ),
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return AppLocalizations.of(context)!.first_name_required;
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 16),
             TextFormField(
               controller: _lastNameController,
               decoration: InputDecoration(
+                errorText: _lastNameError,
                 hintText: AppLocalizations.of(context)!.last_name,
                 prefixIcon:
                     Icon(Icons.person_outline, color: AppColor.textColor),
@@ -201,6 +212,7 @@ class _SignupScreenState extends State<SignupScreen> {
             TextFormField(
               controller: _firstNameArController,
               decoration: InputDecoration(
+                errorText: _firstNameArError,
                 hintText: AppLocalizations.of(context)!.first_name_ar,
                 prefixIcon: Icon(Icons.person, color: AppColor.textColor),
                 filled: true,
@@ -215,6 +227,7 @@ class _SignupScreenState extends State<SignupScreen> {
             TextFormField(
               controller: _lastNameArController,
               decoration: InputDecoration(
+                errorText: _lastNameArError,
                 hintText: AppLocalizations.of(context)!.last_name_ar,
                 prefixIcon:
                     Icon(Icons.person_outline, color: AppColor.textColor),
@@ -225,6 +238,17 @@ class _SignupScreenState extends State<SignupScreen> {
                   borderSide: BorderSide.none,
                 ),
               ),
+              validator: (value) {
+                // Regular Expression to match Arabic characters
+                final arabicRegex = RegExp(r'^[\u0600-\u06FF\s]+$');
+
+                if (value == null || value.isEmpty) {
+                  return 'This field is required'; // Replace with localization if needed
+                } else if (!arabicRegex.hasMatch(value)) {
+                  return 'Please enter text in Arabic'; // Replace with localization
+                }
+                return null;
+              },
             ),
           ],
         ),
@@ -232,12 +256,16 @@ class _SignupScreenState extends State<SignupScreen> {
       Step(
         state: _currentStep > 1 ? StepState.complete : StepState.indexed,
         isActive: _currentStep >= 1,
-        title: Text(AppLocalizations.of(context)!.account_info),
+        title: Text(AppLocalizations.of(context)!.account_info,
+            style: TextStyle(
+              fontSize: 19,
+            )),
         content: Column(
           children: [
             TextFormField(
               controller: _emailController,
               decoration: InputDecoration(
+                errorText: _emailError,
                 hintText: AppLocalizations.of(context)!.email,
                 prefixIcon: Icon(Icons.email, color: AppColor.textColor),
                 filled: true,
@@ -248,20 +276,12 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ),
               keyboardType: TextInputType.emailAddress,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return AppLocalizations.of(context)!.email_required;
-                }
-                if (!value.contains('@')) {
-                  return AppLocalizations.of(context)!.email_invalid;
-                }
-                return null;
-              },
             ),
             const SizedBox(height: 16),
             TextFormField(
               controller: _passwordController,
               decoration: InputDecoration(
+                errorText: _passwordError,
                 hintText: AppLocalizations.of(context)!.password,
                 prefixIcon: Icon(Icons.lock, color: AppColor.textColor),
                 suffixIcon: IconButton(
@@ -285,15 +305,6 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ),
               obscureText: !_isPasswordVisible,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return AppLocalizations.of(context)!.password_required;
-                }
-                if (value.length < 6) {
-                  return AppLocalizations.of(context)!.password_length;
-                }
-                return null;
-              },
             ),
           ],
         ),
@@ -301,7 +312,10 @@ class _SignupScreenState extends State<SignupScreen> {
       Step(
         state: _currentStep > 2 ? StepState.complete : StepState.indexed,
         isActive: _currentStep >= 2,
-        title: Text(AppLocalizations.of(context)!.contact_info),
+        title: Text(AppLocalizations.of(context)!.contact_info,
+            style: TextStyle(
+              fontSize: 19,
+            )),
         content: Column(
           children: [
             TextFormField(
@@ -327,6 +341,7 @@ class _SignupScreenState extends State<SignupScreen> {
             TextFormField(
               controller: _phoneController,
               decoration: InputDecoration(
+                errorText: _phoneError,
                 hintText: AppLocalizations.of(context)!.phone,
                 prefixIcon: Icon(Icons.phone, color: AppColor.textColor),
                 filled: true,
@@ -350,7 +365,10 @@ class _SignupScreenState extends State<SignupScreen> {
       Step(
         state: _currentStep > 3 ? StepState.complete : StepState.indexed,
         isActive: _currentStep >= 3,
-        title: Text(AppLocalizations.of(context)!.location_class),
+        title: Text(AppLocalizations.of(context)!.location_class,
+            style: TextStyle(
+              fontSize: 19,
+            )),
         content: Column(
           children: [
             DropdownButtonFormField<String>(
@@ -427,9 +445,16 @@ class _SignupScreenState extends State<SignupScreen> {
       Step(
         state: _currentStep > 4 ? StepState.complete : StepState.indexed,
         isActive: _currentStep >= 4,
-        title: Text(AppLocalizations.of(context)!.profile_photo),
+        title: Text(AppLocalizations.of(context)!.profile_photo,
+            style: TextStyle(
+              fontSize: 19,
+            )),
         content: Column(
           children: [
+            if (_profileImage == null)
+              Text(
+                AppLocalizations.of(context)!.profile_photo_not_necessary,
+              ),
             if (_profileImage != null)
               Stack(
                 alignment: Alignment.center,
@@ -454,46 +479,186 @@ class _SignupScreenState extends State<SignupScreen> {
                 ],
               ),
             const SizedBox(height: 16),
-            GradientButton(
-              text: _profileImage == null
-                  ? AppLocalizations.of(context)!.upload_photo
-                  : AppLocalizations.of(context)!.change_photo,
-              variant: 'secondary',
-              onTap: _pickImage,
-              color: AppColor.primary,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // Expanded(
+                //   child: GradientButton(
+                //     text: AppLocalizations.of(context)!.take_photo,
+                //     variant: 'secondary',
+                //     onTap: _takePhoto, // Call the new method for taking a photo
+                //     color: AppColor.primary,
+                //   ),
+                // ),
+                FloatingActionButtonFb3(
+                    icon: Icon(
+                      Icons.camera_alt_rounded,
+                      color: Colors.white,
+                    ),
+                    color: AppColor.primary,
+                    tag: 'btn1',
+                    onPressed: _takePhoto),
+                const SizedBox(width: 8),
+                // Text(
+                //   text: _profileImage == null
+                //       ? AppLocalizations.of(context)!.upload_photo
+                //       : AppLocalizations.of(context)!.change_photo,
+                //   variant: 'secondary',
+                //   onTap: _pickImage,
+                //   color: AppColor.primary,
+                // ),
+                FloatingActionButtonFb3(
+                    icon: Icon(
+                      Icons.file_download_rounded,
+                      color: Colors.white,
+                    ),
+                    color: AppColor.primary,
+                    tag: 'btn2',
+                    onPressed: _pickImage)
+              ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              AppLocalizations.of(context)!.photo_optional,
-              style: TextStyle(
-                color: AppColor.textColor.withValues(alpha: 0.7),
-                fontSize: 12,
-              ),
-            ),
+            const SizedBox(height: 48),
           ],
         ),
       ),
     ];
   }
 
-  void _updateStepValidation() {
-    setState(() {}); // Triggers UI rebuild to recheck button state
+
+  // Method to take a photo using the camera
+  Future<void> _takePhoto() async {
+    try {
+      final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
+      if (photo != null) {
+        setState(() {
+          _profileImage = File(photo.path);
+        });
+      }
+    } catch (e) {
+      print('Error taking photo: $e');
+    }
   }
 
   @override
   void initState() {
     super.initState();
 
-    // Add listeners to all controllers involved in validation
-    _firstNameController.addListener(_updateStepValidation);
-    _lastNameController.addListener(_updateStepValidation);
-    _firstNameArController.addListener(_updateStepValidation);
-    _lastNameArController.addListener(_updateStepValidation);
-    _emailController.addListener(_updateStepValidation);
-    _passwordController.addListener(_updateStepValidation);
-    _confirmPasswordController.addListener(_updateStepValidation);
-    _addressController.addListener(_updateStepValidation);
-    _phoneController.addListener(_updateStepValidation);
+    // // Add listeners to all controllers involved in validation_firstNameController.addListener(_updateStepValidation);
+    // _lastNameController.addListener(_updateStepValidation);
+    // _firstNameArController.addListener(_updateStepValidation);
+    // _lastNameArController.addListener(_updateStepValidation);
+    // _emailController.addListener(_updateStepValidation);
+    // _passwordController.addListener(_updateStepValidation);
+    // _confirmPasswordController.addListener(_updateStepValidation);
+    // _addressController.addListener(_updateStepValidation);
+    // _phoneController.addListener(_updateStepValidation);
+
+    _firstNameController.addListener(() {
+      setState(() {
+        _firstNameError = _validateFirstName(_firstNameController.text);
+        _firstNameError = _validateNameInLatinChars(_firstNameController.text);
+      });
+    });
+    _lastNameController.addListener(() {
+      setState(() {
+        _lastNameError = _validateLastName(_lastNameController.text);
+        _lastNameError = _validateNameInLatinChars(_lastNameController.text);
+      });
+    });
+    _firstNameArController.addListener(() {
+      setState(() {
+        _firstNameArError = _validateFirstName(_firstNameArController.text);
+        _firstNameArError =
+            _validateNameInArabicChars(_firstNameArController.text);
+      });
+    });
+    _lastNameArController.addListener(() {
+      setState(() {
+        _lastNameArError = _validateLastName(_lastNameArController.text);
+        _lastNameArError =
+            _validateNameInArabicChars(_lastNameArController.text);
+      });
+    });
+    _emailController.addListener(() {
+      setState(() {
+        _emailError = _validateEmail(_emailController.text);
+      });
+    });
+    _passwordController.addListener(() {
+      setState(() {
+        _passwordError = _validatePassword(_passwordController.text);
+      });
+    });
+    _phoneController.addListener(() {
+      setState(() {
+        _phoneError = _validatePhoneNumber(_phoneController.text);
+      });
+    });
+  }
+
+  String? _validatePhoneNumber(String value) {
+    if (value.isEmpty) {
+      return AppLocalizations.of(context)!.phone_required;
+    }
+    if (!RegExp(r'^(0|(\+213))?[5-7][0-9]{8}$').hasMatch(value)) {
+      return AppLocalizations.of(context)!.invalid_algerian_phone_number;
+    }
+    return null;
+  }
+
+  String? _validateFirstName(String value) {
+    if (value.isEmpty) {
+      return AppLocalizations.of(context)!.first_name_required;
+    }
+    return null;
+  }
+
+  String? _validateEmail(String value) {
+    if (value.isEmpty) {
+      return AppLocalizations.of(context)!.email_required;
+    }
+    if (!RegExp(r'^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$')
+        .hasMatch(value)) {
+      return AppLocalizations.of(context)!.invalid_email_format;
+    }
+    return null;
+  }
+
+  String? _validatePassword(String value) {
+    if (value.length < 8) {
+      return AppLocalizations.of(context)!.password_must_be_longer_than_8_chars;
+    }
+    if (!RegExp(r'[A-Za-z]').hasMatch(value)) {
+      return AppLocalizations.of(context)!.password_must_contain_letters;
+    }
+    if (!RegExp(r'\d').hasMatch(value)) {
+      return AppLocalizations.of(context)!.password_must_contain_numbers;
+    }
+    if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(value)) {
+      return AppLocalizations.of(context)!.password_must_contain_special_chars;
+    }
+    return null;
+  }
+
+  String? _validateLastName(String value) {
+    if (value.isEmpty) {
+      return AppLocalizations.of(context)!.last_name_required;
+    }
+    return null;
+  }
+
+  String? _validateNameInLatinChars(String value) {
+    if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
+      return AppLocalizations.of(context)!.name_must_be_in_latin_char;
+    }
+    return null;
+  }
+
+  String? _validateNameInArabicChars(String value) {
+    if (!RegExp(r'^[\u0621-\u064A\s]+$').hasMatch(value)) {
+      return AppLocalizations.of(context)!.name_must_be_in_arabic_char;
+    }
+    return null;
   }
 
   @override
@@ -504,18 +669,37 @@ class _SignupScreenState extends State<SignupScreen> {
         child: Form(
           key: _formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
               Center(
-                child: Image.asset(
-                  'assets/logo.png',
-                  height: 80,
-                  color: AppColor.primary,
+                  child: SvgPicture.asset(
+                'assets/icons/logo-v2-gradient.svg',
+                // height: 80,
+                width: 100,
+              )),
+              Center(
+                  child: Image.asset(
+                'assets/icons/logo-large.png',
+                // height: 80,
+                width: 200,
+                color: AppColor.darkBackground,
+              )),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                child: Text(
+                  AppLocalizations.of(context)!.signup_subtitle,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
                 ),
               ),
               const SizedBox(height: 20),
               Expanded(
                 child: Stepper(
+                  connectorColor: WidgetStatePropertyAll(AppColor.primary),
+                  stepIconWidth: 25,
+                  stepIconHeight: 25,
                   type: StepperType.vertical,
                   currentStep: _currentStep,
                   steps: getSteps(),
@@ -556,7 +740,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             Expanded(
                               child: GradientButton(
                                 text: AppLocalizations.of(context)!.back,
-                                variant: 'secondary',
+                                variant: 'blueGradient',
                                 onTap: details.onStepCancel!,
                                 color: AppColor.primary,
                               ),
@@ -570,7 +754,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                       : AppLocalizations.of(context)!
                                           .signup_button)
                                   : AppLocalizations.of(context)!.next,
-                              variant: 'primary',
+                              variant: 'blueGradient',
                               disabled: _isLoading || !isStepValid,
                               onTap: details.onStepContinue!,
                               color: AppColor.primary,

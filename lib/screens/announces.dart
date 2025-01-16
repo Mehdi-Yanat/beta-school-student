@@ -7,6 +7,8 @@ import 'package:online_course/theme/color.dart';
 import 'package:online_course/utils/helper.dart';
 import 'package:online_course/widgets/announces_item.dart';
 
+import '../widgets/appbar.dart';
+
 class AnnouncesPage extends StatefulWidget {
   const AnnouncesPage({Key? key}) : super(key: key);
 
@@ -50,89 +52,65 @@ class _AnnouncesPageState extends State<AnnouncesPage> {
   @override
   Widget build(BuildContext context) {
     final currentLocale = Localizations.localeOf(context).languageCode;
-    return Scaffold(
-      backgroundColor: AppColor.appBgColor,
-      body: RefreshIndicator(
-        onRefresh: _fetchAnnouncements,
-        child: SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
-          padding: EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            children: [
-              _buildHeader(context),
-              if (_isLoading)
-                Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 20),
-                    child: CircularProgressIndicator(),
-                  ),
-                )
-              else if (_announcements.isEmpty)
-                Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 20),
-                    child: Text(
-                      AppLocalizations.of(context)!.no_announcements,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: AppColor.darker,
-                      ),
-                    ),
-                  ),
-                )
-              else
-                // Update ListView.builder section:
-                ListView.builder(
-                  padding: EdgeInsets.only(top: 10),
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: _announcements.length,
-                  itemBuilder: (context, index) {
-                    final announcement = _announcements[index];
-                    return AnnouncesItem(
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => TeacherAnnouncesPage(
-                                  teacherId: announcement.teacher.id))),
-                      {
-                        'name': announcement.teacher.fullName,
-                        'image': announcement.teacher.profilePic?.url ??
-                            'assets/images/profile.png',
-                        'message': announcement.message,
-                        'createdAt': announcement.createdAt,
-                        'timeAgo': Helpers.getTimeAgo(
-                            announcement.createdAt ?? DateTime.now(),
-                            currentLocale),
-                      },
-                    );
-                  },
-                ),
-            ],
+    return RefreshIndicator(
+      onRefresh: _fetchAnnouncements,
+      child: Scaffold(
+        appBar: CustomAppBar(
+          title: AppLocalizations.of(context)!.announces_title,
+        ),
+        backgroundColor: AppColor.appBgColor,
+        body: _isLoading
+            ? Center( // Show loading indicator if fetching data
+          child: Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: CircularProgressIndicator(),
           ),
+        )
+            : _announcements.isEmpty
+            ? Center( // Show no announcements message if the list is empty
+          child: Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Text(
+              AppLocalizations.of(context)!.no_announcements,
+              style: TextStyle(
+                fontSize: 16,
+                color: AppColor.darker,
+              ),
+            ),
+          ),
+        )
+            : ListView.builder(
+          padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
+          itemCount: _announcements.length,
+          itemBuilder: (context, index) {
+            final announcement = _announcements[index];
+            // Render each announcement in the list
+            return AnnouncesItem(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TeacherAnnouncesPage(
+                      teacherId: announcement.teacher.id),
+                ),
+              ),
+              {
+                'name': Localizations.localeOf(context).languageCode == 'ar' ? announcement.teacher.fullNameAr : announcement.teacher.fullName,
+                'image': announcement.teacher.profilePic?.url ??
+                    'assets/images/profile.png',
+                'message': announcement.message,
+                'createdAt': announcement.createdAt,
+                'timeAgo': Helpers.getTimeAgo(
+                  announcement.createdAt ?? DateTime.now(),
+                  currentLocale,
+                ),
+              },
+            );
+          },
         ),
       ),
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, 60, 0, 5),
-      child: Column(
-        children: [
-          Text(
-            AppLocalizations.of(context)!.announces_title,
-            style: TextStyle(
-              color: AppColor.mainColor,
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          SizedBox(height: 15),
-        ],
-      ),
-    );
-  }
 
   @override
   void dispose() {

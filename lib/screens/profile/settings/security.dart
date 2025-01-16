@@ -4,6 +4,7 @@ import 'package:online_course/providers/auth_provider.dart';
 import 'package:online_course/services/auth_service.dart';
 import 'package:online_course/theme/color.dart';
 import 'package:online_course/utils/storage.dart';
+import 'package:online_course/widgets/AlertDialogue.dart';
 import 'package:online_course/widgets/appbar.dart';
 import 'package:online_course/widgets/gradient_button.dart';
 import 'package:online_course/widgets/snackbar.dart';
@@ -173,7 +174,21 @@ class _SecurityScreenState extends State<SecurityScreen> {
                             : AppLocalizations.of(context)!.update_email,
                         variant: 'primary',
                         disabled: _isLoadingEmail,
-                        onTap: _updateEmail,
+                        onTap: (){
+                          showDialog(
+                              context: context,
+                              builder: (context) => AlertDialogFb1(
+                                  title: AppLocalizations.of(context)!.are_you_sure,
+                                  description: AppLocalizations.of(context)!.you_will_have_to_verify_account_again_and_no_access_to_courses,
+                                  actions: [
+                                    TextButton(
+                                      onPressed: (){Navigator.pop(context);},
+                                      child: Text(AppLocalizations.of(context)!.cancel)
+                                  ),                                    TextButton(
+                                      onPressed: _updateEmail,
+                                      child: Text(AppLocalizations.of(context)!.confirm)
+                                  )]));
+                        },
                         color: AppColor.primary,
                       ),
                     ],

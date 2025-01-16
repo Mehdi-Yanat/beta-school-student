@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppGradients {
   static const LinearGradient red = LinearGradient(
-    colors: [Color(0xFFDE0B28), Color(0xFF0A0E23)],
+    colors: [Color(0xFFDE0B28), Color(0xFFFF7B00)],
     begin: Alignment(-0.97, -0.24),
     end: Alignment(0.97, 0.24),
   );

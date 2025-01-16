@@ -4,6 +4,7 @@ import android.os.Bundle
 //import android.view.WindowManager
 import android.content.Intent
 import android.net.Uri
+import android.view.WindowManager
 import io.flutter.embedding.android.FlutterActivity
 
 class MainActivity : FlutterActivity() {
@@ -11,7 +12,7 @@ class MainActivity : FlutterActivity() {
         super.onCreate(savedInstanceState)
 
         // Prevent screenshots and screen recording
-        // window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+//         window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
 
         // Handle deep link when activity is created
         handleDeepLink(intent)
