@@ -227,8 +227,16 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                           : null,
                       child: _newProfileImage == null
                           ? ClipOval(
-                            child: Image.network(context.read<AuthProvider>().student!.profilePic ?? '', width: 100, height: 100, fit: BoxFit.cover,)
-                          )
+                              child: Image.network(
+                              context
+                                      .read<AuthProvider>()
+                                      .student!
+                                      .profilePic ??
+                                  '',
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            ))
                           : null,
                     ),
                   ),
@@ -236,7 +244,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     bottom: 0,
                     right: 0,
                     child: IconButton(
-                      icon: Icon(Icons.camera_alt, color: Colors.white,),
+                      icon: Icon(
+                        Icons.camera_alt,
+                        color: Colors.white,
+                      ),
                       onPressed: _pickImage,
                     ),
                   ),

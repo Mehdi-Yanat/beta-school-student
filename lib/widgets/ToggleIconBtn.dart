@@ -9,12 +9,12 @@ class ToggleIconBtnsFb1 extends StatefulWidget {
   final bool canUnToggle;
   ToggleIconBtnsFb1(
       {required this.icons,
-        required this.selected,
-        this.selectedColor = const Color(0xFF6200EE),
-        this.stateContained = true,
-        this.canUnToggle = false,
-        this.multipleSelectionsAllowed = false,
-        Key? key});
+      required this.selected,
+      this.selectedColor = const Color(0xFF6200EE),
+      this.stateContained = true,
+      this.canUnToggle = false,
+      this.multipleSelectionsAllowed = false,
+      Key? key});
 
   @override
   _ToggleIconBtnsFb1State createState() => _ToggleIconBtnsFb1State();

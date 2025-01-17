@@ -41,11 +41,7 @@ List categories = [
     "name": "Islamiques",
     "icon": "assets/icons/categories/quran.png"
   },
-  {
-    "id": "ARABIC",
-    "name": "Arabe",
-    "icon": "assets/icons/categories/ar.png"
-  },
+  {"id": "ARABIC", "name": "Arabe", "icon": "assets/icons/categories/ar.png"},
   {
     "id": "FRENCH",
     "name": "Français",

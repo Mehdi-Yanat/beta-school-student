@@ -12,7 +12,8 @@ class OnboardingScreen extends StatefulWidget {
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerProviderStateMixin {
+class _OnboardingScreenState extends State<OnboardingScreen>
+    with SingleTickerProviderStateMixin {
   late PageController _pageController;
   int _currentPage = 0; // Tracks the currently visible page
 
@@ -48,7 +49,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerPr
       end: 1, // Fully visible
     ).animate(CurvedAnimation(
       parent: _animationController,
-      curve: const Interval(0.5, 1.0, curve: Curves.easeIn), // Fade in after SVG reaches center
+      curve: const Interval(0.5, 1.0,
+          curve: Curves.easeIn), // Fade in after SVG reaches center
     ));
 
     // Start the animation when the screen initializes
@@ -70,7 +72,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerPr
         isImage: true,
         asset: "assets/images/learn-anytime.png",
         title: AppLocalizations.of(context)!.learn_anytime_anywhere,
-        description: AppLocalizations.of(context)!.access_ressources_at_your_fingerprints,
+        description: AppLocalizations.of(context)!
+            .access_ressources_at_your_fingerprints,
       ),
       _buildPage(
         isImage: true,
@@ -111,19 +114,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerPr
       children: [
         SlideTransition(
           position: _svgAnimation, // Animate SVG movement
-          child:
-              SvgPicture.asset(
-                "assets/icons/logo-v2-gradient.svg",
-                width: 200,
-              ),
+          child: SvgPicture.asset(
+            "assets/icons/logo-v2-gradient.svg",
+            width: 200,
           ),
+        ),
         const SizedBox(height: 20),
         FadeTransition(
           opacity: _fadeInAnimation, // Fade in animation for text
           child: Stack(
             clipBehavior: Clip.none,
             children: [
-              Image.asset("assets/icons/logo-large.png", width: 200,),
+              Image.asset(
+                "assets/icons/logo-large.png",
+                width: 200,
+              ),
               Positioned(
                 top: 10,
                 right: -50,
@@ -204,15 +209,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerPr
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            isImage ? Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  color: AppColor.appBgColor
-                ),
-                child: Image.asset(asset, width: 300,)) : SvgPicture.asset(
-              asset,
-              width: 200,
-            ),
+            isImage
+                ? Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        color: AppColor.appBgColor),
+                    child: Image.asset(
+                      asset,
+                      width: 300,
+                    ))
+                : SvgPicture.asset(
+                    asset,
+                    width: 200,
+                  ),
             const SizedBox(height: 30),
             Text(
               title,
@@ -246,15 +255,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerPr
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColor.primary,
-                padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 15.0),
-                textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 40.0, vertical: 15.0),
+                textStyle: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
               onPressed: () {
                 // Navigate to login
                 Navigator.pushReplacementNamed(context, '/login');
               },
-              child: Text(AppLocalizations.of(context)!.start_learning_now,
-                style: TextStyle(fontSize: 18, fontFamily: 'Rubik', fontWeight: FontWeight.bold, color: Colors.white),),
+              child: Text(
+                AppLocalizations.of(context)!.start_learning_now,
+                style: TextStyle(
+                    fontSize: 18,
+                    fontFamily: 'Rubik',
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
             ),
           )
       ],
@@ -273,7 +292,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerPr
             height: 10,
             width: _currentPage == index ? 20 : 10,
             decoration: BoxDecoration(
-              color: _currentPage == index ? AppColor.brandFocus : Colors.white70,
+              color:
+                  _currentPage == index ? AppColor.brandFocus : Colors.white70,
               borderRadius: BorderRadius.circular(5),
             ),
           );

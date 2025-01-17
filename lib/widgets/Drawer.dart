@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 class DrawerFb1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     return Drawer(
       child: Material(
         color: Color(0xff4338CA),
@@ -61,8 +60,6 @@ class DrawerFb1 extends StatelessWidget {
     );
   }
 
-
-
   void selectedItem(BuildContext context, int index) {
     Navigator.of(context).pop();
     switch (index) {
@@ -79,14 +76,18 @@ class DrawerFb1 extends StatelessWidget {
     }
   }
 }
+
 class MenuItem extends StatelessWidget {
   final String text;
   final IconData icon;
   final VoidCallback? onClicked;
 
-  const MenuItem({required this.text,
+  const MenuItem({
+    required this.text,
     required this.icon,
-    this.onClicked,Key? key, }) : super(key: key);
+    this.onClicked,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -101,6 +102,7 @@ class MenuItem extends StatelessWidget {
     );
   }
 }
+
 class SearchFieldDrawer extends StatelessWidget {
   const SearchFieldDrawer({Key? key}) : super(key: key);
 
@@ -114,7 +116,11 @@ class SearchFieldDrawer extends StatelessWidget {
         contentPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
         hintText: 'Search',
         hintStyle: TextStyle(color: color),
-        prefixIcon: Icon(Icons.search, color: color, size: 20,),
+        prefixIcon: Icon(
+          Icons.search,
+          color: color,
+          size: 20,
+        ),
         filled: true,
         fillColor: Colors.white12,
         enabledBorder: OutlineInputBorder(

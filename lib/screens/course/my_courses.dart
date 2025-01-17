@@ -31,7 +31,7 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
         Provider.of<CourseProvider>(context); // Access CourseProvider
 
     return RefreshIndicator(
-        onRefresh: _refreshCourses,
+      onRefresh: _refreshCourses,
       child: Scaffold(
           backgroundColor: AppColor.appBgColor,
           appBar: CustomAppBar(title: localizations!.my_courses_title),
@@ -75,8 +75,8 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => CourseDetailScreen(courseId: course.course.id)
-              ),
+                  builder: (context) =>
+                      CourseDetailScreen(courseId: course.course.id)),
             );
           },
           child: Container(
@@ -151,8 +151,13 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                           ),
                           const Spacer(),
                           */
-                          Icon(Icons.video_collection_rounded, size: 15,),
-                          const SizedBox(width: 8,),
+                          Icon(
+                            Icons.video_collection_rounded,
+                            size: 15,
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
                           Text(
                             '${course.course.chapters.length}',
                             style: TextStyle(
@@ -160,13 +165,18 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                               fontSize: 15,
                             ),
                           ),
-                          const SizedBox(width: 16,),
-                          Icon(Icons.timelapse_rounded, size: 15,),
-                          const SizedBox(width: 5,),
-
-                          Text(
-                            Helpers.formatHoursAndMinutes(context, course.course.totalWatchTime)
-                          )
+                          const SizedBox(
+                            width: 16,
+                          ),
+                          Icon(
+                            Icons.timelapse_rounded,
+                            size: 15,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(Helpers.formatHoursAndMinutes(
+                              context, course.course.totalWatchTime))
                         ],
                       ),
                       const SizedBox(height: 6),
@@ -183,9 +193,7 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                   ),
                 ),
                 GradientButton(
-                  text: AppLocalizations.of(
-                      context)!
-                      .watch,
+                  text: AppLocalizations.of(context)!.watch,
                   // Add your localization key or hardcoded text
                   variant: 'blueGradient',
                   // Variant setting (e.g., primary style)
@@ -193,17 +201,14 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                   // Text or icon color
                   onTap: () {
                     Navigator.push(
-                      context,
-                      MaterialPageRoute<dynamic>(
-                        maintainState: true,
-                        builder: (context) =>
-                            ViewChapterScreen(
-                                chapterId: course.course.chapters[0].id,
-                                courseId: course.course.id,
-                                chapter: course.course.chapters[0]
-                      ),
-                    )
-                    );
+                        context,
+                        MaterialPageRoute<dynamic>(
+                          maintainState: true,
+                          builder: (context) => ViewChapterScreen(
+                              chapterId: course.course.chapters[0].id,
+                              courseId: course.course.id,
+                              chapter: course.course.chapters[0]),
+                        ));
                   },
                 ),
               ],

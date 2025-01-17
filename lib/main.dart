@@ -161,8 +161,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                   backgroundColor: Colors.transparent,
                 ),
               ),
-              home:
-              auth.isLoading
+              home: auth.isLoading
                   ? SplashScreen(MyApp.currentLocale.value)
                   : auth.isAuthenticated
                       ? const RootApp()

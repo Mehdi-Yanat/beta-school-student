@@ -152,7 +152,11 @@ class _AccountPageState extends State<AccountPage> {
           SettingItem(
             title: AppLocalizations.of(context)!.settings_title,
             // Localized text
-            fullIcon: Icon(Icons.settings_applications_rounded, color: AppColor.primary, size: 28,),
+            fullIcon: Icon(
+              Icons.settings_applications_rounded,
+              color: AppColor.primary,
+              size: 28,
+            ),
             leadingIcon: "assets/icons/setting.svg",
             bgIconColor: AppColor.blue,
             onTap: () {
@@ -172,7 +176,11 @@ class _AccountPageState extends State<AccountPage> {
           SettingItem(
             title: AppLocalizations.of(context)!.payments_title,
             // Localized text
-            fullIcon: Icon(Icons.wallet_rounded, color: AppColor.primary, size: 28,),
+            fullIcon: Icon(
+              Icons.wallet_rounded,
+              color: AppColor.primary,
+              size: 28,
+            ),
             leadingIcon: "assets/icons/wallet.svg",
             bgIconColor: AppColor.green,
             onTap: () {
@@ -207,7 +215,11 @@ class _AccountPageState extends State<AccountPage> {
           SettingItem(
             title: AppLocalizations.of(context)!.privacy_title,
             // Localized text
-            fullIcon: Icon(Icons.shield, color: AppColor.primary, size: 28,),
+            fullIcon: Icon(
+              Icons.shield,
+              color: AppColor.primary,
+              size: 28,
+            ),
             leadingIcon: "assets/icons/shield.svg",
             bgIconColor: AppColor.orange,
             onTap: () {
@@ -220,7 +232,11 @@ class _AccountPageState extends State<AccountPage> {
           SettingItem(
             title: AppLocalizations.of(context)!.our_contact_info,
             // Localized text
-            fullIcon: Icon(Icons.contact_mail_rounded, color: AppColor.primary, size: 28,),
+            fullIcon: Icon(
+              Icons.contact_mail_rounded,
+              color: AppColor.primary,
+              size: 28,
+            ),
             leadingIcon: "assets/icons/shield.svg",
             bgIconColor: AppColor.orange,
             onTap: () {
@@ -233,7 +249,11 @@ class _AccountPageState extends State<AccountPage> {
           SettingItem(
             title: AppLocalizations.of(context)!.licenses,
             // Localized text
-            fullIcon: Icon(Icons.local_police_rounded, color: AppColor.primary, size: 28,),
+            fullIcon: Icon(
+              Icons.local_police_rounded,
+              color: AppColor.primary,
+              size: 28,
+            ),
             leadingIcon: "assets/icons/shield.svg",
             bgIconColor: AppColor.orange,
             onTap: () {
@@ -265,7 +285,11 @@ class _AccountPageState extends State<AccountPage> {
       ),
       child: SettingItem(
         title: AppLocalizations.of(context)!.account_logout, // Localized text
-        fullIcon: Icon(Icons.logout_rounded, color: AppColor.red, size: 28,),
+        fullIcon: Icon(
+          Icons.logout_rounded,
+          color: AppColor.red,
+          size: 28,
+        ),
         leadingIcon: "assets/icons/logout.svg",
         bgIconColor: AppColor.darker,
         onTap: () {

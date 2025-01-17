@@ -34,13 +34,17 @@ class SettingItem extends StatelessWidget {
   Widget _buildPrefixIcon() {
     return Container(
       padding: EdgeInsets.all(6),
-      decoration: fullIcon == null ? BoxDecoration(color: bgIconColor, shape: BoxShape.circle) : null,
-      child: fullIcon != null ? fullIcon : SvgPicture.asset(
-        leadingIcon!,
-        color: leadingIconColor,
-        width: 22,
-        height: 22,
-      ),
+      decoration: fullIcon == null
+          ? BoxDecoration(color: bgIconColor, shape: BoxShape.circle)
+          : null,
+      child: fullIcon != null
+          ? fullIcon
+          : SvgPicture.asset(
+              leadingIcon!,
+              color: leadingIconColor,
+              width: 22,
+              height: 22,
+            ),
     );
   }
 

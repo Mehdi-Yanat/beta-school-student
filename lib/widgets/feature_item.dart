@@ -153,7 +153,7 @@ class FeatureItem extends StatelessWidget {
 
             // Price section
             Positioned(
-              top: hasDiscount ? 150: 170,
+              top: hasDiscount ? 150 : 170,
               right: 15,
               child: Container(
                 padding: EdgeInsets.all(10),

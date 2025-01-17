@@ -74,9 +74,8 @@ class User {
       lastName: json['lastName'],
       lastNameAr: json['lastNameAr'],
       firstNameAr: json['firstNameAr'],
-      profilePic: json['profilePic'] != null
-          ? File.fromJson(json['profilePic'])
-          : null,
+      profilePic:
+          json['profilePic'] != null ? File.fromJson(json['profilePic']) : null,
     );
   }
 
@@ -203,9 +202,7 @@ class FeaturedCourse {
       statusNote: json['statusNote'],
       deleted: json['deleted'],
       teacher: Teacher.fromJson(json['teacher']),
-      icon: json['icon'] != null
-          ? File.fromJson(json['icon'])
-          : null,
+      icon: json['icon'] != null ? File.fromJson(json['icon']) : null,
       balanceScore: json['balanceScore'].toDouble(),
       chapters: (json['chapters'] as List<dynamic>)
           .map((chapterJson) => Chapter.fromJson(chapterJson))

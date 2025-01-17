@@ -141,13 +141,12 @@ class _SignupScreenState extends State<SignupScreen> {
           Navigator.pushNamedAndRemoveUntil(
             context,
             '/root',
-                (Route<dynamic> route) => false,
+            (Route<dynamic> route) => false,
           );
         }
       } else {
         if (mounted) {
-          SnackBarHelper.showErrorSnackBar(
-              context, signup.message);
+          SnackBarHelper.showErrorSnackBar(context, signup.message);
         }
       }
     } catch (e) {
@@ -523,7 +522,6 @@ class _SignupScreenState extends State<SignupScreen> {
       ),
     ];
   }
-
 
   // Method to take a photo using the camera
   Future<void> _takePhoto() async {

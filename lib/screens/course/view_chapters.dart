@@ -59,7 +59,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
       courseProvider.fetchChaptersForCourse(widget.courseId, context);
       // Or any other provider updates
       _fetchChapterData(widget.chapterId.toString());
-      _isDataFetched = true;
+      courseProvider.setCurrentChapter(widget.chapter);
     });
 
     // Initialize TabController for the TabBar
@@ -82,7 +82,8 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
             Provider.of<CourseProvider>(context, listen: false);
         courseProvider.fetchCourse(widget.courseId, context);
         courseProvider.fetchChaptersForCourse(widget.courseId, context);
-        _fetchChapterData(widget.chapterId.toString());
+        //_fetchChapterData(widget.chapterId.toString());
+        courseProvider.setCurrentChapter(widget.chapter);
       });
       _isDataFetched = true;
     }
@@ -117,7 +118,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
           provider.setCurrentVideo({
             'url': videoUrl,
             'chapterId': chapterId,
-            'title':  widget.chapter.title ?? provider.courseData?['title'],
+            'title': widget.chapter.title ?? provider.courseData?['title'],
           });
         }
 
@@ -346,8 +347,8 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                           indicatorColor: AppColor.primary,
                           tabs: [
                             Tab(
-                                text:
-                                    AppLocalizations.of(context)!.about_chapter_title),
+                                text: AppLocalizations.of(context)!
+                                    .about_chapter_title),
                             Tab(
                                 text:
                                     AppLocalizations.of(context)!.lessons_tab),
@@ -368,10 +369,11 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                   child: Column(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        widget.chapter.title,
+                                        courseProvider.currentChapter!.title,
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
                                           fontSize: 26,
@@ -380,72 +382,103 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                         ),
                                       ),
                                       Text(
-                                        widget.chapter.description,
+                                        courseProvider
+                                            .currentChapter!.description,
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w400,
-                                          color: AppColor.mainColor.withValues(alpha: 0.75),
+                                          color: AppColor.mainColor
+                                              .withValues(alpha: 0.75),
                                         ),
                                       ),
-                                      SizedBox(height: 30,),
-                                      if(widget.chapter.rating != null)
-                                      Row(
-                                        children: [
-                                          Text(
-                                            AppLocalizations.of(context)!.chapter_rating + ": ",
-                                            style: TextStyle(
-                                              fontSize: 16
-                                            ),
-                                          ),
-                                          StarRating(color: AppColor.yellow, starCount: 5, rating: widget.chapter.rating * 5, size: 22,),
-                                          Text(
-                                            widget.chapter.rating.toString(),
-                                            style: TextStyle(
-                                                fontSize: 16
-                                            ),
-                                          ),
-                                        ],
+                                      SizedBox(
+                                        height: 30,
                                       ),
+                                      if (courseProvider
+                                              .currentChapter?.rating !=
+                                          null)
+                                        Row(
+                                          children: [
+                                            Text(
+                                              AppLocalizations.of(context)!
+                                                      .chapter_rating +
+                                                  ": ",
+                                              style: TextStyle(fontSize: 16),
+                                            ),
+                                            StarRating(
+                                              color: AppColor.yellow,
+                                              starCount: 5,
+                                              rating: courseProvider
+                                                      .currentChapter!.rating! *
+                                                  5,
+                                              size: 22,
+                                            ),
+                                            Text(
+                                              courseProvider
+                                                  .currentChapter!.rating
+                                                  .toString(),
+                                              style: TextStyle(fontSize: 16),
+                                            ),
+                                          ],
+                                        ),
                                       Row(
                                         children: [
-                                          Icon(Icons.remove_red_eye_rounded, color: AppColor.primary,),
-                                          Text(
-                                            " " + AppLocalizations.of(context)!.chapter_views + ": ",
-                                            style: TextStyle(
-                                                fontSize: 16
-                                            ),
+                                          Icon(
+                                            Icons.remove_red_eye_rounded,
+                                            color: AppColor.primary,
                                           ),
-                                          const SizedBox(width: 12,),
                                           Text(
-                                            widget.chapter.views.toString() + " " + AppLocalizations.of(context)!.a_view,
-                                            style: TextStyle(
-                                                fontSize: 16
-                                            ),
+                                            " " +
+                                                AppLocalizations.of(context)!
+                                                    .chapter_views +
+                                                ": ",
+                                            style: TextStyle(fontSize: 16),
+                                          ),
+                                          const SizedBox(
+                                            width: 12,
+                                          ),
+                                          Text(
+                                            courseProvider.currentChapter!.views
+                                                    .toString() +
+                                                " " +
+                                                AppLocalizations.of(context)!
+                                                    .a_view,
+                                            style: TextStyle(fontSize: 16),
                                           )
                                         ],
                                       ),
                                       Row(
                                         children: [
-                                          Icon(Icons.timelapse_rounded, color: AppColor.primary,),
-                                          Text(
-                                            " " + AppLocalizations.of(context)!.watch_time + ": ",
-                                            style: TextStyle(
-                                                fontSize: 16
-                                            ),
+                                          Icon(
+                                            Icons.timelapse_rounded,
+                                            color: AppColor.primary,
                                           ),
-                                          const SizedBox(width: 12,),
                                           Text(
-                                            Helpers.formatHoursAndMinutes(context, widget.chapter.duration),
-                                            style: TextStyle(
-                                                fontSize: 16
-                                            ),
+                                            " " +
+                                                AppLocalizations.of(context)!
+                                                    .watch_time +
+                                                ": ",
+                                            style: TextStyle(fontSize: 16),
+                                          ),
+                                          const SizedBox(
+                                            width: 12,
+                                          ),
+                                          Text(
+                                            Helpers.formatHoursAndMinutes(
+                                                context,
+                                                courseProvider
+                                                    .currentChapter!.duration),
+                                            style: TextStyle(fontSize: 16),
                                           )
                                         ],
                                       ),
-                                      SizedBox(height: 60,),
+                                      SizedBox(
+                                        height: 60,
+                                      ),
                                       Text(
-                                        AppLocalizations.of(context)!.did_you_like_chapter,
+                                        AppLocalizations.of(context)!
+                                            .did_you_like_chapter,
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
                                           fontSize: 16,
@@ -457,19 +490,21 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                         alignment: Alignment.bottomCenter,
                                         child: ToggleIconBtnsFb1(
                                             selectedColor: AppColor.blue,
-                                            icons: List<Icon>.from(
-                                                [Icon(Icons.thumb_up_rounded), Icon(Icons.thumb_down)]),
+                                            icons: List<Icon>.from([
+                                              Icon(Icons.thumb_up_rounded),
+                                              Icon(Icons.thumb_down)
+                                            ]),
                                             selected: (index) {
                                               if (index == 0) {
                                                 //TODO: send a like
                                               } else {
                                                 //TODO: send a dislike
                                               }
-
-                                            }
-                                        ),
+                                            }),
                                       ),
-                                      SizedBox(width: 20,)
+                                      SizedBox(
+                                        width: 20,
+                                      )
                                     ],
                                   ),
                                 ),
@@ -482,17 +517,19 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                   return chapter != null
                                       ? GestureDetector(
                                           child: Container(
-                                            padding: EdgeInsets.symmetric(horizontal: 25),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 25),
                                               child: LikeListTile(
-                                            imgUrl: chapter.thumbnail.url,
-                                            title: '${index + 1}. ' + chapter.title,
-                                            likes: chapter.views.toString(),
-                                            color: AppColor.primary,
-                                            subtitle: Helpers
-                                                .formatHoursAndMinutes(
-                                                context,
-                                                chapter.duration),
-                                          )),
+                                                imgUrl: chapter.thumbnail.url,
+                                                title: '${index + 1}. ' +
+                                                    chapter.title,
+                                                likes: chapter.views.toString(),
+                                                color: AppColor.primary,
+                                                subtitle: Helpers
+                                                    .formatHoursAndMinutes(
+                                                        context,
+                                                        chapter.duration),
+                                              )),
                                           onTap: () async {
                                             try {
                                               final chapterData =
@@ -556,15 +593,14 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
 
                                   return ExpansionTile(
                                     title: Text(
-                                      '${index+1}. ' + chapter.title,
+                                      '${index + 1}. ' + chapter.title,
                                       style:
                                           TextStyle(color: AppColor.mainColor),
                                     ),
                                     children: attachments.map((attachment) {
                                       final file = attachment.file;
                                       return ListTile(
-                                        title: Text(
-                                            file.fileName),
+                                        title: Text(file.fileName),
                                         trailing: Icon(Icons.download,
                                             color: AppColor.primary),
                                         onTap: () async {
@@ -577,7 +613,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                                 AppLocalizations.of(context)!
                                                     .failed_to_open_attachment);
                                           }
-                                                                                },
+                                        },
                                       );
                                     }).toList(),
                                   );

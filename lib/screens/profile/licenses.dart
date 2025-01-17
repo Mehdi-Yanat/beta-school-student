@@ -46,7 +46,8 @@ class LicensesPage extends StatelessWidget {
                 url: "https://www.flaticon.com/free-icons/quran",
               ),
               AttributionLink(
-                text: "Arabic language icons created by Laisa Islam Ani - Flaticon",
+                text:
+                    "Arabic language icons created by Laisa Islam Ani - Flaticon",
                 url: "https://www.flaticon.com/free-icons/arabic-language",
               ),
               AttributionLink(
@@ -79,7 +80,8 @@ class AttributionLink extends StatelessWidget {
         onTap: () => _launchUrl(url),
         child: Text(
           text,
-          style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+          style: TextStyle(
+              color: Colors.blue, decoration: TextDecoration.underline),
         ),
       ),
     );

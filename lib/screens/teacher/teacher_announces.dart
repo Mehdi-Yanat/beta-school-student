@@ -105,7 +105,10 @@ class _TeacherAnnouncesPageState extends State<TeacherAnnouncesPage> {
                       onTap: () =>
                           _showAnnouncementDetails(announcement, context),
                       {
-                        'name': Localizations.localeOf(context).languageCode == 'ar'?  announcement.teacher.fullNameAr : announcement.teacher.fullName,
+                        'name':
+                            Localizations.localeOf(context).languageCode == 'ar'
+                                ? announcement.teacher.fullNameAr
+                                : announcement.teacher.fullName,
                         'image': announcement.teacher.user.profilePic?.url ??
                             'assets/images/profile.png',
                         'message': announcement.message,

@@ -72,7 +72,8 @@ class TeacherView extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileHeader(BuildContext context, Map<String, dynamic> user, Map<String, dynamic> teacher) {
+  Widget _buildProfileHeader(BuildContext context, Map<String, dynamic> user,
+      Map<String, dynamic> teacher) {
     return Container(
       padding: EdgeInsets.all(16),
       child: Row(
@@ -120,7 +121,7 @@ class TeacherView extends StatelessWidget {
               if (user['firstNameAr'] != null && user['lastNameAr'] != null)
                 Text(
                   '${user['firstNameAr']} '
-                      '${user['lastNameAr']}',
+                  '${user['lastNameAr']}',
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -130,7 +131,7 @@ class TeacherView extends StatelessWidget {
                 ),
               Text(
                 '${user['firstName'][0].toUpperCase()}${user['firstName'].substring(1).toLowerCase()} '
-                    '${user['lastName'][0].toUpperCase()}${user['lastName'].substring(1).toLowerCase()}',
+                '${user['lastName'][0].toUpperCase()}${user['lastName'].substring(1).toLowerCase()}',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w400,
@@ -138,24 +139,33 @@ class TeacherView extends StatelessWidget {
                 ),
                 textAlign: TextAlign.start,
               ),
-              const SizedBox(height: 5,),
+              const SizedBox(
+                height: 5,
+              ),
               if (teacher['rating'] ?? 0 * 5 > 3)
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  StarRating(color: AppColor.yellow, starCount: 5, rating: teacher['rating'] * 5, size: 28,),
-                  const SizedBox(width: 10,),
-                  Text(
-                    (teacher['rating'] * 5).toString(),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    StarRating(
+                      color: AppColor.yellow,
+                      starCount: 5,
+                      rating: teacher['rating'] * 5,
+                      size: 28,
                     ),
-                  )
-                ],
-              )
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      (teacher['rating'] * 5).toString(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                      ),
+                    )
+                  ],
+                )
             ],
           ),
         ],
@@ -204,9 +214,8 @@ class TeacherView extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(12)),
-        color: AppColor.primary.withAlpha(120)
-      ),
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+          color: AppColor.primary.withAlpha(120)),
       alignment: AlignmentDirectional.topStart,
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -263,27 +272,22 @@ class TeacherView extends StatelessWidget {
           Row(
             children: [
               Icon(Icons.subject, color: AppColor.mainColor),
-              Text(AppLocalizations.of(context)!.class_label + ": ", style: TextStyle(fontWeight: FontWeight.w500),),
+              Text(
+                AppLocalizations.of(context)!.class_label + ": ",
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
               SizedBox(width: 8),
               Container(
-                padding:
-                const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
-                    color: AppColor.secondary
-                        .withValues(alpha: 0.3),
-                    borderRadius:
-                    BorderRadius.all(
-                        Radius.circular(12))),
+                    color: AppColor.secondary.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.all(Radius.circular(12))),
                 child: Text(
-                  TranslationHelper
-                      .getTranslatedSubject(
-                      context,
-                      teacher['subject']),
-                  style: TextStyle(
-                      color: Colors.purple),
+                  TranslationHelper.getTranslatedSubject(
+                      context, teacher['subject']),
+                  style: TextStyle(color: Colors.purple),
                 ),
-              )
-,
+              ),
             ],
           ),
           SizedBox(height: 8),
@@ -304,11 +308,15 @@ class TeacherView extends StatelessWidget {
           Row(
             children: [
               Icon(Icons.people_alt_rounded, color: AppColor.mainColor),
-              Text(AppLocalizations.of(context)!.students_count + ": ", style: TextStyle(fontWeight: FontWeight.w500),),
+              Text(
+                AppLocalizations.of(context)!.students_count + ": ",
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
               SizedBox(width: 8),
               Text(
-                teacher['totalEnrolledStudents'].toString().isEmpty ?
-                    'N/A' : teacher['totalEnrolledStudents'].toString(),
+                teacher['totalEnrolledStudents'].toString().isEmpty
+                    ? 'N/A'
+                    : teacher['totalEnrolledStudents'].toString(),
                 style: TextStyle(
                   color: AppColor.mainColor,
                 ),

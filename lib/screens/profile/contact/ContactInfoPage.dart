@@ -28,36 +28,49 @@ class OurContactInfo extends StatelessWidget {
 
               // Section 1: Personal Information
               buildSection(
-                title: localization.address,
-                description: "PC6M+58G, Boulevard Des Lions, Bir El Djir",
-                icon: Icons.map_rounded,
-                isLink: true,
-                onTap: () => _openGoogleMaps(schoolOneAddress)
-              ),
+                  title: localization.address,
+                  description: "PC6M+58G, Boulevard Des Lions, Bir El Djir",
+                  icon: Icons.map_rounded,
+                  isLink: true,
+                  onTap: () => _openGoogleMaps(schoolOneAddress)),
               SizedBox(height: 24),
               buildSection(
-                title: localization.phone,
-                description: "0791941612",
-                icon: Icons.phone_rounded,
-                isLink: true,
-                onTap: () => _makePhoneCall("0791941612")
-              ),
+                  title: localization.phone,
+                  description: "0791941612",
+                  icon: Icons.phone_rounded,
+                  isLink: true,
+                  onTap: () => _makePhoneCall("0791941612")),
 
               SizedBox(height: 24),
 
               // Section 3: Data Sharing
               buildSection(
-                title: localization.email,
-                description: "contact@betaprimeschool.com",
-                icon: Icons.email_rounded,
-                isLink: true,
-                onTap: () => _sendEmail("contact@betaprimeschool.com")
-              ),
+                  title: localization.email,
+                  description: "contact@betaprimeschool.com",
+                  icon: Icons.email_rounded,
+                  isLink: true,
+                  onTap: () => _sendEmail("contact@betaprimeschool.com")),
 
               SizedBox(height: 24),
-              SocialsBtn(platform: 'facebook', onPressed: () {_openFacebook("BETA-School-soutien-scolaire--100072436272946");},),
-              SocialsBtn(platform: 'tiktok',onPressed: () {_openTikTok("beta_prime_school");},),
-              SocialsBtn(platform: 'instagram',onPressed: () {_openInstagram("betaprimeschool");},)
+              SocialsBtn(
+                platform: 'facebook',
+                onPressed: () {
+                  _openFacebook(
+                      "BETA-School-soutien-scolaire--100072436272946");
+                },
+              ),
+              SocialsBtn(
+                platform: 'tiktok',
+                onPressed: () {
+                  _openTikTok("beta_prime_school");
+                },
+              ),
+              SocialsBtn(
+                platform: 'instagram',
+                onPressed: () {
+                  _openInstagram("betaprimeschool");
+                },
+              )
               //
               // // Contact Us
               // buildContactSection(localization),
@@ -69,8 +82,10 @@ class OurContactInfo extends StatelessWidget {
   }
 
   Future<void> _openFacebook(facebookId) async {
-    final Uri fbAppUri = Uri.parse('fb://profile/$facebookId'); // Opens Facebook app
-    final Uri fbWebUri = Uri.parse('https://www.facebook.com/$facebookId'); // Fallback to the web
+    final Uri fbAppUri =
+        Uri.parse('fb://profile/$facebookId'); // Opens Facebook app
+    final Uri fbWebUri = Uri.parse(
+        'https://www.facebook.com/$facebookId'); // Fallback to the web
     if (await canLaunchUrl(fbAppUri)) {
       await launchUrl(fbAppUri);
     } else {
@@ -80,8 +95,10 @@ class OurContactInfo extends StatelessWidget {
 
   // Function to deeplink to Instagram
   Future<void> _openInstagram(instagramUsername) async {
-    final Uri instaAppUri = Uri.parse('instagram://user?username=$instagramUsername'); // Opens Instagram app
-    final Uri instaWebUri = Uri.parse('https://www.instagram.com/$instagramUsername'); // Fallback to the web
+    final Uri instaAppUri = Uri.parse(
+        'instagram://user?username=$instagramUsername'); // Opens Instagram app
+    final Uri instaWebUri = Uri.parse(
+        'https://www.instagram.com/$instagramUsername'); // Fallback to the web
     if (await canLaunchUrl(instaAppUri)) {
       await launchUrl(instaAppUri);
     } else {
@@ -91,7 +108,8 @@ class OurContactInfo extends StatelessWidget {
 
   // Function to deeplink to TikTok
   Future<void> _openTikTok(tiktokUsername) async {
-    final Uri tiktokUri = Uri.parse('https://www.tiktok.com/@$tiktokUsername'); // TikTok uses only web URLs
+    final Uri tiktokUri = Uri.parse(
+        'https://www.tiktok.com/@$tiktokUsername'); // TikTok uses only web URLs
     if (await canLaunchUrl(tiktokUri)) {
       await launchUrl(tiktokUri);
     } else {
@@ -130,13 +148,12 @@ class OurContactInfo extends StatelessWidget {
   }
 
   // Helper to create reusable sections
-  Widget buildSection({
-    required String title,
-    required String description,
-    required IconData icon,
-    bool isLink = false,
-    void Function()? onTap
-  }) {
+  Widget buildSection(
+      {required String title,
+      required String description,
+      required IconData icon,
+      bool isLink = false,
+      void Function()? onTap}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -155,26 +172,26 @@ class OurContactInfo extends StatelessWidget {
           ],
         ),
         SizedBox(height: 8),
-        isLink ? GestureDetector(
-          onTap: onTap,
-          child:         Text(
-            description,
-            style: TextStyle(
-              fontSize: 15,
-              color: AppColor.secondary,
-              height: 1.5,
-              decoration: TextDecoration.underline
-            ),
-          ),
-        ) :
-        Text(
-          description,
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey[800],
-            height: 1.5,
-          ),
-        ),
+        isLink
+            ? GestureDetector(
+                onTap: onTap,
+                child: Text(
+                  description,
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: AppColor.secondary,
+                      height: 1.5,
+                      decoration: TextDecoration.underline),
+                ),
+              )
+            : Text(
+                description,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[800],
+                  height: 1.5,
+                ),
+              ),
       ],
     );
   }

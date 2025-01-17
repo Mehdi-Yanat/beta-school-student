@@ -55,7 +55,7 @@ class CourseService {
         final data = json.decode(response.body);
         return {
           'courses': data ?? [],
-          'total':  data.length,
+          'total': data.length,
         };
       }
       return {'courses': [], 'total': 0, 'page': 1, 'limit': 10};
@@ -64,7 +64,6 @@ class CourseService {
       return {'courses': [], 'total': 0, 'page': 1, 'limit': 10};
     }
   }
-
 
   // Get all courses
   static Future<Map<String, dynamic>> getCourses({
