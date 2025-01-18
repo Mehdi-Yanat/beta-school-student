@@ -38,6 +38,8 @@
   "branch_SECONDARY_MATHEMATICS": "رياضيات",
   "branch_SECONDARY_SCIENCE": "العلوم التجريبية",
   "branch_SECONDARY_TECHNIQUE_MATH": "تقني رياضي",
+  "branch_SECONDARY_GERMAN": "اللغة الألمانية",
+  "branch_SECONDARY_SPANISH": " اللغة الإسبانية",
   "btn_accept": "موافق",
   "btn_decline": "رفض",
   "buy_now": "اشترِ الآن",
@@ -417,4 +419,3 @@
   "take_photo": "التقط صورة",
   "views": "المشاهدات"
 }
-

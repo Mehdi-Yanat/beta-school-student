@@ -43,6 +43,8 @@
   "branch_SECONDARY_MATHEMATICS": "Mathématiques",
   "branch_SECONDARY_SCIENCE": "Sciences Expérimentales",
   "branch_SECONDARY_TECHNIQUE_MATH": "Technique Mathématique",
+  "branch_SECONDARY_GERMAN": "Allemand",
+  "branch_SECONDARY_SPANISH": "Espagnol",
   "btn_accept": "Accepter",
   "btn_decline": "Refuser",
   "buy_now": "Acheter maintenant",
