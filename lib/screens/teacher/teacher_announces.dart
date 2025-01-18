@@ -187,7 +187,7 @@ void _showAnnouncementDetails(
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
-                          color: AppColor.textColor,
+                          color: AppColor.darker,
                         ),
                       ),
                       Text(
@@ -196,7 +196,7 @@ void _showAnnouncementDetails(
                             Localizations.localeOf(context).languageCode),
                         style: TextStyle(
                           fontSize: 12,
-                          color: AppColor.labelColor,
+                          color: AppColor.darker,
                         ),
                       ),
                     ],
@@ -209,13 +209,16 @@ void _showAnnouncementDetails(
               Helpers.buildTextSpanWithLinks(announcement.message),
               style: TextStyle(
                 fontSize: 16,
-                color: AppColor.textColor,
+                color: AppColor.darker,
               ),
             ),
             SizedBox(height: 20),
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text(AppLocalizations.of(context)!.close_button),
+              child: Text(
+                AppLocalizations.of(context)!.close_button,
+                style: TextStyle(color: AppColor.primary),
+              ),
             ),
           ],
         ),

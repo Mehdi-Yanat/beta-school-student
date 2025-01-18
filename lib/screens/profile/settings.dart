@@ -117,7 +117,8 @@ class _SettingPageState extends State<SettingPage> {
               onPressed: () {
                 Navigator.of(context).pop(); // Close dialog
               },
-              child: Text(AppLocalizations.of(context)!.cancel_button),
+              child: Text(AppLocalizations.of(context)!.cancel_button,
+                  style: const TextStyle(color: AppColor.primary)),
             ),
             TextButton(
               onPressed: () {
@@ -147,7 +148,8 @@ class _SettingPageState extends State<SettingPage> {
                   );
                 }
               },
-              child: Text(AppLocalizations.of(context)!.delete_button),
+              child: Text(AppLocalizations.of(context)!.delete_button,
+                  style: const TextStyle(color: AppColor.primary)),
             ),
           ],
         );

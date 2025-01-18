@@ -1,4 +1,5 @@
 {
+  "languageCode":"fr",
   "a_view": "Vue(s)",
   "about_chapter_title": "À propos",
   "about_course_description": "Dans l'édition et le design graphique, Lorem ipsum est un texte fictif couramment utilisé...",
@@ -47,7 +48,7 @@
   "branch_SECONDARY_SPANISH": "Espagnol",
   "btn_accept": "Accepter",
   "btn_decline": "Refuser",
-  "buy_now": "Acheter maintenant",
+  "buy_now": "Acheter",
   "can_pay_with_eddhabia_cib": "Vous pouvez payer avec Edahabia ou CIB",
   "cancel": "Annuler",
   "cancel_button": "Annuler",

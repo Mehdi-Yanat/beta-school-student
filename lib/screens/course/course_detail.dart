@@ -526,7 +526,7 @@ class CourseDetailScreen extends StatelessWidget {
                                                                 context)!
                                                             .waiting_for_cash_payment, // Purchased text
                                                         style: TextStyle(
-                                                          fontSize: 18,
+                                                          fontSize: 12,
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           color:
@@ -733,7 +733,7 @@ class CourseDetailScreen extends StatelessWidget {
                                                                           color: AppColor
                                                                               .textColor,
                                                                           fontSize:
-                                                                              16,
+                                                                              12,
                                                                           fontWeight:
                                                                               FontWeight.w400),
                                                                     ),
@@ -987,6 +987,7 @@ class CourseDetailScreen extends StatelessWidget {
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
+                    fontSize: 12,
                   ),
                 ),
                 const SizedBox(height: 4),
