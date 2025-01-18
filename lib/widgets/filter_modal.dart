@@ -71,6 +71,8 @@ class _FilterModalState extends State<FilterModal> {
               'ARABIC',
               'FRENCH',
               'ENGLISH',
+              'SPANISH',
+              'GERMAN',
               'OTHER',
             ].map((String value) {
               return DropdownMenuItem<String>(

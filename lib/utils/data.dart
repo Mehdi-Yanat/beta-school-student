@@ -53,6 +53,16 @@ List categories = [
     "icon": "assets/icons/categories/other.png"
   },
   {
+    "id": "SPANISH",
+    "name": "Espagnol",
+    "icon": "assets/icons/categories/other.png"
+  },
+  {
+    "id": "GERMAN",
+    "name": "Allemand",
+    "icon": "assets/icons/categories/other.png"
+  },
+  {
     "id": "OTHER",
     "name": "Autres",
     "icon": "assets/icons/categories/other.png"

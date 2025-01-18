@@ -111,6 +111,8 @@ enum Subject {
   ARABIC,
   FRENCH,
   ENGLISH,
+  SPANISH,
+  GERMAN,
   OTHER
 }
 

@@ -247,6 +247,10 @@ class TranslationHelper {
         return AppLocalizations.of(context)!.subject_FRENCH;
       case 'ENGLISH':
         return AppLocalizations.of(context)!.subject_ENGLISH;
+      case 'SPANISH':
+        return AppLocalizations.of(context)!.subject_SPANISH;
+      case 'GERMAN':
+        return AppLocalizations.of(context)!.subject_GERMAN;
       case 'OTHER':
         return AppLocalizations.of(context)!.subject_OTHER;
       default:
