@@ -223,8 +223,9 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
 
       if (!mounted) return;
 
-      // Reset the last position
+      // Reset the last position and watch duration
       _lastPosition = Duration.zero;
+      _watchDuration = 0;
 
       // Initialize the new video
       await _initializeVideo(url);
@@ -271,25 +272,31 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
   }
 
   void _videoListener() {
-    // Ensure this listener fires only when mounted and active
-    if (!mounted || !_isScreenActive) return;
+    if (!mounted || !_isScreenActive || _videoController == null) return;
 
     final currentPosition = _videoController!.value.position;
+    final elapsedTime = currentPosition.inSeconds - _lastPosition.inSeconds;
+    print('Current position: ${currentPosition.inSeconds} s');
+    print('Last position: ${_lastPosition.inSeconds} s');
 
-    final elapsedTime = currentPosition - _lastPosition;
-
-    // Check if the video is playing
+    // Accumulate watch duration if the video is playing
     if (_videoController!.value.isPlaying) {
-      // Increment the watch time counter
-      _watchDuration += elapsedTime.inSeconds; // Add elapsed time in seconds
-      print('Watch duration: $_watchDuration seconds');
+      if (elapsedTime > 0) {
+        // Prevent rapid updates
+        _watchDuration += elapsedTime;
+        _lastPosition = currentPosition;
+        print('Watch duration: $_watchDuration seconds');
+      }
     } else {
-      print('Video is paused. Sending watch duration: $_watchDuration');
-      _sendWatchDuration();
+      // Video is paused, send the watch duration
+      if (_watchDuration > 0) {
+        print(
+            'Video is paused. Sending watch duration: $_watchDuration seconds');
+        _sendWatchDuration();
+        _watchDuration = 0; // Reset after sending
+      }
+      _lastPosition = currentPosition; // Update last position even if paused
     }
-
-    // Update the last recorded position
-    _lastPosition = currentPosition;
 
     // Defer state updates until the next frame
     WidgetsBinding.instance.addPostFrameCallback((_) {

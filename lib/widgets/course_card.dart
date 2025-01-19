@@ -137,7 +137,7 @@ class CourseCard extends StatelessWidget {
                     course['description'],
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
-                      fontSize: 12,
+                      fontSize: 10,
                       color: AppColor.textColor,
                     ),
                     maxLines: 2,
