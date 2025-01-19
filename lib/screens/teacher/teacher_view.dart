@@ -361,7 +361,7 @@ class TeacherView extends StatelessWidget {
                 crossAxisCount: 2,
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
-                childAspectRatio: 0.8,
+                childAspectRatio: 0.77,
               ),
               itemCount: courses.length,
               itemBuilder: (context, index) => CourseCard(
