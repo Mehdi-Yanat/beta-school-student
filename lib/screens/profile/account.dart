@@ -7,7 +7,6 @@ import 'package:online_course/screens/profile/payments.dart';
 import 'package:online_course/screens/profile/privacy.dart';
 import 'package:online_course/screens/profile/settings.dart';
 import 'package:online_course/theme/color.dart';
-import 'package:online_course/utils/helper.dart';
 import 'package:online_course/widgets/custom_image.dart';
 import 'package:online_course/widgets/dialog.dart';
 import 'package:online_course/widgets/setting_box.dart';
@@ -122,8 +121,10 @@ class _AccountPageState extends State<AccountPage> {
         ),
         Expanded(
           child: SettingBox(
-            title: AppLocalizations.of(context)!
-                .account_hours(Helpers.getTotalWatchTimeFormatted(myCourses)),
+            title: AppLocalizations.of(context)!.account_hours(
+                student?.totalWatchTimeInHours < 1
+                    ? "0"
+                    : student?.totalWatchTimeInHours.toString() ?? "0"),
             // Localized text
             icon: "assets/icons/time.svg",
           ),

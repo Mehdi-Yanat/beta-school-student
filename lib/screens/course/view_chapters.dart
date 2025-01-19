@@ -1,6 +1,7 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Localization
+import 'package:online_course/services/student_service.dart';
 import 'package:online_course/widgets/StarRating.dart';
 import 'package:online_course/widgets/snackbar.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +37,11 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
       _videoController; // Made nullable to prevent initialization issues
   ChewieController? _chewieController;
   String? _currentUrl; // To track which video is currently loaded
+
+  late CourseProvider _courseProvider;
+
+  Duration _lastPosition = Duration.zero; // Track the last recorded position
+  int _watchDuration = 0;
 
   bool _isChangingVideo = false;
   bool _isDataFetched = false; // Tracks whether data was fetched
@@ -75,7 +81,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
+    _courseProvider = Provider.of<CourseProvider>(context, listen: false);
     if (!_isDataFetched) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         final courseProvider =
@@ -216,6 +222,10 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
       }
 
       if (!mounted) return;
+
+      // Reset the last position
+      _lastPosition = Duration.zero;
+
       // Initialize the new video
       await _initializeVideo(url);
     } finally {
@@ -231,6 +241,14 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
         _videoController != null &&
         _videoController!.value.isInitialized) {
       _videoController!.pause();
+      _sendWatchDuration();
+    }
+
+    // Resume video playback when app comes back to foreground
+    if (state == AppLifecycleState.resumed &&
+        _videoController != null &&
+        _videoController!.value.isInitialized) {
+      _videoController!.play();
     }
   }
 
@@ -256,6 +274,23 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
     // Ensure this listener fires only when mounted and active
     if (!mounted || !_isScreenActive) return;
 
+    final currentPosition = _videoController!.value.position;
+
+    final elapsedTime = currentPosition - _lastPosition;
+
+    // Check if the video is playing
+    if (_videoController!.value.isPlaying) {
+      // Increment the watch time counter
+      _watchDuration += elapsedTime.inSeconds; // Add elapsed time in seconds
+      print('Watch duration: $_watchDuration seconds');
+    } else {
+      print('Video is paused. Sending watch duration: $_watchDuration');
+      _sendWatchDuration();
+    }
+
+    // Update the last recorded position
+    _lastPosition = currentPosition;
+
     // Defer state updates until the next frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted || !_isScreenActive) return;
@@ -263,6 +298,12 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
         // Any necessary state updates
       });
     });
+  }
+
+  void _sendWatchDuration() {
+    print('Sending watch duration: $_watchDuration');
+    StudentService.trackWatchTime(
+        _watchDuration, _courseProvider.currentChapter!.id);
   }
 
   @override
@@ -576,9 +617,6 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                 itemBuilder: (context, index) {
                                   final chapter = chapters[index];
                                   final attachments = chapter.attachments;
-
-                                  print('attachments $attachments');
-
                                   if (attachments.isEmpty) {
                                     return ListTile(
                                       title: Text(
@@ -652,6 +690,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
     _tabController.dispose();
     WidgetsBinding.instance.removeObserver(this);
 
+    _sendWatchDuration();
     super.dispose();
   }
 }

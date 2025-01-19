@@ -255,4 +255,28 @@ class StudentService {
       return [];
     }
   }
+
+  static Future<dynamic> trackWatchTime(watchDuration, chapterId) async {
+    try {
+      final response = await _client.patch(
+        Uri.parse('$baseUrl/student/track/$chapterId'),
+        headers: _headers(),
+        body: jsonEncode({
+          'watchTime': watchDuration, // send current timestamp
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print('✅ Watch time tracked successfully: $data');
+        return data;
+      } else {
+        print('❌ Error tracking watch time: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('❌ Error tracking watch time: $e');
+      return null;
+    }
+  }
 }
