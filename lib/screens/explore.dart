@@ -31,6 +31,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
     'ARABIC',
     'FRENCH',
     'ENGLISH',
+    'SPANISH',
+    'GERMAN',
     'OTHER'
   ];
 
@@ -510,6 +512,10 @@ extension LocalizationsExtensions on AppLocalizations {
         return categories_french;
       case 'ENGLISH':
         return categories_english;
+      case 'SPANISH':
+        return categories_spanish;
+      case 'GERMAN':
+        return categories_german;
       case 'OTHER':
         return categories_other;
       default:

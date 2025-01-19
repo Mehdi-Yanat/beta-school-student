@@ -13,6 +13,8 @@ class Student {
   final String? profilePic;
   final isEmailVerified;
   final String? status; // Maps to 'data.Student.status'
+  final totalWatchTimeInHours;
+  final totalWatchTimeInSeconds;
 
   Student({
     this.id,
@@ -29,6 +31,8 @@ class Student {
     this.profilePic,
     this.isEmailVerified,
     this.status,
+    this.totalWatchTimeInHours,
+    this.totalWatchTimeInSeconds,
   });
 
   factory Student.fromJson(Map<String, dynamic> json) {
@@ -47,6 +51,8 @@ class Student {
       isEmailVerified: json['isEmailVerified'],
       status: json['Student']?['status']?.toString() ??
           '', // Maps to 'Student.status'
+      totalWatchTimeInSeconds: json['totalWatchTimeInSeconds'] ?? 0,
+      totalWatchTimeInHours: json['totalWatchTimeInHours'] ?? 0,
     );
   }
 }

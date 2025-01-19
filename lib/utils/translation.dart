@@ -183,6 +183,10 @@ class TranslationHelper {
       case 'SECONDARY_MANAGEMENT_ECONOMIES':
         return AppLocalizations.of(context)!
             .branch_SECONDARY_MANAGEMENT_ECONOMIES;
+      case 'SECONDARY_SPANISH':
+        return AppLocalizations.of(context)!.branch_SECONDARY_SPANISH;
+      case 'SECONDARY_GERMAN':
+        return AppLocalizations.of(context)!.branch_SECONDARY_GERMAN;
       case 'ALL_BRANCHES':
         return AppLocalizations.of(context)!.branch_ALL_BRANCHES;
       default:
@@ -247,6 +251,10 @@ class TranslationHelper {
         return AppLocalizations.of(context)!.subject_FRENCH;
       case 'ENGLISH':
         return AppLocalizations.of(context)!.subject_ENGLISH;
+      case 'SPANISH':
+        return AppLocalizations.of(context)!.subject_SPANISH;
+      case 'GERMAN':
+        return AppLocalizations.of(context)!.subject_GERMAN;
       case 'OTHER':
         return AppLocalizations.of(context)!.subject_OTHER;
       default:

@@ -43,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Navigator.pushNamedAndRemoveUntil(
             context,
             '/root',
-                (Route<dynamic> route) => false,
+            (Route<dynamic> route) => false,
           );
         } else {
           SnackBarHelper.showErrorSnackBar(context, result.message);
@@ -138,12 +138,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         prefixIcon: Icon(Icons.lock, color: AppColor.textColor),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                            _passwordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
                             color: Colors.grey, // Adjust color as needed
                           ),
                           onPressed: () {
                             setState(() {
-                              _passwordVisible = !_passwordVisible; // Toggle visibility
+                              _passwordVisible =
+                                  !_passwordVisible; // Toggle visibility
                             });
                           },
                         ),

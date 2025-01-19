@@ -9,7 +9,7 @@ class Chapter {
   final int views;
   final double? rating;
   final List<Attachment> attachments; // Add attachments field
-
+  final List<ChapterView> chapterViews;
   Chapter({
     required this.id,
     required this.title,
@@ -21,6 +21,7 @@ class Chapter {
     required this.views,
     this.rating,
     this.attachments = const [], // Default to empty list
+    this.chapterViews = const [], // Default to empty list
   });
 
   factory Chapter.fromJson(Map<String, dynamic> json) {
@@ -38,6 +39,36 @@ class Chapter {
               ?.map((x) => Attachment.fromJson(x))
               .toList() ??
           [],
+      chapterViews: (json['chapterViews'] as List?)
+              ?.map((x) => ChapterView.fromJson(x))
+              .toList() ??
+          [], // Parse chapterViews from JSON
+    );
+  }
+}
+
+class ChapterView {
+  final int id;
+  final int chapterId;
+  final DateTime viewedAt;
+  final int studentId;
+  final int? watchTime; // New field
+
+  ChapterView({
+    required this.id,
+    required this.chapterId,
+    required this.viewedAt,
+    required this.studentId,
+    this.watchTime,
+  });
+
+  factory ChapterView.fromJson(Map<String, dynamic> json) {
+    return ChapterView(
+      id: json['id'],
+      chapterId: json['chapterId'],
+      viewedAt: DateTime.parse(json['viewedAt']),
+      studentId: json['studentId'],
+      watchTime: json['watchTime'],
     );
   }
 }

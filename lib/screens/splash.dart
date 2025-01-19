@@ -109,7 +109,11 @@ class _SplashScreenState extends State<SplashScreen>
                     ? _fadeAnimation
                     : const AlwaysStoppedAnimation(0.0),
                 child: _imageLoaded
-                    ? SvgPicture.asset("assets/icons/logo-v2.svg", width: 200, color: Colors.white,)
+                    ? SvgPicture.asset(
+                        "assets/icons/logo-v2.svg",
+                        width: 200,
+                        color: Colors.white,
+                      )
                     : const SizedBox(),
               ),
             ),

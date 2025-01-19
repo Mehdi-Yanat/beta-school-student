@@ -14,12 +14,11 @@ class CustomBottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-
         // Add shadow to the entire Stack
         boxShadow: [
           BoxShadow(
-            color:
-                Colors.grey.withValues(alpha: 0.2), // Shadow color with transparency
+            color: Colors.grey
+                .withValues(alpha: 0.2), // Shadow color with transparency
             blurRadius: 20, // Blurry edges of the shadow
             spreadRadius: 5, // Spread the shadow slightly
             offset: Offset(0, -4), // Shadow offset (upward)
@@ -30,25 +29,25 @@ class CustomBottomBar extends StatelessWidget {
         clipBehavior: Clip.none,
         children: [
           Container(
-            decoration: BoxDecoration(borderRadius:const BorderRadius.only(
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(40),
                 topRight: Radius.circular(40),
               ),
             ),
             child: Container(
-                height: 90,
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: AppColor.appBgColor,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(40),
-                    topRight: Radius.circular(40),
-                  ),
+              height: 90,
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: AppColor.appBgColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(40),
+                  topRight: Radius.circular(40),
                 ),
               ),
+            ),
           ),
           Positioned.fill(
-
               child: Padding(
             padding: const EdgeInsets.only(
               left: 25,

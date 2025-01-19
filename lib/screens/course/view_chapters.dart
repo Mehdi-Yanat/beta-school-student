@@ -1,6 +1,7 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Localization
+import 'package:online_course/services/student_service.dart';
 import 'package:online_course/widgets/StarRating.dart';
 import 'package:online_course/widgets/snackbar.dart';
 import 'package:provider/provider.dart';
@@ -37,6 +38,11 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
   ChewieController? _chewieController;
   String? _currentUrl; // To track which video is currently loaded
 
+  late CourseProvider _courseProvider;
+
+  Duration _lastPosition = Duration.zero; // Track the last recorded position
+  int _watchDuration = 0;
+
   bool _isChangingVideo = false;
   bool _isDataFetched = false; // Tracks whether data was fetched
 
@@ -59,7 +65,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
       courseProvider.fetchChaptersForCourse(widget.courseId, context);
       // Or any other provider updates
       _fetchChapterData(widget.chapterId.toString());
-      _isDataFetched = true;
+      courseProvider.setCurrentChapter(widget.chapter);
     });
 
     // Initialize TabController for the TabBar
@@ -75,14 +81,15 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
+    _courseProvider = Provider.of<CourseProvider>(context, listen: false);
     if (!_isDataFetched) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         final courseProvider =
             Provider.of<CourseProvider>(context, listen: false);
         courseProvider.fetchCourse(widget.courseId, context);
         courseProvider.fetchChaptersForCourse(widget.courseId, context);
-        _fetchChapterData(widget.chapterId.toString());
+        //_fetchChapterData(widget.chapterId.toString());
+        courseProvider.setCurrentChapter(widget.chapter);
         courseProvider.checkChapterIsRated(widget.chapterId, context);
       });
       _isDataFetched = true;
@@ -216,6 +223,11 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
       }
 
       if (!mounted) return;
+
+      // Reset the last position and watch duration
+      _lastPosition = Duration.zero;
+      _watchDuration = 0;
+
       // Initialize the new video
       await _initializeVideo(url);
     } finally {
@@ -231,6 +243,14 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
         _videoController != null &&
         _videoController!.value.isInitialized) {
       _videoController!.pause();
+      _sendWatchDuration();
+    }
+
+    // Resume video playback when app comes back to foreground
+    if (state == AppLifecycleState.resumed &&
+        _videoController != null &&
+        _videoController!.value.isInitialized) {
+      _videoController!.play();
     }
   }
 
@@ -253,8 +273,31 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
   }
 
   void _videoListener() {
-    // Ensure this listener fires only when mounted and active
-    if (!mounted || !_isScreenActive) return;
+    if (!mounted || !_isScreenActive || _videoController == null) return;
+
+    final currentPosition = _videoController!.value.position;
+    final elapsedTime = currentPosition.inSeconds - _lastPosition.inSeconds;
+    print('Current position: ${currentPosition.inSeconds} s');
+    print('Last position: ${_lastPosition.inSeconds} s');
+
+    // Accumulate watch duration if the video is playing
+    if (_videoController!.value.isPlaying) {
+      if (elapsedTime > 0) {
+        // Prevent rapid updates
+        _watchDuration += elapsedTime;
+        _lastPosition = currentPosition;
+        print('Watch duration: $_watchDuration seconds');
+      }
+    } else {
+      // Video is paused, send the watch duration
+      if (_watchDuration > 0) {
+        print(
+            'Video is paused. Sending watch duration: $_watchDuration seconds');
+        _sendWatchDuration();
+        _watchDuration = 0; // Reset after sending
+      }
+      _lastPosition = currentPosition; // Update last position even if paused
+    }
 
     // Defer state updates until the next frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -263,6 +306,12 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
         // Any necessary state updates
       });
     });
+  }
+
+  void _sendWatchDuration() {
+    print('Sending watch duration: $_watchDuration');
+    StudentService.trackWatchTime(
+        _watchDuration, _courseProvider.currentChapter!.id);
   }
 
   @override
@@ -373,7 +422,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        widget.chapter.title,
+                                        courseProvider.currentChapter!.title,
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
                                           fontSize: 26,
@@ -382,7 +431,8 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                         ),
                                       ),
                                       Text(
-                                        widget.chapter.description,
+                                        courseProvider
+                                            .currentChapter!.description,
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
                                           fontSize: 16,
@@ -394,7 +444,9 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                       SizedBox(
                                         height: 30,
                                       ),
-                                      if (widget.chapter.rating != null)
+                                      if (courseProvider
+                                              .currentChapter?.rating !=
+                                          null)
                                         Row(
                                           children: [
                                             Text(
@@ -406,14 +458,14 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                             StarRating(
                                               color: AppColor.yellow,
                                               starCount: 5,
-                                              rating: widget.chapter.rating * 5,
+                                              rating: courseProvider
+                                                      .currentChapter!.rating! *
+                                                  5,
                                               size: 22,
                                             ),
-                                            const SizedBox(
-                                              width: 8,
-                                            ),
                                             Text(
-                                              (widget.chapter.rating * 5)
+                                              ((courseProvider
+                                                  .currentChapter!.rating ?? 0) * 5)
                                                   .toStringAsFixed(1),
                                               style: TextStyle(fontSize: 16),
                                             ),
@@ -439,7 +491,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                             width: 5,
                                           ),
                                           Text(
-                                            widget.chapter.views.toString() +
+                                            courseProvider.currentChapter!.views.toString() +
                                                 " " +
                                                 AppLocalizations.of(context)!
                                                     .a_view,
@@ -469,7 +521,8 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                           Text(
                                             Helpers.formatHoursAndMinutes(
                                                 context,
-                                                widget.chapter.duration),
+                                                courseProvider
+                                                    .currentChapter!.duration),
                                             style: TextStyle(fontSize: 16),
                                           )
                                         ],
@@ -603,9 +656,6 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                 itemBuilder: (context, index) {
                                   final chapter = chapters[index];
                                   final attachments = chapter.attachments;
-
-                                  print('attachments $attachments');
-
                                   if (attachments.isEmpty) {
                                     return ListTile(
                                       title: Text(
@@ -679,6 +729,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
     _tabController.dispose();
     WidgetsBinding.instance.removeObserver(this);
 
+    _sendWatchDuration();
     super.dispose();
   }
 }

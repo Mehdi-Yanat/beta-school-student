@@ -71,6 +71,8 @@ class _FilterModalState extends State<FilterModal> {
               'ARABIC',
               'FRENCH',
               'ENGLISH',
+              'SPANISH',
+              'GERMAN',
               'OTHER',
             ].map((String value) {
               return DropdownMenuItem<String>(
@@ -132,6 +134,8 @@ class _FilterModalState extends State<FilterModal> {
               'SECONDARY_MATHEMATICS',
               'SECONDARY_TECHNIQUE_MATH',
               'SECONDARY_MANAGEMENT_ECONOMIES',
+              'SECONDARY_GERMAN',
+              'SECONDARY_SPANISH',
             ].map((String value) {
               return DropdownMenuItem<String>(
                 value: value,

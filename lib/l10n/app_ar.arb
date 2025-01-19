@@ -1,4 +1,5 @@
 {
+  "languageCode":"ar",
   "about_chapter_title": "عن الفصل",
   "about_course_description": "في النشر والتصميم الجرافيكي، يعد Lorem ipsum نصاً مكانياً يُستخدم بشكل شائع...",
   "about_course_title": "عن الدورة",
@@ -38,6 +39,8 @@
   "branch_SECONDARY_MATHEMATICS": "رياضيات",
   "branch_SECONDARY_SCIENCE": "العلوم التجريبية",
   "branch_SECONDARY_TECHNIQUE_MATH": "تقني رياضي",
+  "branch_SECONDARY_GERMAN": "اللغة الألمانية",
+  "branch_SECONDARY_SPANISH": " اللغة الإسبانية",
   "btn_accept": "موافق",
   "btn_decline": "رفض",
   "buy_now": "اشترِ الآن",
@@ -47,6 +50,8 @@
   "categories_all": "الكل",
   "categories_arabic": "اللغة العربية",
   "categories_english": "اللغة الإنجليزية",
+  "categories_spanish": "اللغة الاسبانية",
+  "categories_german": "اللغة الألمانية",
   "categories_french": "اللغة الفرنسية",
   "categories_history_geography": "التاريخ والجغرافيا",
   "categories_islamic_studies": "الدراسات الإسلامية",
@@ -269,6 +274,8 @@
   "subject_ARABIC": "اللغة العربية",
   "subject_ENGLISH": "اللغة الإنجليزية",
   "subject_FRENCH": "اللغة الفرنسية",
+  "subject_SPANISH": "اللغة الاسبانية",
+  "subject_GERMAN": "اللغة الألمانية",
   "subject_HISTORY_GEOGRAPHY": "تاريخ وجغرافيا",
   "subject_ISLAMIC_STUDIES": "دراسات إسلامية",
   "subject_MATHEMATICS": "رياضيات",
@@ -413,4 +420,3 @@
   "take_photo": "التقط صورة",
   "views": "المشاهدات"
 }
-

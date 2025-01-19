@@ -183,8 +183,8 @@ class CourseProvider with ChangeNotifier {
       );
 
       final newCourses = (result['courses'] as List?)
-          ?.map((data) => FeaturedCourse.fromJson(data))
-          .toList() ??
+              ?.map((data) => FeaturedCourse.fromJson(data))
+              .toList() ??
           [];
 
       if (refresh) {
@@ -206,7 +206,6 @@ class CourseProvider with ChangeNotifier {
       notifyListeners();
     }
   }
-
 
   Future<void> fetchCourses({
     bool refresh = false,
@@ -256,12 +255,11 @@ class CourseProvider with ChangeNotifier {
     }
   }
 
-
-
-  Future<void> enrollByCash(BuildContext context,String courseId) async {
+  Future<void> enrollByCash(BuildContext context, String courseId) async {
     bool isEnrolled = await StudentService.enrollByCash(context, courseId);
 
-    final checkPendingTransactionResponse = await StudentService.checkCashTransaction(courseId);
+    final checkPendingTransactionResponse =
+        await StudentService.checkCashTransaction(courseId);
     if (checkPendingTransactionResponse['status'] != null) {
       _isPending = checkPendingTransactionResponse['status'] == "PENDING";
       notifyListeners();
@@ -272,9 +270,11 @@ class CourseProvider with ChangeNotifier {
     }
   }
 
-  Future<void> cancelCashTransaction(BuildContext context,String transactionId) async {
+  Future<void> cancelCashTransaction(
+      BuildContext context, String transactionId) async {
     print(transactionId);
-    bool isCancelled = await StudentService.cancelCashTransaction(context ,transactionId);
+    bool isCancelled =
+        await StudentService.cancelCashTransaction(context, transactionId);
 
     _isPending = !isCancelled;
     notifyListeners();
@@ -288,13 +288,15 @@ class CourseProvider with ChangeNotifier {
       notifyListeners();
 
       if (courseId.isNotEmpty) {
-        final checkPendingTransactionResponse = await StudentService.checkCashTransaction(courseId);
+        final checkPendingTransactionResponse =
+            await StudentService.checkCashTransaction(courseId);
         if (checkPendingTransactionResponse['status'] != null) {
           _isPending = checkPendingTransactionResponse['status'] == "PENDING";
           notifyListeners();
         }
         if (checkPendingTransactionResponse['transactionId'] != null) {
-          _currentTransactionId = checkPendingTransactionResponse['transactionId'];
+          _currentTransactionId =
+              checkPendingTransactionResponse['transactionId'];
           notifyListeners();
         }
       }
@@ -368,11 +370,11 @@ class CourseProvider with ChangeNotifier {
 
   void setFiltersForSuggestedCourses(
       {String? subject,
-        String? teacherClass,
-        String? educationalBranch,
-        String? searchQuery,
-        refresh = false,
-        context}) {
+      String? teacherClass,
+      String? educationalBranch,
+      String? searchQuery,
+      refresh = false,
+      context}) {
     _selectedSubject = subject;
     _selectedClass = teacherClass;
     _selectedBranch = educationalBranch;
@@ -405,8 +407,7 @@ class CourseProvider with ChangeNotifier {
     print(localizations.clear_filters); // Log success message
   }
 
-  bool isPendingCourse(BuildContext context ,String courseId) {
-
+  bool isPendingCourse(BuildContext context, String courseId) {
     return _isPending;
   }
 }

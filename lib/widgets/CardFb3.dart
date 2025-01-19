@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import localization
 import '../theme/color.dart';
 
 class CardFb3 extends StatelessWidget {
@@ -54,10 +54,12 @@ class CardFb3 extends StatelessWidget {
             Text(
               subtitle,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                   color: Colors.black54,
                   fontWeight: FontWeight.normal,
-                  fontSize: 15),
+                  fontSize: AppLocalizations.of(context)!.languageCode == 'fr'
+                      ? 10
+                      : 15),
             ),
             const SizedBox(
               height: 10,

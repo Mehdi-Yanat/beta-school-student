@@ -75,7 +75,7 @@ class CourseDetailScreen extends StatelessWidget {
 
           bool isVerified = (authProvider.student?.status == "ACCEPTED");
           bool isPurchased = provider.hasPurchasedCourse(course['id']);
-          bool isPending =  provider.isPendingCourse(context ,course['id']);
+          bool isPending = provider.isPendingCourse(context, course['id']);
 
           // Calculate discount percentage and prices
           final hasDiscount =
@@ -492,286 +492,345 @@ class CourseDetailScreen extends StatelessWidget {
                                             ],
                                           ),
                                         )
-                                      : isPending ? Container(
-                            // No SafeArea if course is purchased
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 12),
-                            decoration: BoxDecoration(
-                              color: AppColor.cardColor,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColor.shadowColor
-                                      .withValues(alpha: 0.1),
-                                  offset: const Offset(0, -4),
-                                  blurRadius: 10,
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      AppLocalizations.of(
-                                          context)!
-                                          .waiting_for_cash_payment, // Purchased text
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight:
-                                        FontWeight.bold,
-                                        color: AppColor.darker,
-                                      ),
-                                    ),
-                                    Text(
-                                      AppLocalizations.of(
-                                          context)!
-                                          .price_label,
-                                      style: TextStyle(
-                                          color: AppColor
-                                              .mainColor),
-                                    ),
-                                    _buildPriceDisplay(
-                                      course['price']
-                                          .toDouble(),
-                                      finalPrice,
-                                      course['discount']
-                                          ?.toDouble(),
-                                    ),
-                                  ],
-                                ),
-                                GradientButton(
-                                  text: AppLocalizations.of(
-                                      context)!
-                                      .cancel,
-                                  // Add your localization key or hardcoded text
-                                  variant: 'red',
-                                  // Variant setting (e.g., primary style)
-                                  color: Colors.white,
-                                  // Text or icon color
-                                  onTap: () {
-                                    showDialog(context: context, builder: (context) => AlertDialogFb1(
-                                      title: AppLocalizations.of(context)!.are_you_sure,
-                                      description: AppLocalizations.of(context)!.this_will_delete_the_payment_order,
-                                      actions: [
-                                        TextButton(
-                                          style: ButtonStyle(
-                                              foregroundColor: WidgetStatePropertyAll(AppColor.primary)
-                                          ),
-                                          onPressed: () {
-                                            Navigator.of(context).pop(); // Close the dialog
-                                          },
-                                          child: Text(AppLocalizations.of(context)!.cancel),
-                                        ),
-                                        TextButton(
-                                          style: ButtonStyle(
-                                              foregroundColor: WidgetStatePropertyAll(AppColor.primary)
-                                          ),
-                                          onPressed: () async {
-                                            await provider.cancelCashTransaction(context ,provider.currentTransactionId);
-
-                                            Navigator.of(context).pop(); // Close the dialog
-                                          },
-                                          child: Text(AppLocalizations.of(context)!.confirm),
-                                        )
-                                      ],
-
-                                    ));
-                                  }
-                                    )
-                              ],
-                            ),
-                          )
-                              : SafeArea(
-                                          child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 16, vertical: 12),
-                                            decoration: BoxDecoration(
-                                              color: AppColor.cardColor,
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: AppColor.shadowColor
-                                                      .withValues(alpha: 0.1),
-                                                  offset: Offset(0, -4),
-                                                  blurRadius: 10,
-                                                ),
-                                              ],
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      AppLocalizations.of(
+                                      : isPending
+                                          ? Container(
+                                              // No SafeArea if course is purchased
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 16,
+                                                      vertical: 12),
+                                              decoration: BoxDecoration(
+                                                color: AppColor.cardColor,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: AppColor.shadowColor
+                                                        .withValues(alpha: 0.1),
+                                                    offset: const Offset(0, -4),
+                                                    blurRadius: 10,
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .waiting_for_cash_payment, // Purchased text
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color:
+                                                              AppColor.darker,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .price_label,
+                                                        style: TextStyle(
+                                                            color: AppColor
+                                                                .mainColor),
+                                                      ),
+                                                      _buildPriceDisplay(
+                                                        course['price']
+                                                            .toDouble(),
+                                                        finalPrice,
+                                                        course['discount']
+                                                            ?.toDouble(),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  GradientButton(
+                                                      text: AppLocalizations.of(
                                                               context)!
-                                                          .price_label,
-                                                      style: TextStyle(
-                                                          color: AppColor
-                                                              .mainColor),
-                                                    ),
-                                                    _buildPriceDisplay(
-                                                      course['price']
-                                                          .toDouble(),
-                                                      finalPrice,
-                                                      course['discount']
-                                                          ?.toDouble(),
+                                                          .cancel,
+                                                      // Add your localization key or hardcoded text
+                                                      variant: 'red',
+                                                      // Variant setting (e.g., primary style)
+                                                      color: Colors.white,
+                                                      // Text or icon color
+                                                      onTap: () {
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (context) =>
+                                                                AlertDialogFb1(
+                                                                  title: AppLocalizations.of(
+                                                                          context)!
+                                                                      .are_you_sure,
+                                                                  description:
+                                                                      AppLocalizations.of(
+                                                                              context)!
+                                                                          .this_will_delete_the_payment_order,
+                                                                  actions: [
+                                                                    TextButton(
+                                                                      style: ButtonStyle(
+                                                                          foregroundColor:
+                                                                              WidgetStatePropertyAll(AppColor.primary)),
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.of(context)
+                                                                            .pop(); // Close the dialog
+                                                                      },
+                                                                      child: Text(
+                                                                          AppLocalizations.of(context)!
+                                                                              .cancel),
+                                                                    ),
+                                                                    TextButton(
+                                                                      style: ButtonStyle(
+                                                                          foregroundColor:
+                                                                              WidgetStatePropertyAll(AppColor.primary)),
+                                                                      onPressed:
+                                                                          () async {
+                                                                        await provider.cancelCashTransaction(
+                                                                            context,
+                                                                            provider.currentTransactionId);
+
+                                                                        Navigator.of(context)
+                                                                            .pop(); // Close the dialog
+                                                                      },
+                                                                      child: Text(
+                                                                          AppLocalizations.of(context)!
+                                                                              .confirm),
+                                                                    )
+                                                                  ],
+                                                                ));
+                                                      })
+                                                ],
+                                              ),
+                                            )
+                                          : SafeArea(
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 16,
+                                                    vertical: 12),
+                                                decoration: BoxDecoration(
+                                                  color: AppColor.cardColor,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: AppColor
+                                                          .shadowColor
+                                                          .withValues(
+                                                              alpha: 0.1),
+                                                      offset: Offset(0, -4),
+                                                      blurRadius: 10,
                                                     ),
                                                   ],
                                                 ),
-                                                GradientButton(
-                                                  text: context
-                                                          .watch<
-                                                              CourseProvider>()
-                                                          .isLoading
-                                                      ? AppLocalizations.of(
-                                                              context)!
-                                                          .loading
-                                                      : context
-                                                              .watch<
-                                                                  CourseProvider>()
-                                                              .isSuccess
-                                                          ? AppLocalizations.of(
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          AppLocalizations.of(
                                                                   context)!
-                                                              .loading
-                                                          : AppLocalizations.of(
-                                                                  context)!
-                                                              .buy_now,
-                                                  variant: 'primary',
-                                                  color: Colors.white,
-                                                  onTap: () {
-                                                    showModalBottomSheet(
-                                                      context: context,
-                                                      constraints: BoxConstraints.expand(),
-                                                      backgroundColor: AppColor.appBgColor,
-                                                      shape: const RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.vertical(
-                                                          top: Radius.circular(20),
+                                                              .price_label,
+                                                          style: TextStyle(
+                                                              color: AppColor
+                                                                  .mainColor),
                                                         ),
-                                                      ),
-                                                      builder: (BuildContext context) {
-                                                        return Container(
-                                                          padding: EdgeInsets.all(5),
-                                                          child: Column(
-                                                            mainAxisAlignment: MainAxisAlignment.center,
-                                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                                            children: [
-                                                              Spacer(),
-                                                              Text(
-                                                                  AppLocalizations.of(context)!.chose_payment_method,
-                                                                style: TextStyle(
-                                                                  fontSize: 22,
-                                                                  fontWeight: FontWeight.w500
-                                                                ),
+                                                        _buildPriceDisplay(
+                                                          course['price']
+                                                              .toDouble(),
+                                                          finalPrice,
+                                                          course['discount']
+                                                              ?.toDouble(),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    GradientButton(
+                                                        text: context
+                                                                .watch<
+                                                                    CourseProvider>()
+                                                                .isLoading
+                                                            ? AppLocalizations
+                                                                    .of(
+                                                                        context)!
+                                                                .loading
+                                                            : context
+                                                                    .watch<
+                                                                        CourseProvider>()
+                                                                    .isSuccess
+                                                                ? AppLocalizations.of(
+                                                                        context)!
+                                                                    .loading
+                                                                : AppLocalizations.of(
+                                                                        context)!
+                                                                    .buy_now,
+                                                        variant: 'primary',
+                                                        color: Colors.white,
+                                                        onTap: () {
+                                                          showModalBottomSheet(
+                                                            context: context,
+                                                            constraints:
+                                                                BoxConstraints
+                                                                    .expand(),
+                                                            backgroundColor:
+                                                                AppColor
+                                                                    .appBgColor,
+                                                            shape:
+                                                                const RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .vertical(
+                                                                top: Radius
+                                                                    .circular(
+                                                                        20),
                                                               ),
-                                                              const SizedBox(height: 12,),
-                                                              Text(
-                                                                  AppLocalizations.of(context)!.you_can_pay_card_or_cash,
-                                                                style: TextStyle(
-                                                                  color: AppColor.textColor,
-                                                                  fontSize: 16,
-                                                                  fontWeight: FontWeight.w400
-                                                                ),
-                                                              ),
-                                                              Spacer(flex: 2,),
-                                                              Row(
-                                                                children: [
-                                                                  Spacer(),
-                                                                  Stack(
-                                                                    children: [
-                                                                      CardFb3(
-                                                                        text: AppLocalizations.of(context)!.payment_method_card,
-                                                                        imageUrl: "assets/images/card.png",
-                                                                        subtitle: AppLocalizations.of(context)!.can_pay_with_eddhabia_cib,
-                                                                        onPressed: () async {
-                                                                      // Access CourseProvider without listening
-                                                                      final courseProvider = context.read<CourseProvider>();
+                                                            ),
+                                                            builder:
+                                                                (BuildContext
+                                                                    context) {
+                                                              return Container(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(5),
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Spacer(),
+                                                                    Text(
+                                                                      AppLocalizations.of(
+                                                                              context)!
+                                                                          .chose_payment_method,
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              22,
+                                                                          fontWeight:
+                                                                              FontWeight.w500),
+                                                                    ),
+                                                                    const SizedBox(
+                                                                      height:
+                                                                          12,
+                                                                    ),
+                                                                    Text(
+                                                                      AppLocalizations.of(
+                                                                              context)!
+                                                                          .you_can_pay_card_or_cash,
+                                                                      style: TextStyle(
+                                                                          color: AppColor
+                                                                              .textColor,
+                                                                          fontSize:
+                                                                              12,
+                                                                          fontWeight:
+                                                                              FontWeight.w400),
+                                                                    ),
+                                                                    Spacer(
+                                                                      flex: 2,
+                                                                    ),
+                                                                    Row(
+                                                                      children: [
+                                                                        Spacer(),
+                                                                        Stack(
+                                                                          children: [
+                                                                            CardFb3(
+                                                                              text: AppLocalizations.of(context)!.payment_method_card,
+                                                                              imageUrl: "assets/images/card.png",
+                                                                              subtitle: AppLocalizations.of(context)!.can_pay_with_eddhabia_cib,
+                                                                              onPressed: () async {
+                                                                                // Access CourseProvider without listening
+                                                                                final courseProvider = context.read<CourseProvider>();
 
-                                                                      // Check if the provider is loading or already successful
-                                                                      if (courseProvider.isLoading || courseProvider.isSuccess) {
-                                                                        print("Already loading or success...");
-                                                                        return;
-                                                                      }
+                                                                                // Check if the provider is loading or already successful
+                                                                                if (courseProvider.isLoading || courseProvider.isSuccess) {
+                                                                                  print("Already loading or success...");
+                                                                                  return;
+                                                                                }
 
-                                                                      try {
-                                                                        // Attempt to enroll and redirect
-                                                                        final response = await courseProvider.enrollAndRedirect(context, courseId);
+                                                                                try {
+                                                                                  // Attempt to enroll and redirect
+                                                                                  final response = await courseProvider.enrollAndRedirect(context, courseId);
 
-                                                                        // Handle the response
-                                                                        if (response == true) {
-                                                                          courseProvider.resetSuccess();
-                                                                        }
-                                                                      } catch (error) {
-                                                                        print("Error during enrollment: $error");
-                                                                      }
-                                                                    },),
-                                                                      Positioned(top: 130, right: 5,  child: Image.asset("assets/images/dab-banque.jpg", width: 50,))
-
-                                                                    ],
-                                                                  ),
-                                                                  Spacer(),
-                                                                  CardFb3(
-                                                                      text: AppLocalizations.of(context)!.payment_method_cash,
-                                                                      imageUrl: "assets/images/cash.png",
-                                                                      subtitle: AppLocalizations.of(context)!.come_to_one_our_offices_pay,
-                                                                      onPressed: (){
-                                                                        showDialog(
-                                                                          context: context,
-                                                                          builder: (context) => AlertDialogFb1(
-                                                                            title: AppLocalizations.of(context)!.are_you_sure,
-                                                                            description: AppLocalizations.of(context)!.do_you_want_to_proceed,
-                                                                            actions: [
-                                                                              TextButton(
-                                                                                style: ButtonStyle(
-                                                                                  foregroundColor: WidgetStatePropertyAll(AppColor.primary)
+                                                                                  // Handle the response
+                                                                                  if (response == true) {
+                                                                                    courseProvider.resetSuccess();
+                                                                                  }
+                                                                                } catch (error) {
+                                                                                  print("Error during enrollment: $error");
+                                                                                }
+                                                                              },
+                                                                            ),
+                                                                            Positioned(
+                                                                                top: 130,
+                                                                                right: 5,
+                                                                                child: Image.asset(
+                                                                                  "assets/images/dab-banque.jpg",
+                                                                                  width: 50,
+                                                                                ))
+                                                                          ],
+                                                                        ),
+                                                                        Spacer(),
+                                                                        CardFb3(
+                                                                            text: AppLocalizations.of(context)!
+                                                                                .payment_method_cash,
+                                                                            imageUrl:
+                                                                                "assets/images/cash.png",
+                                                                            subtitle:
+                                                                                AppLocalizations.of(context)!.come_to_one_our_offices_pay,
+                                                                            onPressed: () {
+                                                                              showDialog(
+                                                                                context: context,
+                                                                                builder: (context) => AlertDialogFb1(
+                                                                                  title: AppLocalizations.of(context)!.are_you_sure,
+                                                                                  description: AppLocalizations.of(context)!.do_you_want_to_proceed,
+                                                                                  actions: [
+                                                                                    TextButton(
+                                                                                      style: ButtonStyle(foregroundColor: WidgetStatePropertyAll(AppColor.primary)),
+                                                                                      onPressed: () {
+                                                                                        Navigator.of(context).pop(); // Close the dialog
+                                                                                      },
+                                                                                      child: Text(AppLocalizations.of(context)!.cancel),
+                                                                                    ),
+                                                                                    TextButton(
+                                                                                      style: ButtonStyle(foregroundColor: WidgetStatePropertyAll(AppColor.primary)),
+                                                                                      onPressed: () async {
+                                                                                        await provider.enrollByCash(context, courseId);
+                                                                                        Navigator.of(context).pop();
+                                                                                        Navigator.of(context).pop();
+                                                                                      },
+                                                                                      child: Text(AppLocalizations.of(context)!.confirm),
+                                                                                    ),
+                                                                                  ],
                                                                                 ),
-                                                                                onPressed: () {
-                                                                                  Navigator.of(context).pop(); // Close the dialog
-                                                                                },
-                                                                                child: Text(AppLocalizations.of(context)!.cancel),
-                                                                              ),
-                                                                              TextButton(
-                                                                                style: ButtonStyle(
-                                                                                    foregroundColor: WidgetStatePropertyAll(AppColor.primary)
-                                                                                ),
-                                                                                onPressed: () async {
-                                                                                    await provider.enrollByCash(context, courseId);
-                                                                                    Navigator.of(context).pop();
-                                                                                    Navigator.of(context).pop();
-                                                                                },
-                                                                                child: Text(AppLocalizations.of(context)!.confirm),
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                        );
-
-                                                                      }),
-                                                                  Spacer()
-                                                                ],
-                                                              ),
-                                                              Spacer(),
-                                                            ],
-                                                          ),
-                                                        );
-                                                      },
-                                                    );
-                                                  }
-
-                                                )
-                                              ],
+                                                                              );
+                                                                            }),
+                                                                        Spacer()
+                                                                      ],
+                                                                    ),
+                                                                    Spacer(),
+                                                                  ],
+                                                                ),
+                                                              );
+                                                            },
+                                                          );
+                                                        })
+                                                  ],
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        ),
                         ],
                       ),
                 onRefresh: () => _refreshCourseData(context)),
@@ -892,28 +951,31 @@ class CourseDetailScreen extends StatelessWidget {
             context,
             Icons.school,
             AppLocalizations.of(context)!.course_class,
-            (course['class'] as List?)
-                !.map((classItem) => TranslationHelper.getTranslatedClass(context, classItem))
+            (course['class'] as List?)!
+                .map((classItem) =>
+                    TranslationHelper.getTranslatedClass(context, classItem))
                 .join(' • '),
           ),
           _buildDetailRow(
-            context,
-            Icons.school,
-            AppLocalizations.of(context)!.course_branch,
-              (course['EducationalBranch'] as List?)
-                  !.map((classItem) => TranslationHelper.getTranslatedBranch(context, classItem))
-                  .join('  •  ')
-          ),
+              context,
+              Icons.school,
+              AppLocalizations.of(context)!.course_branch,
+              (course['EducationalBranch'] as List?)!
+                  .map((classItem) =>
+                      TranslationHelper.getTranslatedBranch(context, classItem))
+                  .join('  •  ')),
         ],
       ),
     );
   }
 
-  Widget _buildDetailRow(BuildContext context, IconData icon, String title, String value) {
+  Widget _buildDetailRow(
+      BuildContext context, IconData icon, String title, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start, // Aligns items to the start
+        crossAxisAlignment:
+            CrossAxisAlignment.start, // Aligns items to the start
         children: [
           Icon(icon, color: AppColor.darker),
           const SizedBox(width: 8),
@@ -926,6 +988,7 @@ class CourseDetailScreen extends StatelessWidget {
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
+                    fontSize: 12,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -942,6 +1005,7 @@ class CourseDetailScreen extends StatelessWidget {
       ),
     );
   }
+
   Widget _buildPriceDisplay(
       double originalPrice, double finalPrice, double? discount) {
     return Column(

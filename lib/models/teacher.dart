@@ -110,7 +110,7 @@ class FeaturedTeacher {
       fullName: json['fullName'] ?? '',
       fullNameAr: json['fullNameAr'],
       email: json['email'] ?? '',
-      profilePic: json['profilePic'] ,
+      profilePic: json['profilePic'],
       subject: json['subject'] ?? '',
       institution: json['institution'] ?? '',
       yearsOfExperience: json['yearsOfExperience'] ?? 0,
