@@ -565,15 +565,19 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                               if (index == 0) {
                                                 await courseProvider
                                                     .rateChapter(
-                                                        widget.chapterId,
+                                                    courseProvider
+                                                        .currentChapter!.id,
                                                         true,
                                                         context);
+                                                await courseProvider.checkChapterIsRated(courseProvider.currentChapter!.id, context);
                                               } else {
                                                 await courseProvider
                                                     .rateChapter(
-                                                        widget.chapterId,
+                                                    courseProvider
+                                                        .currentChapter!.id,
                                                         false,
                                                         context);
+                                                await courseProvider.checkChapterIsRated(courseProvider.currentChapter!.id, context);
                                               }
                                             }),
                                       ),
@@ -627,6 +631,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                                     'chapterId': chapter.id,
                                                     'title': chapter.title
                                                   });
+                                                  courseProvider.checkChapterIsRated(chapter.id, context);
                                                 });
                                                 await _changeVideo(
                                                     chapterData['url']);
