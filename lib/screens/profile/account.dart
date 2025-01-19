@@ -7,7 +7,6 @@ import 'package:online_course/screens/profile/payments.dart';
 import 'package:online_course/screens/profile/privacy.dart';
 import 'package:online_course/screens/profile/settings.dart';
 import 'package:online_course/theme/color.dart';
-import 'package:online_course/utils/helper.dart';
 import 'package:online_course/widgets/custom_image.dart';
 import 'package:online_course/widgets/dialog.dart';
 import 'package:online_course/widgets/setting_box.dart';
@@ -122,8 +121,10 @@ class _AccountPageState extends State<AccountPage> {
         ),
         Expanded(
           child: SettingBox(
-            title: AppLocalizations.of(context)!
-                .account_hours(Helpers.getTotalWatchTimeFormatted(myCourses)),
+            title: AppLocalizations.of(context)!.account_hours(
+                student?.totalWatchTimeInHours < 1
+                    ? "0"
+                    : student?.totalWatchTimeInHours.toString() ?? "0"),
             // Localized text
             icon: "assets/icons/time.svg",
           ),
@@ -152,7 +153,11 @@ class _AccountPageState extends State<AccountPage> {
           SettingItem(
             title: AppLocalizations.of(context)!.settings_title,
             // Localized text
-            fullIcon: Icon(Icons.settings_applications_rounded, color: AppColor.primary, size: 28,),
+            fullIcon: Icon(
+              Icons.settings_applications_rounded,
+              color: AppColor.primary,
+              size: 28,
+            ),
             leadingIcon: "assets/icons/setting.svg",
             bgIconColor: AppColor.blue,
             onTap: () {
@@ -172,7 +177,11 @@ class _AccountPageState extends State<AccountPage> {
           SettingItem(
             title: AppLocalizations.of(context)!.payments_title,
             // Localized text
-            fullIcon: Icon(Icons.wallet_rounded, color: AppColor.primary, size: 28,),
+            fullIcon: Icon(
+              Icons.wallet_rounded,
+              color: AppColor.primary,
+              size: 28,
+            ),
             leadingIcon: "assets/icons/wallet.svg",
             bgIconColor: AppColor.green,
             onTap: () {
@@ -207,7 +216,11 @@ class _AccountPageState extends State<AccountPage> {
           SettingItem(
             title: AppLocalizations.of(context)!.privacy_title,
             // Localized text
-            fullIcon: Icon(Icons.shield, color: AppColor.primary, size: 28,),
+            fullIcon: Icon(
+              Icons.shield,
+              color: AppColor.primary,
+              size: 28,
+            ),
             leadingIcon: "assets/icons/shield.svg",
             bgIconColor: AppColor.orange,
             onTap: () {
@@ -220,7 +233,11 @@ class _AccountPageState extends State<AccountPage> {
           SettingItem(
             title: AppLocalizations.of(context)!.our_contact_info,
             // Localized text
-            fullIcon: Icon(Icons.contact_mail_rounded, color: AppColor.primary, size: 28,),
+            fullIcon: Icon(
+              Icons.contact_mail_rounded,
+              color: AppColor.primary,
+              size: 28,
+            ),
             leadingIcon: "assets/icons/shield.svg",
             bgIconColor: AppColor.orange,
             onTap: () {
@@ -233,7 +250,11 @@ class _AccountPageState extends State<AccountPage> {
           SettingItem(
             title: AppLocalizations.of(context)!.licenses,
             // Localized text
-            fullIcon: Icon(Icons.local_police_rounded, color: AppColor.primary, size: 28,),
+            fullIcon: Icon(
+              Icons.local_police_rounded,
+              color: AppColor.primary,
+              size: 28,
+            ),
             leadingIcon: "assets/icons/shield.svg",
             bgIconColor: AppColor.orange,
             onTap: () {
@@ -265,7 +286,11 @@ class _AccountPageState extends State<AccountPage> {
       ),
       child: SettingItem(
         title: AppLocalizations.of(context)!.account_logout, // Localized text
-        fullIcon: Icon(Icons.logout_rounded, color: AppColor.red, size: 28,),
+        fullIcon: Icon(
+          Icons.logout_rounded,
+          color: AppColor.red,
+          size: 28,
+        ),
         leadingIcon: "assets/icons/logout.svg",
         bgIconColor: AppColor.darker,
         onTap: () {

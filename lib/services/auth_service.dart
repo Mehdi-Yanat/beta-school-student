@@ -70,7 +70,8 @@ class AuthService {
         );
       }
       final response = await request.send();
-      final http.Response httpResponse = await http.Response.fromStream(response);
+      final http.Response httpResponse =
+          await http.Response.fromStream(response);
       final Map<String, dynamic> responseData = jsonDecode(httpResponse.body);
       final String message = responseData['message'] ?? 'Unknown error';
 
@@ -86,7 +87,6 @@ class AuthService {
       } else {
         return AuthResult(false, message);
       }
-
     } catch (e) {
       print('Registration error: $e');
       return AuthResult(false, e.toString());

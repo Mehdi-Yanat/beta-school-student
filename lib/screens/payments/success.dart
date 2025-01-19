@@ -122,7 +122,12 @@ class _PaymentStatusContentState extends State<PaymentStatusContent> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-              isSuccess ? Image.asset("assets/images/payment-ok.png", width: 200,) : Image.asset("assets/images/fail.png"),
+            isSuccess
+                ? Image.asset(
+                    "assets/images/payment-ok.png",
+                    width: 200,
+                  )
+                : Image.asset("assets/images/fail.png"),
             const SizedBox(height: 20),
             Text(
               isSuccess

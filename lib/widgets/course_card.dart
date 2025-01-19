@@ -60,28 +60,32 @@ class CourseCard extends StatelessWidget {
                     ),
                     // Level Badge
                     if (course['rating'] ?? 0 * 5 > 2.7)
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: AppColor.mainColor.withValues(alpha: 0.9),
-                          borderRadius: BorderRadius.circular(12),
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: Container(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: AppColor.mainColor.withValues(alpha: 0.9),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(children: [
+                            Icon(
+                              Icons.star_rounded,
+                              color: AppColor.yellow,
+                              size: 20,
+                            ),
+                            Text(
+                              course['rating'] ?? "0",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            )
+                          ]),
                         ),
-                        child: Row(
-                            children: [
-                              Icon(Icons.star_rounded, color: AppColor.yellow, size: 20,),
-                              Text(
-                                course['rating'] ?? "0",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                ),
-                        )]),
                       ),
-                    ),
                     // Course Class Label - Position Absolute (Bottom Left of the Image)
                     if (course['class'] != null &&
                         (course['class'] as List).isNotEmpty)

@@ -298,7 +298,8 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         );
-      } else if (student?.isEmailVerified == null || !student?.isEmailVerified ) {
+      } else if (student?.isEmailVerified == null ||
+          !student?.isEmailVerified) {
         // Render the validation message
         return Center(
           child: Padding(
@@ -510,7 +511,9 @@ class _HomePageState extends State<HomePage> {
                 ? "${course.teacher.user.firstNameAr} ${course.teacher.user.lastNameAr}"
                 : "${course.teacher.user.firstName} ${course.teacher.user.lastName}";
             final firstChapter =
-                course.chapters != null && course.chapters!.isNotEmpty ? course.chapters?.first : null;
+                course.chapters != null && course.chapters!.isNotEmpty
+                    ? course.chapters?.first
+                    : null;
             final totalDuration = course.totalWatchTime;
 
             final formatedDurationMinutes =
@@ -521,8 +524,9 @@ class _HomePageState extends State<HomePage> {
             final originalPrice = course.price;
             final discountAmount =
                 hasDiscount ? (course.price * course.discount! / 100) : 0;
-            final finalPrice =
-                hasDiscount ? (course.price - discountAmount).toInt() : course.price.toInt();
+            final finalPrice = hasDiscount
+                ? (course.price - discountAmount).toInt()
+                : course.price.toInt();
 
             return FeatureItem(
               data: {
@@ -530,9 +534,12 @@ class _HomePageState extends State<HomePage> {
                     "assets/images/course_icon.png",
                 "icon": course.icon?.url ?? "assets/images/course_icon.png",
                 "name": course.title,
-                "originalPrice":
-                    hasDiscount ? "${originalPrice.toString()} " + AppLocalizations.of(context)!.dzd  : "",
-                "price": "${finalPrice.toString()} " + AppLocalizations.of(context)!.dzd,
+                "originalPrice": hasDiscount
+                    ? "${originalPrice.toString()} " +
+                        AppLocalizations.of(context)!.dzd
+                    : "",
+                "price": "${finalPrice.toString()} " +
+                    AppLocalizations.of(context)!.dzd,
                 "discountPercentage": course.discount.toString(),
                 "session":
                     "${course.chapters != null ? course.chapters?.length : 0} ${AppLocalizations.of(context)!.courses}",
@@ -602,9 +609,8 @@ class _HomePageState extends State<HomePage> {
             children: teacherProvider.featuredTeachers.map((teacher) {
               final isArabic =
                   Localizations.localeOf(context).languageCode == 'ar';
-              final fullName = isArabic
-                  ? "${teacher.fullNameAr}"
-                  : "${teacher.fullName}";
+              final fullName =
+                  isArabic ? "${teacher.fullNameAr}" : "${teacher.fullName}";
 
               final profilePic = teacher.profilePic != null
                   ? teacher.profilePic
@@ -626,8 +632,7 @@ class _HomePageState extends State<HomePage> {
                     "institution": teacher.institution,
                     "totalEnrolledStudents":
                         teacher.stats.totalEnrolledStudents,
-                    "experience":
-                        "${teacher.yearsOfExperience} years",
+                    "experience": "${teacher.yearsOfExperience} years",
                     "review": "${teacher.stats.rating * 5}",
                   },
                 ),

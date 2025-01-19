@@ -33,7 +33,8 @@ class TeacherProvider with ChangeNotifier {
       notifyListeners();
 
       final teachersData = await TeacherService.getAcceptedTeachers();
-      _featuredTeachers = teachersData.map((data) => FeaturedTeacher.fromJson(data)).toList();
+      _featuredTeachers =
+          teachersData.map((data) => FeaturedTeacher.fromJson(data)).toList();
       print('✅ Fetched ${_teachers.length} teachers');
     } catch (e) {
       print('❌ Error fetching teachers: $e');

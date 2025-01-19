@@ -60,57 +60,63 @@ class _AnnouncesPageState extends State<AnnouncesPage> {
         ),
         backgroundColor: AppColor.appBgColor,
         body: _isLoading
-            ? Center( // Show loading indicator if fetching data
-          child: Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: CircularProgressIndicator(),
-          ),
-        )
+            ? Center(
+                // Show loading indicator if fetching data
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: CircularProgressIndicator(),
+                ),
+              )
             : _announcements.isEmpty
-            ? Center( // Show no announcements message if the list is empty
-          child: Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: Text(
-              AppLocalizations.of(context)!.no_announcements,
-              style: TextStyle(
-                fontSize: 16,
-                color: AppColor.darker,
-              ),
-            ),
-          ),
-        )
-            : ListView.builder(
-          padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
-          itemCount: _announcements.length,
-          itemBuilder: (context, index) {
-            final announcement = _announcements[index];
-            // Render each announcement in the list
-            return AnnouncesItem(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => TeacherAnnouncesPage(
-                      teacherId: announcement.teacher.id),
-                ),
-              ),
-              {
-                'name': Localizations.localeOf(context).languageCode == 'ar' ? announcement.teacher.fullNameAr : announcement.teacher.fullName,
-                'image': announcement.teacher.profilePic?.url ??
-                    'assets/images/profile.png',
-                'message': announcement.message,
-                'createdAt': announcement.createdAt,
-                'timeAgo': Helpers.getTimeAgo(
-                  announcement.createdAt ?? DateTime.now(),
-                  currentLocale,
-                ),
-              },
-            );
-          },
-        ),
+                ? Center(
+                    // Show no announcements message if the list is empty
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Text(
+                        AppLocalizations.of(context)!.no_announcements,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: AppColor.darker,
+                        ),
+                      ),
+                    ),
+                  )
+                : ListView.builder(
+                    padding:
+                        const EdgeInsets.only(top: 10, left: 15, right: 15),
+                    itemCount: _announcements.length,
+                    itemBuilder: (context, index) {
+                      final announcement = _announcements[index];
+                      // Render each announcement in the list
+                      return AnnouncesItem(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TeacherAnnouncesPage(
+                                teacherId: announcement.teacher.id),
+                          ),
+                        ),
+                        {
+                          'name':
+                              Localizations.localeOf(context).languageCode ==
+                                      'ar'
+                                  ? announcement.teacher.fullNameAr
+                                  : announcement.teacher.fullName,
+                          'image': announcement.teacher.profilePic?.url ??
+                              'assets/images/profile.png',
+                          'message': announcement.message,
+                          'createdAt': announcement.createdAt,
+                          'timeAgo': Helpers.getTimeAgo(
+                            announcement.createdAt ?? DateTime.now(),
+                            currentLocale,
+                          ),
+                        },
+                      );
+                    },
+                  ),
       ),
     );
   }
-
 
   @override
   void dispose() {

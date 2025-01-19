@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AlertDialogFb1 extends StatelessWidget {
@@ -7,14 +6,18 @@ class AlertDialogFb1 extends StatelessWidget {
 
   final List<TextButton> actions;
 
-  const AlertDialogFb1({required this.title, required this.description, required this.actions, Key? key}) : super(key: key);
+  const AlertDialogFb1(
+      {required this.title,
+      required this.description,
+      required this.actions,
+      Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(title),
-      content:
-      Text(description),
+      content: Text(description),
       actions: actions,
     );
   }

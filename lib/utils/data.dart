@@ -41,11 +41,7 @@ List categories = [
     "name": "Islamiques",
     "icon": "assets/icons/categories/quran.png"
   },
-  {
-    "id": "ARABIC",
-    "name": "Arabe",
-    "icon": "assets/icons/categories/ar.png"
-  },
+  {"id": "ARABIC", "name": "Arabe", "icon": "assets/icons/categories/ar.png"},
   {
     "id": "FRENCH",
     "name": "Français",
@@ -54,6 +50,16 @@ List categories = [
   {
     "id": "ENGLISH",
     "name": "Anglais",
+    "icon": "assets/icons/categories/other.png"
+  },
+  {
+    "id": "SPANISH",
+    "name": "Espagnol",
+    "icon": "assets/icons/categories/other.png"
+  },
+  {
+    "id": "GERMAN",
+    "name": "Allemand",
     "icon": "assets/icons/categories/other.png"
   },
   {

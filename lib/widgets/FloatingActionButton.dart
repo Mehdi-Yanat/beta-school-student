@@ -8,9 +8,10 @@ class FloatingActionButtonFb3 extends StatelessWidget {
   final String? tag;
   const FloatingActionButtonFb3(
       {required this.onPressed,
-        required this.icon,
-        this.color = Colors.blue,
-        Key? key, this.tag})
+      required this.icon,
+      this.color = Colors.blue,
+      Key? key,
+      this.tag})
       : super(key: key);
 
   @override

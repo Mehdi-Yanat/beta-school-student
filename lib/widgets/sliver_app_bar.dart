@@ -36,35 +36,35 @@ class CustomSliverAppBar extends StatelessWidget {
         ),
         // Ensure the blur effect is clipped to the AppBar's area
         child: Container(
-            decoration: const BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  spreadRadius: 5,
-                  blurRadius: 10,
-                  offset: Offset(0, 2),
-                ),
-              ],
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xFF0075FF), // main
-                  Color(0xFF21D4FD), // state
-                ],
-                begin: Alignment(
-                    0.838, 0.546), // Start point shifted for 127 degrees
-                end: Alignment(
-                    -0.838, -0.546), // End point aligned for 127 degrees
+          decoration: const BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                spreadRadius: 5,
+                blurRadius: 10,
+                offset: Offset(0, 2),
               ),
-            ),
-            child: AppBar(
-              title: title,
-              elevation: 0,
-              clipBehavior: Clip.none,
-              backgroundColor: Colors.transparent, // Fully transparent
-              automaticallyImplyLeading: false,
+            ],
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF0075FF), // main
+                Color(0xFF21D4FD), // state
+              ],
+              begin: Alignment(
+                  0.838, 0.546), // Start point shifted for 127 degrees
+              end: Alignment(
+                  -0.838, -0.546), // End point aligned for 127 degrees
             ),
           ),
+          child: AppBar(
+            title: title,
+            elevation: 0,
+            clipBehavior: Clip.none,
+            backgroundColor: Colors.transparent, // Fully transparent
+            automaticallyImplyLeading: false,
+          ),
         ),
+      ),
     );
   }
 }
