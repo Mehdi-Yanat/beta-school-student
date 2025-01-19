@@ -7,6 +7,7 @@ import '../models/course.dart' as Course;
 import '../models/mycourses.dart' as MyCourse;
 import '../services/course_service.dart';
 import '../services/student_service.dart';
+import '../utils/helper.dart';
 import '../widgets/snackbar.dart';
 
 class CourseProvider with ChangeNotifier {
@@ -17,6 +18,14 @@ class CourseProvider with ChangeNotifier {
 
   Chapter.Chapter? _currentChapter;
   Map<String, dynamic>? _currentVideo;
+  Map<String, dynamic>? _currentChapterRating = null;
+
+  Map<String, dynamic> get currentChapterRating => _currentChapterRating ?? {};
+
+  set currentChapterRating(Map<String, dynamic>? value) {
+    _currentChapterRating = value;
+  }
+
   bool _isLoading = false;
   bool _isPending = false;
   bool _isLoadingCourses = false;
@@ -109,6 +118,41 @@ class CourseProvider with ChangeNotifier {
       _error = null;
     } catch (e) {
       _error = localizations.error_fetching_chapters; // Use translation key
+    } finally {
+      _isLoadingChapter = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> checkChapterIsRated(
+      int chapterId, BuildContext context) async {
+    final localizations = AppLocalizations.of(context)!; // Get localizations
+    _isLoadingChapter = true;
+    notifyListeners();
+
+    try {
+      final response = await CourseService.checkChapterIsRated(chapterId);
+      _currentChapterRating = response;
+    } catch (e) {
+      _error = localizations.error_fetching_chapters; // Use translation key
+    } finally {
+      _isLoadingChapter = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> rateChapter(
+      int chapterId, bool rating, BuildContext context) async {
+    final localizations = AppLocalizations.of(context)!; // Get localizations
+    _isLoadingChapter = true;
+    notifyListeners();
+
+    try {
+      final response = await CourseService.rateChapter(chapterId, rating);
+      SnackBarHelper.showSuccessSnackBar(context, response?['message']);
+    } catch (e) {
+      _error = localizations.error_fetching_chapters; // Use translation key
+      SnackBarHelper.showErrorSnackBar(context, "Error rating chapter");
     } finally {
       _isLoadingChapter = false;
       notifyListeners();

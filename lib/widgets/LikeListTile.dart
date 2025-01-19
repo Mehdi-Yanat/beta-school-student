@@ -8,14 +8,17 @@ class LikeListTile extends StatelessWidget {
       required this.title,
       required this.likes,
       required this.subtitle,
+      this.subtitle2,
       required this.imgUrl,
       this.color = Colors.grey})
       : super(key: key);
   final String title;
   final String likes;
   final String subtitle;
+  final String? subtitle2;
   final Color color;
   final String imgUrl;
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -55,7 +58,17 @@ class LikeListTile extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: SizedBox(width: 4, height: 4),
               )),
-          Text(subtitle)
+          Text(subtitle),
+          SizedBox(
+            width: 8,
+          ),
+          if(subtitle2 != null)
+            Icon(Icons.star_rounded, color: color, size: 20),
+          SizedBox(
+            width: 3,
+          ),
+          if(subtitle2 != null)
+            Text(subtitle2!)
         ],
       ),
       trailing: Icon(
@@ -72,6 +85,7 @@ class LikeButton extends StatefulWidget {
       : super(key: key);
   final Function onPressed;
   final Color color;
+
   @override
   _LikeButtonState createState() => _LikeButtonState();
 }

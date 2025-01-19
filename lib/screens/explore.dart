@@ -3,10 +3,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:online_course/providers/course_provider.dart';
 import 'package:online_course/screens/course/course_detail.dart';
 import 'package:online_course/theme/color.dart';
+import 'package:online_course/widgets/appbar.dart';
 import 'package:online_course/widgets/course_image.dart';
 import 'package:online_course/widgets/filter_modal.dart';
 import 'package:provider/provider.dart';
-import 'package:online_course/widgets/appbar.dart';
 
 import '../utils/helper.dart';
 import '../utils/translation.dart';
@@ -82,313 +82,311 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: AppColor.appBgColor,
-        appBar: CustomAppBar(
-          title: AppLocalizations.of(context)!.explore_title,
-        ),
-        body: RefreshIndicator(
-            child: Column(
-              children: [
-                // Search Bar
-                _buildSearchBar(),
+    return RefreshIndicator(
+      onRefresh: _refreshData,
+      child: Scaffold(
+          backgroundColor: AppColor.appBgColor,
+          appBar: CustomAppBar(
+            title: AppLocalizations.of(context)!.explore_title,
+          ),
+          body: Column(
+            children: [
+              // Search Bar
+              _buildSearchBar(),
 
-                // Categories
-                _buildCategories(),
+              // Categories
+              _buildCategories(),
 
-                // Course Grid
-                // Replace Expanded section with:
-                // Replace Expanded section with:
-                Expanded(
-                  child: Consumer<CourseProvider>(
-                    builder: (context, provider, _) {
-                      if (provider.isLoading && provider.courses.isEmpty) {
-                        return Center(child: CircularProgressIndicator());
-                      }
+              // Course Grid
+              // Replace Expanded section with:
+              // Replace Expanded section with:
+              Expanded(
+                child: Consumer<CourseProvider>(
+                  builder: (context, provider, _) {
+                    if (provider.isLoading && provider.courses.isEmpty) {
+                      return Center(child: CircularProgressIndicator());
+                    }
 
-                      if (provider.courses.isEmpty) {
-                        return _buildEmptyState();
-                      }
+                    if (provider.courses.isEmpty) {
+                      return _buildEmptyState();
+                    }
 
-                      return GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 5,
-                          mainAxisSpacing: 16,
-                          childAspectRatio: 0.75,
-                        ),
-                        shrinkWrap: true,
-                        controller: _scrollController,
-                        itemCount: provider.courses.length +
-                            (provider.hasMore ? 1 : 0),
-                        itemBuilder: (context, index) {
-                          if (index == provider.courses.length) {
-                            return Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(16),
-                                child: CircularProgressIndicator(),
-                              ),
-                            );
-                          }
-
-                          final course = provider.courses[index];
-                          final firstChapter = course.chapters.isNotEmpty
-                              ? course.chapters.first
-                              : null;
-
-                          final totalDuration = course.chapters.fold<int>(
-                              0, (sum, chapter) => sum + (chapter.duration));
-
-                          final formatedDuration =
-                              Helpers.formatTimeHours(totalDuration);
-
-                          return GestureDetector(
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    CourseDetailScreen(courseId: course.id),
-                              ),
-                            ),
+                    return GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 5,
+                        mainAxisSpacing: 16,
+                        childAspectRatio: 0.75,
+                      ),
+                      shrinkWrap: true,
+                      controller: _scrollController,
+                      itemCount:
+                          provider.courses.length + (provider.hasMore ? 1 : 0),
+                      itemBuilder: (context, index) {
+                        if (index == provider.courses.length) {
+                          return Center(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 2, vertical: 8),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: AppColor.cardColor,
-                                  borderRadius: BorderRadius.circular(12),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: AppColor.shadowColor
-                                          .withValues(alpha: 0.1),
-                                      blurRadius: 8,
-                                      offset: Offset(0, 3),
-                                    ),
-                                  ],
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize:
-                                      MainAxisSize.min, // Add this line
-                                  children: [
-                                    Stack(
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius: BorderRadius.vertical(
-                                              top: Radius.circular(12)),
-                                          child: CourseImage(
-                                            thumbnailUrl:
-                                                firstChapter?.thumbnail?.url,
-                                            iconUrl: course.icon?.url,
-                                            width: double.maxFinite,
-                                            height: 120,
-                                          ),
+                              padding: EdgeInsets.all(16),
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+
+                        final course = provider.courses[index];
+                        final firstChapter = course.chapters.isNotEmpty
+                            ? course.chapters.first
+                            : null;
+
+                        final totalDuration = course.chapters.fold<int>(
+                            0, (sum, chapter) => sum + (chapter.duration));
+
+                        final formatedDuration =
+                            Helpers.formatTimeHours(totalDuration);
+
+                        return GestureDetector(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  CourseDetailScreen(courseId: course.id),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 2, vertical: 8),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: AppColor.cardColor,
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColor.shadowColor
+                                        .withValues(alpha: 0.1),
+                                    blurRadius: 8,
+                                    offset: Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min, // Add this line
+                                children: [
+                                  Stack(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(12)),
+                                        child: CourseImage(
+                                          thumbnailUrl:
+                                              firstChapter?.thumbnail?.url,
+                                          iconUrl: course.icon?.url,
+                                          width: double.maxFinite,
+                                          height: 120,
                                         ),
-                                        if (course.discount != null &&
-                                            course.discount! > 0)
-                                          Positioned(
-                                            top: 80,
-                                            right: 0,
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 12, vertical: 6),
-                                              decoration: BoxDecoration(
-                                                color: Colors.red,
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.black
-                                                        .withValues(alpha: 0.2),
-                                                    blurRadius: 4,
-                                                    offset: Offset(0, 2),
-                                                  ),
-                                                ],
-                                              ),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Icon(
-                                                    Icons.local_offer,
-                                                    color: Colors.white,
-                                                    size: 16,
-                                                  ),
-                                                  SizedBox(width: 4),
-                                                  Text(
-                                                    "-${course.discount}%",
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
+                                      ),
+                                      if (course.discount != null &&
+                                          course.discount! > 0)
                                         Positioned(
+                                          top: 80,
+                                          right: 0,
                                           child: Container(
-                                            padding: const EdgeInsets.all(12.0),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 12, vertical: 6),
                                             decoration: BoxDecoration(
-                                                color: AppColor.brandMain
-                                                    .withValues(alpha: 1),
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(12))),
-                                            child: Text(
-                                              TranslationHelper
-                                                  .getTranslatedSubject(
-                                                      context, course.subject),
-                                              style: TextStyle(
+                                              color: Colors.red,
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black
+                                                      .withValues(alpha: 0.2),
+                                                  blurRadius: 4,
+                                                  offset: Offset(0, 2),
+                                                ),
+                                              ],
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Icon(
+                                                  Icons.local_offer,
                                                   color: Colors.white,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 15),
+                                                  size: 16,
+                                                ),
+                                                SizedBox(width: 4),
+                                                Text(
+                                                  "-${course.discount}%",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            course.title,
-                                            maxLines: 1,
+                                      Positioned(
+                                        child: Container(
+                                          padding: const EdgeInsets.all(12.0),
+                                          decoration: BoxDecoration(
+                                              color: AppColor.brandMain
+                                                  .withValues(alpha: 1),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(12))),
+                                          child: Text(
+                                            TranslationHelper
+                                                .getTranslatedSubject(
+                                                    context, course.subject),
                                             style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color: AppColor.mainColor,
-                                            ),
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 15),
                                           ),
-                                          Text(
-                                            course.description,
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColor.mainColor
-                                                  .withValues(alpha: 0.5),
-                                            ),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          course.title,
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: AppColor.mainColor,
                                           ),
-                                          SizedBox(height: 7),
-                                          Row(
-                                            children: [
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  if (course.discount != null &&
-                                                      course.discount! > 0) ...[
-                                                    Text(
-                                                      "${course.price} ${AppLocalizations.of(context)?.dzd}",
-                                                      style: TextStyle(
-                                                        color: Colors.grey,
-                                                        decoration:
-                                                            TextDecoration
-                                                                .lineThrough,
-                                                        fontSize: 8,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                  Text(
-                                                    "${(course.price - (course.price * (course.discount ?? 0) / 100)).toStringAsFixed(2)} ${AppLocalizations.of(context)?.dzd}",
-                                                    style: TextStyle(
-                                                        color: course.discount !=
-                                                                    null &&
-                                                                course.discount! >
-                                                                    0
-                                                            ? Colors.red
-                                                            : AppColor.darker,
-                                                        fontWeight:
-                                                            FontWeight.w800,
-                                                        fontSize: 12),
-                                                  ),
-                                                ],
-                                              ),
-                                              Spacer(),
-                                              Icon(
-                                                  Icons
-                                                      .video_collection_rounded,
-                                                  color: AppColor.darker,
-                                                  size: 18),
-                                              Text(
-                                                " " +
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .course_lessons(course
-                                                            .chapters.length),
-                                                style: TextStyle(
-                                                    color: AppColor.darker),
-                                              ),
-                                              /*
-                                        Spacer(),
+                                        ),
+                                        Text(
+                                          course.description,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColor.mainColor
+                                                .withValues(alpha: 0.5),
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        SizedBox(height: 7),
                                         Row(
                                           children: [
-                                            Icon(Icons.star,
-                                                color: AppColor.yellow,
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                if (course.discount != null &&
+                                                    course.discount! > 0) ...[
+                                                  Text(
+                                                    "${course.price} ${AppLocalizations.of(context)?.dzd}",
+                                                    style: TextStyle(
+                                                      color: Colors.grey,
+                                                      decoration: TextDecoration
+                                                          .lineThrough,
+                                                      fontSize: 8,
+                                                    ),
+                                                  ),
+                                                ],
+                                                Text(
+                                                  "${(course.price - (course.price * (course.discount ?? 0) / 100)).toStringAsFixed(2)} ${AppLocalizations.of(context)?.dzd}",
+                                                  style: TextStyle(
+                                                      color: course.discount !=
+                                                                  null &&
+                                                              course.discount! >
+                                                                  0
+                                                          ? Colors.red
+                                                          : AppColor.darker,
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                      fontSize: 12),
+                                                ),
+                                              ],
+                                            ),
+                                            Spacer(),
+                                            Icon(Icons.video_collection_rounded,
+                                                color: AppColor.darker,
                                                 size: 18),
-                                            Text("4.5",
-                                                style: TextStyle(
-                                                    color: AppColor.darker)),
+                                            Text(
+                                              " " +
+                                                  AppLocalizations.of(context)!
+                                                      .course_lessons(course
+                                                          .chapters.length),
+                                              style: TextStyle(
+                                                  color: AppColor.darker),
+                                            ),
+                                            /*
+                                      Spacer(),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.star,
+                                              color: AppColor.yellow,
+                                              size: 18),
+                                          Text("4.5",
+                                              style: TextStyle(
+                                                  color: AppColor.darker)),
+                                        ],
+                                      ),
+                                      */
                                           ],
                                         ),
-                                        */
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Row(
-                                            children: [
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(
+                                          children: [
+                                            if (course.rating != null &&
+                                                course.rating! * 5 > 2.3)
                                               Icon(Icons.star_rounded,
                                                   color: AppColor.yellow,
                                                   size: 18),
-                                              Text(
-                                                  "4.5", // TODO: implement rating
-                                                  style: TextStyle(
-                                                      color: AppColor.darker)),
-                                              Spacer(),
-                                              Icon(Icons.people_alt_rounded,
-                                                  color: AppColor.darker,
-                                                  size: 18),
-                                              Text(
-                                                  course.currentEnrollment
-                                                      .toString(), // TODO: implement rating
-                                                  style: TextStyle(
-                                                      color: AppColor.darker)),
-                                              Spacer(),
-                                              Icon(Icons.schedule,
-                                                  color: AppColor.darker,
-                                                  size: 18),
-                                              Text(
-                                                Helpers.formatHoursAndMinutes(
-                                                    context,
-                                                    course.totalWatchTime ?? 0),
+                                            if (course.rating != null &&
+                                                course.rating! * 5 > 2.3)
+                                            Text((course.rating! * 5).toString(),
                                                 style: TextStyle(
-                                                    color: AppColor.darker),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
+                                                    color: AppColor.darker)),
+                                            Spacer(),
+                                            Icon(Icons.people_alt_rounded,
+                                                color: AppColor.darker,
+                                                size: 18),
+                                            Text(
+                                                course.currentEnrollment
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    color: AppColor.darker)),
+                                            Spacer(),
+                                            Icon(Icons.schedule,
+                                                color: AppColor.darker,
+                                                size: 18),
+                                            Text(
+                                              Helpers.formatHoursAndMinutes(
+                                                  context,
+                                                  course.totalWatchTime ?? 0),
+                                              style: TextStyle(
+                                                  color: AppColor.darker),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                )
-              ],
-            ),
-            onRefresh: _refreshData));
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              )
+            ],
+          )),
+    );
   }
 
   Widget _buildSearchBar() {

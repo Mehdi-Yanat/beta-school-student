@@ -162,8 +162,9 @@ class Course {
   final String? statusNote;
   final Teacher teacher;
   final String? subject;
+  final double? rating;
 
-  Course({
+  Course( {
     required this.id,
     required this.handle,
     required this.title,
@@ -188,6 +189,7 @@ class Course {
     this.statusNote,
     this.subject,
     required this.teacher,
+    this.rating,
   });
 
   factory Course.fromJson(Map<String, dynamic> json) {
@@ -227,6 +229,7 @@ class Course {
         statusNote: json['statusNote'],
         subject: json['subject'],
         teacher: Teacher.fromJson(json['teacher']),
+        rating: json['rating'] != null ? json['rating'].toDouble() : null,
       );
     } else {
       return Course(

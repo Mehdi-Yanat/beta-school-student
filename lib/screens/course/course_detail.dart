@@ -10,6 +10,7 @@ import 'package:online_course/widgets/CardFb1.dart';
 import 'package:online_course/widgets/CardFb3.dart';
 import 'package:online_course/widgets/DialogFb3.dart';
 import 'package:online_course/widgets/LikeListTile.dart';
+import 'package:online_course/widgets/StarRating.dart';
 import 'package:online_course/widgets/course_image.dart';
 import 'package:online_course/widgets/gradient_button.dart';
 import 'package:provider/provider.dart';
@@ -795,10 +796,10 @@ class CourseDetailScreen extends StatelessWidget {
           style: TextStyle(color: AppColor.mainColor),
         ),
         SizedBox(width: 16),
-        Icon(Icons.star, size: 16, color: AppColor.yellow),
+        StarRating(color: AppColor.yellow, size: 28, rating: rating * 5, starCount: 5,),
         SizedBox(width: 4),
-        Text(rating.toStringAsFixed(1),
-            style: TextStyle(color: AppColor.mainColor)),
+        Text((rating * 5).toStringAsFixed(1),
+            style: TextStyle(color: AppColor.mainColor, fontSize: 21)),
       ],
     );
   }

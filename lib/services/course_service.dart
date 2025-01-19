@@ -247,4 +247,41 @@ class CourseService {
       return false;
     }
   }
+
+  static Future<Map<String, dynamic>?> checkChapterIsRated(int chapterId) async {
+    try {
+      final response = await _client.get(
+        Uri.parse(
+            '$baseUrl/chapter/rating/check/${chapterId}?lng=${getCurrentLocale()}'),
+        headers: _headers()
+      );
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return data;
+      }
+      return null;
+    } catch (e) {
+      print('Error updating course progress: $e');
+      throw e;
+    }
+  }
+
+  static Future<Map<String, dynamic>?> rateChapter(int chapterId, bool rating) async {
+    try {
+      final response = await _client.put(
+          Uri.parse(
+              '$baseUrl/chapter/rating/${chapterId}/${rating? 1 : 0}?lng=${getCurrentLocale()}'),
+          headers: _headers()
+      );
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return data;
+      }
+      return null;
+    } catch (e) {
+      print('Error updating course progress: $e');
+      throw e;
+    }
+
+  }
 }
