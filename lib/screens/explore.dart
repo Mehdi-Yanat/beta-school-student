@@ -348,9 +348,11 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                                   size: 18),
                                             if (course.rating != null &&
                                                 course.rating! * 5 > 2.3)
-                                            Text((course.rating! * 5).toString(),
-                                                style: TextStyle(
-                                                    color: AppColor.darker)),
+                                              Text(
+                                                  (course.rating! * 5)
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                      color: AppColor.darker)),
                                             Spacer(),
                                             Icon(Icons.people_alt_rounded,
                                                 color: AppColor.darker,
