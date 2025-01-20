@@ -1,3 +1,5 @@
+import 'package:online_course/models/chapter.dart' as ChapterModel;
+
 class MyCourse {
   final int id;
   final DateTime enrolledAt;
@@ -67,7 +69,7 @@ class CourseIcon {
   }
 }
 
-class Chapter {
+class Chapter extends ChapterModel.Chapter {
   final int id;
   final String title;
   final String description;
@@ -81,7 +83,17 @@ class Chapter {
       required this.views,
       required this.description,
       required this.duration,
-      this.rating});
+      this.rating,
+      required super.createdAt,
+      required super.updatedAt,
+      required super.thumbnail})
+      : super(
+            id: id,
+            title: title,
+            description: description,
+            duration: duration,
+            views: views,
+            rating: rating);
 
   factory Chapter.fromJson(Map<String, dynamic> json) {
     return Chapter(
@@ -90,7 +102,14 @@ class Chapter {
         description: json['description'] ?? '',
         rating: json['rating'],
         views: json['views'],
-        duration: json['duration']);
+        duration: json['duration'],
+        createdAt: json['createdAt'] != null
+            ? DateTime.parse(json['createdAt'])
+            : DateTime.now(),
+        updatedAt: json['updatedAt'] != null
+            ? DateTime.parse(json['updatedAt'])
+            : DateTime.now(),
+        thumbnail: ChapterModel.Thumbnail.fromJson(json['thumbnail']));
   }
 }
 

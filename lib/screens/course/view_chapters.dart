@@ -66,6 +66,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
       // Or any other provider updates
       _fetchChapterData(widget.chapterId.toString());
       courseProvider.setCurrentChapter(widget.chapter);
+      courseProvider.checkChapterIsRated(widget.chapterId, context);
     });
 
     // Initialize TabController for the TabBar
@@ -421,8 +422,9 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
+                                      if (courseProvider.currentChapter != null)
                                       Text(
-                                        courseProvider.currentChapter!.title,
+                                        courseProvider.currentChapter?.title ?? "",
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
                                           fontSize: 26,
@@ -430,9 +432,10 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                           color: AppColor.darker,
                                         ),
                                       ),
+                                      if (courseProvider.currentChapter != null)
                                       Text(
                                         courseProvider
-                                            .currentChapter!.description,
+                                            .currentChapter?.description ?? "",
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
                                           fontSize: 16,
@@ -444,6 +447,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                       SizedBox(
                                         height: 30,
                                       ),
+                                      if (courseProvider.currentChapter != null)
                                       if (courseProvider
                                               .currentChapter?.rating !=
                                           null)
@@ -471,6 +475,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                             ),
                                           ],
                                         ),
+                                      if (courseProvider.currentChapter != null)
                                       Row(
                                         children: [
                                           Text(
@@ -491,7 +496,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                             width: 5,
                                           ),
                                           Text(
-                                            courseProvider.currentChapter!.views.toString() +
+                                            courseProvider.currentChapter?.views.toString() ?? " " +
                                                 " " +
                                                 AppLocalizations.of(context)!
                                                     .a_view,
@@ -499,6 +504,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                           )
                                         ],
                                       ),
+                                      if (courseProvider.currentChapter != null)
                                       Row(
                                         children: [
                                           Text(
@@ -522,7 +528,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                             Helpers.formatHoursAndMinutes(
                                                 context,
                                                 courseProvider
-                                                    .currentChapter!.duration),
+                                                    .currentChapter?.duration ?? 0),
                                             style: TextStyle(fontSize: 16),
                                           )
                                         ],
