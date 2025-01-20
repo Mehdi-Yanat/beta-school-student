@@ -855,7 +855,12 @@ class CourseDetailScreen extends StatelessWidget {
           style: TextStyle(color: AppColor.mainColor),
         ),
         SizedBox(width: 16),
-        StarRating(color: AppColor.yellow, size: 28, rating: rating * 5, starCount: 5,),
+        StarRating(
+          color: AppColor.yellow,
+          size: 28,
+          rating: rating * 5,
+          starCount: 5,
+        ),
         SizedBox(width: 4),
         Text((rating * 5).toStringAsFixed(1),
             style: TextStyle(color: AppColor.mainColor, fontSize: 21)),

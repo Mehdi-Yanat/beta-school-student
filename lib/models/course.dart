@@ -164,7 +164,7 @@ class Course {
   final String? subject;
   final double? rating;
 
-  Course( {
+  Course({
     required this.id,
     required this.handle,
     required this.title,

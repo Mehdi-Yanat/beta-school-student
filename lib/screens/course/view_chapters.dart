@@ -464,8 +464,10 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                               size: 22,
                                             ),
                                             Text(
-                                              ((courseProvider
-                                                  .currentChapter!.rating ?? 0) * 5)
+                                              ((courseProvider.currentChapter!
+                                                              .rating ??
+                                                          0) *
+                                                      5)
                                                   .toStringAsFixed(1),
                                               style: TextStyle(fontSize: 16),
                                             ),
@@ -491,7 +493,8 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                             width: 5,
                                           ),
                                           Text(
-                                            courseProvider.currentChapter!.views.toString() +
+                                            courseProvider.currentChapter!.views
+                                                    .toString() +
                                                 " " +
                                                 AppLocalizations.of(context)!
                                                     .a_view,
@@ -565,19 +568,27 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                               if (index == 0) {
                                                 await courseProvider
                                                     .rateChapter(
-                                                    courseProvider
-                                                        .currentChapter!.id,
+                                                        courseProvider
+                                                            .currentChapter!.id,
                                                         true,
                                                         context);
-                                                await courseProvider.checkChapterIsRated(courseProvider.currentChapter!.id, context);
+                                                await courseProvider
+                                                    .checkChapterIsRated(
+                                                        courseProvider
+                                                            .currentChapter!.id,
+                                                        context);
                                               } else {
                                                 await courseProvider
                                                     .rateChapter(
-                                                    courseProvider
-                                                        .currentChapter!.id,
+                                                        courseProvider
+                                                            .currentChapter!.id,
                                                         false,
                                                         context);
-                                                await courseProvider.checkChapterIsRated(courseProvider.currentChapter!.id, context);
+                                                await courseProvider
+                                                    .checkChapterIsRated(
+                                                        courseProvider
+                                                            .currentChapter!.id,
+                                                        context);
                                               }
                                             }),
                                       ),
@@ -631,7 +642,9 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                                     'chapterId': chapter.id,
                                                     'title': chapter.title
                                                   });
-                                                  courseProvider.checkChapterIsRated(chapter.id, context);
+                                                  courseProvider
+                                                      .checkChapterIsRated(
+                                                          chapter.id, context);
                                                 });
                                                 await _changeVideo(
                                                     chapterData['url']);

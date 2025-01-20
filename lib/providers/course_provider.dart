@@ -124,8 +124,7 @@ class CourseProvider with ChangeNotifier {
     }
   }
 
-  Future<void> checkChapterIsRated(
-      int chapterId, BuildContext context) async {
+  Future<void> checkChapterIsRated(int chapterId, BuildContext context) async {
     final localizations = AppLocalizations.of(context)!; // Get localizations
     _isLoadingChapter = true;
     notifyListeners();

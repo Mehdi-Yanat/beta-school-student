@@ -62,13 +62,12 @@ class LikeListTile extends StatelessWidget {
           SizedBox(
             width: 8,
           ),
-          if(subtitle2 != null)
+          if (subtitle2 != null)
             Icon(Icons.star_rounded, color: color, size: 20),
           SizedBox(
             width: 3,
           ),
-          if(subtitle2 != null)
-            Text(subtitle2!)
+          if (subtitle2 != null) Text(subtitle2!)
         ],
       ),
       trailing: Icon(
