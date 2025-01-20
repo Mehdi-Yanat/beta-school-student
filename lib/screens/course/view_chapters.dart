@@ -641,6 +641,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                                 });
                                                 await _changeVideo(
                                                     chapterData['url']);
+                                                _tabController.animateTo(0);
                                               } else {
                                                 SnackBarHelper
                                                     .showErrorSnackBar(
