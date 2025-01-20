@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class ToggleIconBtnsFb1 extends StatefulWidget {
   final List<Icon> icons;
+  final List<bool> whichSelected;
   final Function(int) selected;
   final Color selectedColor;
   final bool multipleSelectionsAllowed;
@@ -10,6 +11,7 @@ class ToggleIconBtnsFb1 extends StatefulWidget {
   ToggleIconBtnsFb1(
       {required this.icons,
       required this.selected,
+      this.whichSelected = const [],
       this.selectedColor = const Color(0xFF6200EE),
       this.stateContained = true,
       this.canUnToggle = false,
@@ -24,7 +26,11 @@ class _ToggleIconBtnsFb1State extends State<ToggleIconBtnsFb1> {
   late List<bool> isSelected = [];
   @override
   void initState() {
-    widget.icons.forEach((e) => isSelected.add(false));
+    if (widget.whichSelected.length == 0) {
+      widget.icons.forEach((e) => isSelected.add(false));
+    } else {
+      widget.whichSelected.forEach((e) => isSelected.add(e));
+    }
     super.initState();
   }
 

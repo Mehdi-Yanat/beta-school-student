@@ -90,6 +90,7 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
         courseProvider.fetchChaptersForCourse(widget.courseId, context);
         //_fetchChapterData(widget.chapterId.toString());
         courseProvider.setCurrentChapter(widget.chapter);
+        courseProvider.checkChapterIsRated(widget.chapterId, context);
       });
       _isDataFetched = true;
     }
@@ -463,19 +464,17 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                               size: 22,
                                             ),
                                             Text(
-                                              courseProvider
-                                                  .currentChapter!.rating
-                                                  .toString(),
+                                              ((courseProvider.currentChapter!
+                                                              .rating ??
+                                                          0) *
+                                                      5)
+                                                  .toStringAsFixed(1),
                                               style: TextStyle(fontSize: 16),
                                             ),
                                           ],
                                         ),
                                       Row(
                                         children: [
-                                          Icon(
-                                            Icons.remove_red_eye_rounded,
-                                            color: AppColor.primary,
-                                          ),
                                           Text(
                                             " " +
                                                 AppLocalizations.of(context)!
@@ -485,6 +484,13 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                           ),
                                           const SizedBox(
                                             width: 12,
+                                          ),
+                                          Icon(
+                                            Icons.remove_red_eye_rounded,
+                                            color: AppColor.primary,
+                                          ),
+                                          const SizedBox(
+                                            width: 5,
                                           ),
                                           Text(
                                             courseProvider.currentChapter!.views
@@ -498,10 +504,6 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                       ),
                                       Row(
                                         children: [
-                                          Icon(
-                                            Icons.timelapse_rounded,
-                                            color: AppColor.primary,
-                                          ),
                                           Text(
                                             " " +
                                                 AppLocalizations.of(context)!
@@ -511,6 +513,13 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                           ),
                                           const SizedBox(
                                             width: 12,
+                                          ),
+                                          Icon(
+                                            Icons.timelapse_rounded,
+                                            color: AppColor.primary,
+                                          ),
+                                          const SizedBox(
+                                            width: 5,
                                           ),
                                           Text(
                                             Helpers.formatHoursAndMinutes(
@@ -537,16 +546,49 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                       Container(
                                         alignment: Alignment.bottomCenter,
                                         child: ToggleIconBtnsFb1(
+                                            whichSelected: courseProvider
+                                                    .currentChapterRating
+                                                    .isEmpty
+                                                ? []
+                                                : courseProvider
+                                                            .currentChapterRating[
+                                                        'isRated']
+                                                    ? courseProvider
+                                                                .currentChapterRating[
+                                                            'liked']
+                                                        ? [true, false]
+                                                        : [false, true]
+                                                    : [],
                                             selectedColor: AppColor.blue,
                                             icons: List<Icon>.from([
                                               Icon(Icons.thumb_up_rounded),
                                               Icon(Icons.thumb_down)
                                             ]),
-                                            selected: (index) {
+                                            selected: (index) async {
                                               if (index == 0) {
-                                                //TODO: send a like
+                                                await courseProvider
+                                                    .rateChapter(
+                                                        courseProvider
+                                                            .currentChapter!.id,
+                                                        true,
+                                                        context);
+                                                await courseProvider
+                                                    .checkChapterIsRated(
+                                                        courseProvider
+                                                            .currentChapter!.id,
+                                                        context);
                                               } else {
-                                                //TODO: send a dislike
+                                                await courseProvider
+                                                    .rateChapter(
+                                                        courseProvider
+                                                            .currentChapter!.id,
+                                                        false,
+                                                        context);
+                                                await courseProvider
+                                                    .checkChapterIsRated(
+                                                        courseProvider
+                                                            .currentChapter!.id,
+                                                        context);
                                               }
                                             }),
                                       ),
@@ -577,6 +619,11 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                                     .formatHoursAndMinutes(
                                                         context,
                                                         chapter.duration),
+                                                subtitle2:
+                                                    chapter.rating != null
+                                                        ? (chapter.rating! * 5)
+                                                            .toStringAsFixed(1)
+                                                        : null,
                                               )),
                                           onTap: () async {
                                             try {
@@ -595,6 +642,9 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                                     'chapterId': chapter.id,
                                                     'title': chapter.title
                                                   });
+                                                  courseProvider
+                                                      .checkChapterIsRated(
+                                                          chapter.id, context);
                                                 });
                                                 await _changeVideo(
                                                     chapterData['url']);
