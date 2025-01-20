@@ -542,7 +542,7 @@ class _HomePageState extends State<HomePage> {
                     AppLocalizations.of(context)!.dzd,
                 "discountPercentage": course.discount.toString(),
                 "session":
-                    "${course.chapters != null ? course.chapters?.length : 0} ${AppLocalizations.of(context)!.courses}",
+                    "${course.chapters != null ? course.chapters?.length : 0} ${AppLocalizations.of(context)!.chapters_to_count}",
                 "duration": "${formatedDurationMinutes}",
                 "teacherName": "${fullName}",
                 "teacherProfilePic": course.teacher.user.profilePic?.url,
