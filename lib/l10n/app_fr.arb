@@ -415,5 +415,7 @@
   "years_experience": "Années d'expérience",
   "you_can_learn_at_any_pace": "Vous pouvez apprendre à votre rythme et progresser selon vos objectifs",
   "you_can_pay_card_or_cash": "Vous pouvez payer par carte ou en espèces",
-  "you_will_have_to_verify_account_again_and_no_access_to_courses": "Vous devrez vérifier votre compte à nouveau et vous n'aurez pas accès aux cours"
+  "you_will_have_to_verify_account_again_and_no_access_to_courses": "Vous devrez vérifier votre compte à nouveau et vous n'aurez pas accès aux cours",
+  "institution_label": "Établissement",
+  "chapters_to_count": "Chapitres"
 }

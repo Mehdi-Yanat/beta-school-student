@@ -23,12 +23,42 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
         context); // Ensure this method is implemented in your provider
   }
 
+  // Search State
+  TextEditingController _searchController = TextEditingController();
+  List<MyCourse> _filteredCourses = [];
+  String _searchQuery = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    setState(() {
+      _searchQuery = _searchController.text.toLowerCase();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final localizations =
         AppLocalizations.of(context); // Localizations instance
     final courseProvider =
         Provider.of<CourseProvider>(context); // Access CourseProvider
+    final courses = courseProvider.myCourses;
+    // Filter courses based on search query
+    _filteredCourses = _searchQuery.isEmpty
+        ? courses
+        : courses.where((course) {
+      return course.course.title.toLowerCase().contains(_searchQuery);
+    }).toList();
 
     return RefreshIndicator(
       onRefresh: _refreshCourses,
@@ -37,6 +67,36 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
           appBar: CustomAppBar(title: localizations!.my_courses_title),
           body: Column(
             children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: localizations.search_hint, // Localization key
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(style: BorderStyle.solid, color: AppColor.brandMain),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12), // Optional
+                      borderSide: BorderSide(
+                        color: AppColor.brandMain, // Color when not focused
+                        width: 2.0, // Border width
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12), // Optional
+                      borderSide: BorderSide(
+                        color: AppColor.primary, // Color when focused
+                        width: 2.0, // Border width when focused
+                      ),
+                    ),
+                    filled: true,
+                    fillColor: AppColor.cardColor,
+                  ),
+                ),
+              ),
               // For now, simply display all courses (Disable tabs)
               Expanded(
                 child: courseProvider.isLoading
@@ -45,7 +105,7 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                           color: AppColor.primary,
                         ),
                       )
-                    : courseProvider.myCourses.isEmpty
+                    : courses.isEmpty
                         ? Center(
                             child: Text(
                               localizations.no_courses_message,
@@ -54,7 +114,7 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                             ),
                           )
                         : buildCourseList(
-                            localizations, courseProvider.myCourses),
+                            localizations, _filteredCourses),
               ),
             ],
           )),

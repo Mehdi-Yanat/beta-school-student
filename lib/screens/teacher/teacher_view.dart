@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:online_course/providers/teacher_provider.dart';
 import 'package:online_course/screens/course/course_detail.dart';
 import 'package:online_course/theme/color.dart';
+import 'package:online_course/utils/translation.dart';
 import 'package:online_course/widgets/appbar.dart';
 import 'package:online_course/widgets/course_card.dart';
 import 'package:provider/provider.dart';
-import 'package:online_course/utils/translation.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../widgets/CardFb1.dart';
 import '../../widgets/StarRating.dart'; // Import localization
@@ -47,19 +47,9 @@ class TeacherView extends StatelessWidget {
             body: SingleChildScrollView(
               child: Column(
                 children: [
-                  // Profile Header
                   _buildProfileHeader(context, user, teacher['teacher']),
-
-                  // Subject & Institution
-                  _buildTeacherInfo(context, teacher['teacher']),
-
-                  // About Teacher Section
                   _buildAboutTeacherSection(context, description),
-                  //
-                  // // Stats Section
-                  // _buildStatsSection(context, teacher['teacher'], courses.length),
-
-                  // Course Grid
+                  _buildTeacherInfo(context, teacher['teacher']),
                   _buildCourseGrid(context, courses, courses.length),
 
                   SizedBox(height: 16),
@@ -142,30 +132,32 @@ class TeacherView extends StatelessWidget {
               const SizedBox(
                 height: 5,
               ),
-              if (teacher['rating'] ?? 0 * 5 > 3)
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    StarRating(
-                      color: AppColor.yellow,
-                      starCount: 5,
-                      rating: teacher['rating'] * 5,
-                      size: 28,
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      (teacher['rating'] * 5).toString(),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  StarRating(
+                    color: AppColor.yellow,
+                    starCount: 5,
+                    rating: (teacher['rating'] ?? 0) * 5,
+                    size: 28,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 3.0),
+                    child: Text(
+                      ((teacher['rating'] ?? 0) * 5).toStringAsFixed(1),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 18,
                       ),
-                    )
-                  ],
-                )
+                    ),
+                  )
+                ],
+              )
             ],
           ),
         ],
@@ -230,7 +222,7 @@ class TeacherView extends StatelessWidget {
             style: const TextStyle(
               fontSize: 19,
               fontWeight: FontWeight.w600,
-              color: AppColor.primaryTextContrast,
+              color: AppColor.darkBackground,
             ),
           ),
           const SizedBox(height: 8),
@@ -240,7 +232,7 @@ class TeacherView extends StatelessWidget {
               textAlign: TextAlign.start,
               description,
               style: const TextStyle(
-                color: AppColor.primaryTextContrast,
+                color: AppColor.darkBackground,
                 fontWeight: FontWeight.w400,
                 height: 1.5,
               ),
@@ -294,6 +286,10 @@ class TeacherView extends StatelessWidget {
           Row(
             children: [
               Icon(Icons.business, color: AppColor.mainColor),
+              Text(
+                AppLocalizations.of(context)!.institution_label + ": ",
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
               SizedBox(width: 8),
               Text(
                 teacher['institution'] ??

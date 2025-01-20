@@ -542,7 +542,7 @@ class _HomePageState extends State<HomePage> {
                     AppLocalizations.of(context)!.dzd,
                 "discountPercentage": course.discount.toString(),
                 "session":
-                    "${course.chapters != null ? course.chapters?.length : 0} ${AppLocalizations.of(context)!.courses}",
+                    "${course.chapters != null ? course.chapters?.length : 0} ${AppLocalizations.of(context)!.chapters_to_count}",
                 "duration": "${formatedDurationMinutes}",
                 "teacherName": "${fullName}",
                 "teacherProfilePic": course.teacher.user.profilePic?.url,
@@ -633,7 +633,7 @@ class _HomePageState extends State<HomePage> {
                     "totalEnrolledStudents":
                         teacher.stats.totalEnrolledStudents,
                     "experience": "${teacher.yearsOfExperience} years",
-                    "review": "${teacher.stats.rating * 5}",
+                    "review": "${(teacher.stats.rating * 5).toStringAsFixed(1)}",
                   },
                 ),
               );
