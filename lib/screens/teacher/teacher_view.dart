@@ -142,7 +142,7 @@ class TeacherView extends StatelessWidget {
               const SizedBox(
                 height: 5,
               ),
-              if (teacher['rating'] ?? 0 * 5 > 3)
+              if (((teacher['rating'] ?? 0) * 5) < 3)
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -150,18 +150,21 @@ class TeacherView extends StatelessWidget {
                     StarRating(
                       color: AppColor.yellow,
                       starCount: 5,
-                      rating: teacher['rating'] * 5,
+                      rating: (teacher['rating'] ?? 0) * 5,
                       size: 28,
                     ),
                     const SizedBox(
                       width: 10,
                     ),
-                    Text(
-                      (teacher['rating'] * 5).toString(),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
+                    Padding(
+                      padding: const EdgeInsets.only(top: 3.0),
+                      child: Text(
+                        ((teacher['rating'] ?? 0) * 5).toStringAsFixed(1),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                        ),
                       ),
                     )
                   ],
