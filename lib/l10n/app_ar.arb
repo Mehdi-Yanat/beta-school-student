@@ -418,5 +418,6 @@
   "invalid_algerian_phone_number": "رقم الهاتف الجزائري غير صحيح",
   "profile_photo_not_necessary": "الصورة ليست ضرورية",
   "take_photo": "التقط صورة",
-  "views": "المشاهدات"
+  "views": "المشاهدات",
+  "institution_label": "اسم المؤسسة"
 }
