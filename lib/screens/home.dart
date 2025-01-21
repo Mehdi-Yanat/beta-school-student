@@ -633,7 +633,8 @@ class _HomePageState extends State<HomePage> {
                     "totalEnrolledStudents":
                         teacher.stats.totalEnrolledStudents,
                     "experience": "${teacher.yearsOfExperience} years",
-                    "review": "${(teacher.stats.rating * 5).toStringAsFixed(1)}",
+                    "review":
+                        "${(teacher.stats.rating * 5).toStringAsFixed(1)}",
                   },
                 ),
               );

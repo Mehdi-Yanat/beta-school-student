@@ -423,118 +423,127 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
                                         CrossAxisAlignment.start,
                                     children: [
                                       if (courseProvider.currentChapter != null)
-                                      Text(
-                                        courseProvider.currentChapter?.title ?? "",
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                          fontSize: 26,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColor.darker,
+                                        Text(
+                                          courseProvider
+                                                  .currentChapter?.title ??
+                                              "",
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                            fontSize: 26,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColor.darker,
+                                          ),
                                         ),
-                                      ),
                                       if (courseProvider.currentChapter != null)
-                                      Text(
-                                        courseProvider
-                                            .currentChapter?.description ?? "",
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColor.mainColor
-                                              .withValues(alpha: 0.75),
+                                        Text(
+                                          courseProvider.currentChapter
+                                                  ?.description ??
+                                              "",
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColor.mainColor
+                                                .withValues(alpha: 0.75),
+                                          ),
                                         ),
-                                      ),
                                       SizedBox(
                                         height: 30,
                                       ),
                                       if (courseProvider.currentChapter != null)
-                                      if (courseProvider
-                                              .currentChapter?.rating !=
-                                          null)
+                                        if (courseProvider
+                                                .currentChapter?.rating !=
+                                            null)
+                                          Row(
+                                            children: [
+                                              Text(
+                                                AppLocalizations.of(context)!
+                                                        .chapter_rating +
+                                                    ": ",
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                              StarRating(
+                                                color: AppColor.yellow,
+                                                starCount: 5,
+                                                rating: courseProvider
+                                                        .currentChapter!
+                                                        .rating! *
+                                                    5,
+                                                size: 22,
+                                              ),
+                                              Text(
+                                                ((courseProvider.currentChapter!
+                                                                .rating ??
+                                                            0) *
+                                                        5)
+                                                    .toStringAsFixed(1),
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ],
+                                          ),
+                                      if (courseProvider.currentChapter != null)
                                         Row(
                                           children: [
                                             Text(
-                                              AppLocalizations.of(context)!
-                                                      .chapter_rating +
+                                              " " +
+                                                  AppLocalizations.of(context)!
+                                                      .chapter_views +
                                                   ": ",
                                               style: TextStyle(fontSize: 16),
                                             ),
-                                            StarRating(
-                                              color: AppColor.yellow,
-                                              starCount: 5,
-                                              rating: courseProvider
-                                                      .currentChapter!.rating! *
-                                                  5,
-                                              size: 22,
+                                            const SizedBox(
+                                              width: 12,
+                                            ),
+                                            Icon(
+                                              Icons.remove_red_eye_rounded,
+                                              color: AppColor.primary,
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
                                             ),
                                             Text(
-                                              ((courseProvider.currentChapter!
-                                                              .rating ??
-                                                          0) *
-                                                      5)
-                                                  .toStringAsFixed(1),
+                                              courseProvider
+                                                      .currentChapter?.views
+                                                      .toString() ??
+                                                  " " +
+                                                      " " +
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .a_view,
                                               style: TextStyle(fontSize: 16),
-                                            ),
+                                            )
                                           ],
                                         ),
                                       if (courseProvider.currentChapter != null)
-                                      Row(
-                                        children: [
-                                          Text(
-                                            " " +
-                                                AppLocalizations.of(context)!
-                                                    .chapter_views +
-                                                ": ",
-                                            style: TextStyle(fontSize: 16),
-                                          ),
-                                          const SizedBox(
-                                            width: 12,
-                                          ),
-                                          Icon(
-                                            Icons.remove_red_eye_rounded,
-                                            color: AppColor.primary,
-                                          ),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            courseProvider.currentChapter?.views.toString() ?? " " +
-                                                " " +
-                                                AppLocalizations.of(context)!
-                                                    .a_view,
-                                            style: TextStyle(fontSize: 16),
-                                          )
-                                        ],
-                                      ),
-                                      if (courseProvider.currentChapter != null)
-                                      Row(
-                                        children: [
-                                          Text(
-                                            " " +
-                                                AppLocalizations.of(context)!
-                                                    .watch_time +
-                                                ": ",
-                                            style: TextStyle(fontSize: 16),
-                                          ),
-                                          const SizedBox(
-                                            width: 12,
-                                          ),
-                                          Icon(
-                                            Icons.timelapse_rounded,
-                                            color: AppColor.primary,
-                                          ),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            Helpers.formatHoursAndMinutes(
-                                                context,
-                                                courseProvider
-                                                    .currentChapter?.duration ?? 0),
-                                            style: TextStyle(fontSize: 16),
-                                          )
-                                        ],
-                                      ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              " " +
+                                                  AppLocalizations.of(context)!
+                                                      .watch_time +
+                                                  ": ",
+                                              style: TextStyle(fontSize: 16),
+                                            ),
+                                            const SizedBox(
+                                              width: 12,
+                                            ),
+                                            Icon(
+                                              Icons.timelapse_rounded,
+                                              color: AppColor.primary,
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(
+                                              Helpers.formatHoursAndMinutes(
+                                                  context,
+                                                  courseProvider.currentChapter
+                                                          ?.duration ??
+                                                      0),
+                                              style: TextStyle(fontSize: 16),
+                                            )
+                                          ],
+                                        ),
                                       SizedBox(
                                         height: 60,
                                       ),
