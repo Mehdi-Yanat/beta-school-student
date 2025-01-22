@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:online_course/providers/auth_provider.dart';
 import 'package:online_course/providers/course_provider.dart';
 import 'package:online_course/providers/teacher_provider.dart';
@@ -28,22 +29,27 @@ Future<void> main() async {
   Logger.enable();
   Helpers.initTimeAgoLocales();
   // Initialize the provider before running the app
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) => TeacherProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => CourseProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => AuthProvider(),
-        )
-      ],
-      child: MyApp(),
-    ),
-  );
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]).then((_) {
+    runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => TeacherProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => CourseProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => AuthProvider(),
+          )
+        ],
+        child: MyApp(),
+      ),
+    );
+  });
 }
 
 class MyApp extends StatefulWidget {

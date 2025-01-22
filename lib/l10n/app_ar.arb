@@ -135,7 +135,7 @@
   "email_verification_in_progress": "جاري التحقق من البريد الإلكتروني...",
   "email_verification_required": "يرجى التحقق من عنوان بريدك الإلكتروني للوصول إلى جميع الميزات ، بما في ذلك شراء الدورات التدريبية.",
   "email_verification_success": "تم التحقق من البريد الإلكتروني بنجاح.",
-  "enrolled_students": "مسجلون",
+  "enrolled_students": "عدد المسجلون",
   "enrollment_error": "حدث خطأ أثناء التسجيل في الكورس",
   "enrollment_error_message": "فشل التسجيل في الدورة. يُرجى إعادة المحاولة لاحقًا.",
   "enrollment_payment_error": "فشل التسجيل، لم يتم توفير رابط الدفع",
@@ -203,7 +203,7 @@
   "no_video_available": "لا يوجد فيديو متاح.",
   "not_specified": "غير محدد",
   "notifications_title": "الإشعارات",
-  "number_of_chapters": "الفصول",
+  "number_of_chapters": "عدد الفصول",
   "password": "كلمة المرور",
   "password_hint": "كلمة المرور",
   "password_length": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
@@ -420,5 +420,6 @@
   "take_photo": "التقط صورة",
   "views": "المشاهدات",
   "institution_label": "اسم المؤسسة",
-  "chapters_to_count": "فصول"
+  "chapters_to_count": "فصول",
+  "free_preview": "مقتطف مجاني"
 }

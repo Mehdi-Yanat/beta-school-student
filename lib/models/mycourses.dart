@@ -109,7 +109,7 @@ class Chapter extends ChapterModel.Chapter {
         updatedAt: json['updatedAt'] != null
             ? DateTime.parse(json['updatedAt'])
             : DateTime.now(),
-        thumbnail: ChapterModel.Thumbnail.fromJson(json['thumbnail']));
+        thumbnail: ChapterModel.File.fromJson(json['thumbnail']));
   }
 }
 
