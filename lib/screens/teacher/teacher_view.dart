@@ -51,7 +51,6 @@ class TeacherView extends StatelessWidget {
                   _buildAboutTeacherSection(context, description),
                   _buildTeacherInfo(context, teacher['teacher']),
                   _buildCourseGrid(context, courses, courses.length),
-
                   SizedBox(height: 16),
                 ],
               ),

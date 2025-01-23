@@ -77,9 +77,23 @@ class LikeListTile extends StatelessWidget {
           clipBehavior: Clip.none,
           children: [
             if (!hasPreview)
-            Positioned(left: 30, top: 2, child: Icon(Icons.lock, size: 19, color: Colors.grey,)),
+              Positioned(
+                  left: 30,
+                  top: 2,
+                  child: Icon(
+                    Icons.lock,
+                    size: 19,
+                    color: Colors.grey,
+                  )),
             if (hasPreview)
-              Positioned(left: 30, top: 2, child: Icon(Icons.lock_open_rounded, size: 19, color: AppColor.green,)),
+              Positioned(
+                  left: 30,
+                  top: 2,
+                  child: Icon(
+                    Icons.lock_open_rounded,
+                    size: 19,
+                    color: AppColor.green,
+                  )),
             Icon(
               Icons.remove_red_eye_sharp,
               color: AppColor.primary,

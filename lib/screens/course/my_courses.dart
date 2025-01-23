@@ -57,8 +57,8 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
     _filteredCourses = _searchQuery.isEmpty
         ? courses
         : courses.where((course) {
-      return course.course.title.toLowerCase().contains(_searchQuery);
-    }).toList();
+            return course.course.title.toLowerCase().contains(_searchQuery);
+          }).toList();
 
     return RefreshIndicator(
       onRefresh: _refreshCourses,
@@ -76,7 +76,8 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                     prefixIcon: Icon(Icons.search),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(style: BorderStyle.solid, color: AppColor.brandMain),
+                      borderSide: BorderSide(
+                          style: BorderStyle.solid, color: AppColor.brandMain),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12), // Optional
@@ -113,8 +114,7 @@ class _MyCourseScreenState extends State<MyCourseScreen> {
                               style: TextStyle(color: AppColor.mainColor),
                             ),
                           )
-                        : buildCourseList(
-                            localizations, _filteredCourses),
+                        : buildCourseList(localizations, _filteredCourses),
               ),
             ],
           )),

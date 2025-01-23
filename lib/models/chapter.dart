@@ -35,7 +35,9 @@ class Chapter {
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
       thumbnail: File.fromJson(json['thumbnail']),
-      previewVideoFile: json['previewVideoFile'] != null ? File.fromJson(json['previewVideoFile']) : null,
+      previewVideoFile: json['previewVideoFile'] != null
+          ? File.fromJson(json['previewVideoFile'])
+          : null,
       views: json['views'],
       rating: json['rating']?.toDouble(),
       attachments: (json['attachments'] as List?)

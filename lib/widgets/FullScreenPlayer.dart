@@ -5,7 +5,8 @@ import 'package:flutter/services.dart';
 class FullScreenPlayer extends StatefulWidget {
   final VideoPlayerController controller;
 
-  const FullScreenPlayer({Key? key, required this.controller}) : super(key: key);
+  const FullScreenPlayer({Key? key, required this.controller})
+      : super(key: key);
 
   @override
   State<FullScreenPlayer> createState() => _FullScreenPlayerState();
@@ -53,7 +54,8 @@ class _FullScreenPlayerState extends State<FullScreenPlayer> {
           Center(
             // Center the video on the screen
             child: AspectRatio(
-              aspectRatio: widget.controller.value.aspectRatio, // Ensure proper aspect ratio
+              aspectRatio: widget
+                  .controller.value.aspectRatio, // Ensure proper aspect ratio
               child: VideoPlayer(widget.controller),
             ),
           ),
@@ -76,7 +78,9 @@ class _FullScreenPlayerState extends State<FullScreenPlayer> {
             right: 16,
             child: IconButton(
               icon: Icon(
-                widget.controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                widget.controller.value.isPlaying
+                    ? Icons.pause
+                    : Icons.play_arrow,
                 color: Colors.white,
                 size: 32,
               ),

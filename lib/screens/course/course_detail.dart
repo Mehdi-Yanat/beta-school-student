@@ -276,8 +276,9 @@ class CourseDetailScreen extends StatelessWidget {
                                           // Spacer(),
                                           Expanded(
                                             child: CardFb1(
-                                              text: AppLocalizations.of(context)!
-                                                  .enrolled_students,
+                                              text:
+                                                  AppLocalizations.of(context)!
+                                                      .enrolled_students,
                                               imageUrl:
                                                   "assets/images/students.png",
                                               subtitle:
@@ -286,12 +287,16 @@ class CourseDetailScreen extends StatelessWidget {
                                               onPressed: () {},
                                             ),
                                           ),
-                                          const SizedBox(width: 10,),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
                                           Expanded(
                                             child: CardFb1(
-                                              text: AppLocalizations.of(context)!
-                                                  .number_of_chapters,
-                                              imageUrl: "assets/images/video.png",
+                                              text:
+                                                  AppLocalizations.of(context)!
+                                                      .number_of_chapters,
+                                              imageUrl:
+                                                  "assets/images/video.png",
                                               subtitle: provider
                                                   .courseChapters.length
                                                   .toString(),
@@ -404,30 +409,29 @@ class CourseDetailScreen extends StatelessWidget {
                                                                         color: Colors
                                                                             .white,
                                                                         fontWeight:
-                                                                            FontWeight
-                                                                                .w500),
+                                                                            FontWeight.w500),
                                                                   ),
                                                                 ),
                                                               ),
                                                               Center(
                                                                 child: Padding(
                                                                   padding:
-                                                                  const EdgeInsets
-                                                                      .all(
-                                                                      8.0),
+                                                                      const EdgeInsets
+                                                                          .all(
+                                                                          8.0),
                                                                   child: Text(
                                                                     textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                                      chapter.title,
+                                                                        TextAlign
+                                                                            .center,
+                                                                    chapter
+                                                                        .title,
                                                                     style: TextStyle(
                                                                         fontSize:
-                                                                        17,
+                                                                            17,
                                                                         color: Colors
                                                                             .white,
                                                                         fontWeight:
-                                                                        FontWeight
-                                                                            .w400),
+                                                                            FontWeight.w400),
                                                                   ),
                                                                 ),
                                                               ),
@@ -444,12 +448,15 @@ class CourseDetailScreen extends StatelessWidget {
                                                                 ),
                                                               ),
                                                               Padding(
-                                                                padding: const EdgeInsets
-                                                                    .all(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(
                                                                         15.0),
                                                                 child: Text(
                                                                   maxLines: 3,
-                                                                  overflow: TextOverflow.ellipsis,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
                                                                   chapter
                                                                       .description,
                                                                   textAlign:
