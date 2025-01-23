@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:online_course/theme/gradients.dart';
 
 class DialogFb3 extends StatelessWidget {
   const DialogFb3({
@@ -31,7 +32,7 @@ class DialogFb3 extends StatelessWidget {
         ),
         padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [primaryColor, secondaryColor]),
+            gradient: AppGradients.blueGradient,
             borderRadius: BorderRadius.circular(15.0),
             boxShadow: [
               BoxShadow(

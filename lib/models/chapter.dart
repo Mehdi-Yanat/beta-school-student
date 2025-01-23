@@ -5,7 +5,8 @@ class Chapter {
   final int duration;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final Thumbnail thumbnail;
+  final File thumbnail;
+  final File? previewVideoFile;
   final int views;
   final double? rating;
   final List<Attachment> attachments; // Add attachments field
@@ -20,6 +21,7 @@ class Chapter {
     required this.thumbnail,
     required this.views,
     this.rating,
+    this.previewVideoFile,
     this.attachments = const [], // Default to empty list
     this.chapterViews = const [], // Default to empty list
   });
@@ -32,7 +34,10 @@ class Chapter {
       duration: json['duration'],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
-      thumbnail: Thumbnail.fromJson(json['thumbnail']),
+      thumbnail: File.fromJson(json['thumbnail']),
+      previewVideoFile: json['previewVideoFile'] != null
+          ? File.fromJson(json['previewVideoFile'])
+          : null,
       views: json['views'],
       rating: json['rating']?.toDouble(),
       attachments: (json['attachments'] as List?)
@@ -110,20 +115,20 @@ class FileData {
   }
 }
 
-class Thumbnail {
+class File {
   final int id;
   final String fileName;
   final String url;
 
-  Thumbnail({
+  File({
     required this.id,
     required this.fileName,
     required this.url,
   });
 
   // Factory method to create a Thumbnail from JSON
-  factory Thumbnail.fromJson(Map<String, dynamic> json) {
-    return Thumbnail(
+  factory File.fromJson(Map<String, dynamic> json) {
+    return File(
       id: json['id'],
       fileName: json['fileName'],
       url: json['url'],

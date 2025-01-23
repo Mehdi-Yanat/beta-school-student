@@ -1,5 +1,6 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Localization
 import 'package:online_course/services/student_service.dart';
 import 'package:online_course/widgets/StarRating.dart';
@@ -184,6 +185,14 @@ class _ViewChapterScreenState extends State<ViewChapterScreen>
           looping: false,
           allowFullScreen: true,
           allowMuting: true,
+          deviceOrientationsOnEnterFullScreen: [
+            DeviceOrientation.landscapeRight,
+            DeviceOrientation.landscapeLeft,
+          ],
+          deviceOrientationsAfterFullScreen: [
+            DeviceOrientation.portraitUp,
+            DeviceOrientation.portraitDown,
+          ],
           materialProgressColors: ChewieProgressColors(
             playedColor: AppColor.primary,
             handleColor: AppColor.primary,

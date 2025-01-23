@@ -7,7 +7,6 @@ import '../models/course.dart' as Course;
 import '../models/mycourses.dart' as MyCourse;
 import '../services/course_service.dart';
 import '../services/student_service.dart';
-import '../utils/helper.dart';
 import '../widgets/snackbar.dart';
 
 class CourseProvider with ChangeNotifier {

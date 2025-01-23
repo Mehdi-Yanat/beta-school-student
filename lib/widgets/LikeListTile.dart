@@ -8,6 +8,7 @@ class LikeListTile extends StatelessWidget {
       required this.title,
       required this.likes,
       required this.subtitle,
+      this.hasPreview = false,
       this.subtitle2,
       required this.imgUrl,
       this.color = Colors.grey})
@@ -18,6 +19,7 @@ class LikeListTile extends StatelessWidget {
   final String? subtitle2;
   final Color color;
   final String imgUrl;
+  final bool hasPreview;
 
   @override
   Widget build(BuildContext context) {
@@ -70,9 +72,34 @@ class LikeListTile extends StatelessWidget {
           if (subtitle2 != null) Text(subtitle2!)
         ],
       ),
-      trailing: Icon(
-        Icons.remove_red_eye_sharp,
-        color: AppColor.primary,
+      trailing: Container(
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            if (!hasPreview)
+              Positioned(
+                  left: 30,
+                  top: 2,
+                  child: Icon(
+                    Icons.lock,
+                    size: 19,
+                    color: Colors.grey,
+                  )),
+            if (hasPreview)
+              Positioned(
+                  left: 30,
+                  top: 2,
+                  child: Icon(
+                    Icons.lock_open_rounded,
+                    size: 19,
+                    color: AppColor.green,
+                  )),
+            Icon(
+              Icons.remove_red_eye_sharp,
+              color: AppColor.primary,
+            ),
+          ],
+        ),
       ),
     );
   }

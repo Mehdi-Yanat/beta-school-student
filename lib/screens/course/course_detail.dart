@@ -16,6 +16,7 @@ import 'package:online_course/widgets/gradient_button.dart';
 import 'package:provider/provider.dart';
 
 import '../../widgets/AlertDialogue.dart';
+import '../../widgets/VideoPlayer.dart';
 import '../../widgets/appbar.dart';
 import '../teacher/teacher_view.dart';
 
@@ -268,33 +269,43 @@ class CourseDetailScreen extends StatelessWidget {
                                         ),
                                         SizedBox(height: 12),
                                         _buildCourseStats(context, course),
-                                        SizedBox(height: 25),
-                                        Row(children: [
-                                          Spacer(),
-                                          CardFb1(
-                                            text: AppLocalizations.of(context)!
-                                                .enrolled_students,
-                                            imageUrl:
-                                                "assets/images/students.png",
-                                            subtitle:
-                                                course["currentEnrollment"]
-                                                    .toString(),
-                                            onPressed: () {},
-                                          ),
-                                          Spacer(),
-                                          CardFb1(
-                                            text: AppLocalizations.of(context)!
-                                                .number_of_chapters,
-                                            imageUrl: "assets/images/video.png",
-                                            subtitle: provider
-                                                .courseChapters.length
-                                                .toString(),
-                                            onPressed: () {},
-                                          ),
-                                          Spacer(),
-                                        ]),
                                         SizedBox(height: 20),
                                         _buildAboutSection(context, course),
+                                        SizedBox(height: 25),
+                                        Row(children: [
+                                          // Spacer(),
+                                          Expanded(
+                                            child: CardFb1(
+                                              text:
+                                                  AppLocalizations.of(context)!
+                                                      .enrolled_students,
+                                              imageUrl:
+                                                  "assets/images/students.png",
+                                              subtitle:
+                                                  course["currentEnrollment"]
+                                                      .toString(),
+                                              onPressed: () {},
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          Expanded(
+                                            child: CardFb1(
+                                              text:
+                                                  AppLocalizations.of(context)!
+                                                      .number_of_chapters,
+                                              imageUrl:
+                                                  "assets/images/video.png",
+                                              subtitle: provider
+                                                  .courseChapters.length
+                                                  .toString(),
+                                              onPressed: () {},
+                                            ),
+                                          ),
+                                          // Spacer(),
+                                        ]),
+                                        SizedBox(height: 20),
                                         SizedBox(height: 12),
                                         _buildCourseDetails(context, course),
                                         SizedBox(height: 16),
@@ -318,6 +329,8 @@ class CourseDetailScreen extends StatelessWidget {
                                               .thumbnail; // Thumbnail is an object
                                           final imageUrl = thumbnail
                                               .url; // Access url from Thumbnail// Convert duration to a string
+                                          final previewVideo =
+                                              chapter.previewVideoFile;
 
                                           return Container(
                                             color: Colors.white70,
@@ -341,6 +354,127 @@ class CourseDetailScreen extends StatelessWidget {
                                                               chapter: chapter),
                                                     ),
                                                   );
+                                                } else if (previewVideo !=
+                                                    null) {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return Dialog(
+                                                        shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15)),
+                                                        insetPadding:
+                                                            EdgeInsets.all(8),
+                                                        child: Container(
+                                                          constraints:
+                                                              BoxConstraints(
+                                                                  minHeight:
+                                                                      100,
+                                                                  maxHeight:
+                                                                      420),
+                                                          padding:
+                                                              EdgeInsets.all(0),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: AppColor
+                                                                .primary,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15.0),
+                                                          ),
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Center(
+                                                                child: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .all(
+                                                                          8.0),
+                                                                  child: Text(
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    AppLocalizations.of(
+                                                                            context)!
+                                                                        .free_preview,
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            24,
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontWeight:
+                                                                            FontWeight.w500),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Center(
+                                                                child: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .all(
+                                                                          8.0),
+                                                                  child: Text(
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    chapter
+                                                                        .title,
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            17,
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontWeight:
+                                                                            FontWeight.w400),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .symmetric(
+                                                                    horizontal:
+                                                                        8.0),
+                                                                child:
+                                                                    VideoPlayerScreen(
+                                                                  url:
+                                                                      previewVideo
+                                                                          .url,
+                                                                ),
+                                                              ),
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(
+                                                                        15.0),
+                                                                child: Text(
+                                                                  maxLines: 3,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  chapter
+                                                                      .description,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .start,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                  ),
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
                                                 } else {
                                                   showDialog(
                                                     context: context,
@@ -360,6 +494,8 @@ class CourseDetailScreen extends StatelessWidget {
                                                 title: title,
                                                 likes: chapter.views.toString(),
                                                 color: AppColor.primary,
+                                                hasPreview:
+                                                    previewVideo != null,
                                                 subtitle: Helpers
                                                     .formatHoursAndMinutes(
                                                         context,
